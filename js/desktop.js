@@ -15,7 +15,7 @@
     // --------------- State ---------------
     let highestZIndex = 50;
     const windows = {};
-    const winKeys = ['cv', 'reel', 'projects', 'contact'];
+    const winKeys = ['cv', 'projects', 'contact'];
     let activeWinKey = 'projects';
     let allMinimized = false;
     let prevStatesBeforeShowDesktop = {};
@@ -239,8 +239,7 @@
     function getWindowTitle(key) {
         switch (key) {
             case 'cv': return 'curriculum.pdf — Document Viewer';
-            case 'reel': return 'reel.mp4 — Video Player';
-            case 'projects': return 'archive — public---domain';
+            case 'projects': return 'My Stuff';
             case 'contact': return 'contacts.txt — Text Editor';
             default: return 'Desktop';
         }
@@ -260,13 +259,6 @@
         if (win.tab) win.tab.style.display = 'inline-flex';
 
         bringToFront(key);
-
-        if (key === 'reel') {
-            const vid = document.getElementById('kali-os-video');
-            if (vid) {
-                vid.play().catch(() => { });
-            }
-        }
     }
 
     function closeWindow(key) {
@@ -276,11 +268,6 @@
         win.el.classList.add('is-closed');
         win.el.classList.remove('is-focused');
         if (win.tab) win.tab.style.display = 'none';
-
-        if (key === 'reel') {
-            const vid = document.getElementById('kali-os-video');
-            if (vid) vid.pause();
-        }
 
         // Find next open window to focus
         let next = winKeys.find(k => windows[k] && !windows[k].el.classList.contains('is-closed') && !windows[k].el.classList.contains('is-minimized'));
@@ -460,9 +447,6 @@
             } else if (key === 'contact') {
                 minW = 260;
                 minH = 200;
-            } else if (key === 'reel') {
-                minW = 300;
-                minH = 200;
             }
 
             const parent = winEl.offsetParent || document.getElementById('kali-os-desktop') || document.body;
@@ -580,7 +564,6 @@
     // --------------- Desktop Icons Dragging & Clicks -----
     function initDesktopIcons() {
         const iconCv = document.getElementById('icon-cv');
-        const iconReel = document.getElementById('icon-reel');
         const iconProjects = document.getElementById('icon-projects');
         const iconContact = document.getElementById('icon-contact');
         const iconTrash = document.getElementById('icon-trash');
@@ -588,7 +571,6 @@
         const map = [
             { el: iconCv, key: 'cv' },
             { el: iconProjects, key: 'projects' },
-            { el: iconReel, key: 'reel' },
             { el: iconContact, key: 'contact' },
         ];
 
@@ -743,340 +725,290 @@
         }
     }
 
-    // --------------- Video Reel Controls -----------------
-    function initVideoControls() {
-        const vid = document.getElementById('kali-os-video');
-        const playBtn = document.getElementById('video-btn-play');
-        const playIcon = document.getElementById('video-play-icon');
-        const playLabel = document.getElementById('video-play-label');
-        const restartBtn = document.getElementById('video-btn-restart');
-        const muteBtn = document.getElementById('video-btn-mute');
-        const fsBtn = document.getElementById('video-btn-fs');
-        const timeDisplay = document.getElementById('video-time-display');
-
-        if (!vid) return;
-
-        function updatePlayState() {
-            if (vid.paused) {
-                if (playIcon) playIcon.innerHTML = '&#9654;';
-                if (playLabel) playLabel.textContent = 'Play';
-            } else {
-                if (playIcon) playIcon.innerHTML = '&#10074;&#10074;';
-                if (playLabel) playLabel.textContent = 'Pause';
-            }
-        }
-
-        if (playBtn) {
-            playBtn.addEventListener('click', () => {
-                if (vid.paused) vid.play();
-                else vid.pause();
-                updatePlayState();
-            });
-        }
-
-        vid.addEventListener('play', updatePlayState);
-        vid.addEventListener('pause', updatePlayState);
-
-        if (restartBtn) {
-            restartBtn.addEventListener('click', () => {
-                vid.currentTime = 0;
-                vid.play();
-            });
-        }
-
-        if (muteBtn) {
-            muteBtn.addEventListener('click', () => {
-                vid.muted = !vid.muted;
-                muteBtn.innerHTML = vid.muted ? '&#128263; Unmute' : '&#128266; Mute';
-            });
-        }
-
-        if (fsBtn) {
-            fsBtn.addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    vid.requestFullscreen().catch(() => { });
-                } else {
-                    document.exitFullscreen().catch(() => { });
-                }
-            });
-        }
-
-        vid.addEventListener('timeupdate', () => {
-            if (!timeDisplay) return;
-            const cur = formatTime(vid.currentTime);
-            const dur = formatTime(vid.duration || 0);
-            timeDisplay.textContent = `${cur} / ${dur}`;
-        });
-
-        function formatTime(sec) {
-            const m = Math.floor(sec / 60);
-            const s = Math.floor(sec % 60);
-            return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-        }
-    }
-
-    // --------------- Projects & Hobbies Data (Virgil Abloh public---domain style) ---------------
+    // --------------- Projects Data (macOS Finder / My Stuff) ---------------
     const PROJECT_FOLDERS = [
-        {
-            id: "aether",
-            name: "AETHER",
-            displayPath: "AETHER",
-            category: "Jewelry, 2025",
-            portfolioLink: "index.html#project-0",
-            description: "Collezione capsule di anelli scultorei in argento 925 e titanio stampato in 3D.",
-            files: [
-                {
-                    name: "ath_01.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/aether/ath_01.jpg",
-                    size: "1.3 MB",
-                    sizeBytes: "1326546",
-                    created: "5/29/2024, 12:09:41 AM",
-                    modified: "5/29/2024, 12:09:41 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "ATH_01.JPG — Scultura indossabile in titanio 3D"
-                },
-                {
-                    name: "ath_02.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/aether/ath_02.jpg",
-                    size: "1.0 MB",
-                    sizeBytes: "1019224",
-                    created: "5/29/2024, 12:10:20 AM",
-                    modified: "5/29/2024, 12:10:20 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "ATH_02.JPG — Prototipo e finitura manuale"
-                },
-                {
-                    name: "ath_03.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/aether/ath_03.jpg",
-                    size: "1.1 MB",
-                    sizeBytes: "1099472",
-                    created: "5/29/2024, 12:10:46 AM",
-                    modified: "5/29/2024, 12:10:46 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "ATH_03.JPG — Dettaglio texture organica"
-                },
-                {
-                    name: "ath_04.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/aether/ath_04.jpg",
-                    size: "1.0 MB",
-                    sizeBytes: "1053625",
-                    created: "5/29/2024, 12:11:39 AM",
-                    modified: "5/29/2024, 12:11:39 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "ATH_04.JPG — Studio di proporzioni"
-                },
-                {
-                    name: "ath_05.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/aether/ath_05.jpg",
-                    size: "890 KB",
-                    sizeBytes: "890356",
-                    created: "5/29/2024, 12:12:02 AM",
-                    modified: "5/29/2024, 12:12:02 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "ATH_05.JPG — Anello Aether 925"
-                }
+    {
+            "id": "jewelry-inspiration",
+            "name": "Jewelry Inspiration",
+            "displayPath": "Jewelry Inspiration",
+            "category": "Inspiration & Research, 2025-2026",
+            "description": "Visual references, traditional silver ornaments and sculptural hardware inspiration for contemporary jewelry.",
+            "tagColor": "purple",
+            "files": [
+                    {
+                            "name": "01.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/01.png",
+                            "size": "484 KB",
+                            "sizeBytes": "484041",
+                            "created": "08/14/2025, 02:41:18 AM",
+                            "modified": "08/14/2025, 02:41:18 AM",
+                            "contentType": "image/png",
+                            "dimensions": "486 × 500",
+                            "caption": "Jewelry Inspiration — Traditional silver armlet / cuff with conical stud details"
+                    },
+                    {
+                            "name": "02.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/02.png",
+                            "size": "226 KB",
+                            "sizeBytes": "226167",
+                            "created": "08/19/2025, 03:15:42 AM",
+                            "modified": "08/19/2025, 03:22:10 AM",
+                            "contentType": "image/png",
+                            "dimensions": "327 × 500",
+                            "caption": "Jewelry Inspiration — Engraved side profile & concentric filigree ornament"
+                    },
+                    {
+                            "name": "03.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/03.png",
+                            "size": "366 KB",
+                            "sizeBytes": "366147",
+                            "created": "09/02/2025, 11:34:09 PM",
+                            "modified": "09/03/2025, 12:05:33 AM",
+                            "contentType": "image/png",
+                            "dimensions": "500 × 430",
+                            "caption": "Jewelry Inspiration — Complete circular bangle with geometric fluted nodes"
+                    },
+                    {
+                            "name": "04.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/04.png",
+                            "size": "110 KB",
+                            "sizeBytes": "109649",
+                            "created": "09/11/2025, 01:22:50 AM",
+                            "modified": "09/11/2025, 01:22:50 AM",
+                            "contentType": "image/png",
+                            "dimensions": "316 × 273",
+                            "caption": "Jewelry Inspiration — Open torque bracelet with crown terminals"
+                    },
+                    {
+                            "name": "05.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/05.png",
+                            "size": "151 KB",
+                            "sizeBytes": "150699",
+                            "created": "09/27/2025, 04:08:15 AM",
+                            "modified": "09/27/2025, 04:15:00 AM",
+                            "contentType": "image/png",
+                            "dimensions": "320 × 378",
+                            "caption": "Jewelry Inspiration — Articulated ceremonial necklace with repoussé pendants"
+                    },
+                    {
+                            "name": "06.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/06.png",
+                            "size": "712 KB",
+                            "sizeBytes": "711982",
+                            "created": "10/05/2025, 10:14:30 AM",
+                            "modified": "10/05/2025, 10:20:12 AM",
+                            "contentType": "image/png",
+                            "dimensions": "1024 × 1024",
+                            "caption": "Jewelry Inspiration — Gothic openwork collar necklace with Maltese cross"
+                    },
+                    {
+                            "name": "07.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/07.png",
+                            "size": "726 KB",
+                            "sizeBytes": "726428",
+                            "created": "10/18/2025, 02:55:04 AM",
+                            "modified": "10/18/2025, 02:55:04 AM",
+                            "contentType": "image/png",
+                            "dimensions": "1024 × 1024",
+                            "caption": "Jewelry Inspiration — Leather belt with engraved circular silver ring buckle"
+                    },
+                    {
+                            "name": "08.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/08.png",
+                            "size": "611 KB",
+                            "sizeBytes": "611314",
+                            "created": "11/04/2025, 05:20:11 PM",
+                            "modified": "11/04/2025, 05:45:00 PM",
+                            "contentType": "image/png",
+                            "dimensions": "564 × 1024",
+                            "caption": "Jewelry Inspiration — Sterling silver filigree link chain with bell pendant"
+                    },
+                    {
+                            "name": "09.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/09.png",
+                            "size": "530 KB",
+                            "sizeBytes": "530091",
+                            "created": "11/21/2025, 01:48:33 AM",
+                            "modified": "11/21/2025, 01:52:19 AM",
+                            "contentType": "image/png",
+                            "dimensions": "934 × 751",
+                            "caption": "Jewelry Inspiration — Sculptural silver cross buckle on black leather"
+                    },
+                    {
+                            "name": "10.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/10.png",
+                            "size": "490 KB",
+                            "sizeBytes": "489505",
+                            "created": "12/03/2025, 08:30:22 PM",
+                            "modified": "12/03/2025, 08:45:10 PM",
+                            "contentType": "image/png",
+                            "dimensions": "480 × 640",
+                            "caption": "Jewelry Inspiration — Celtic knotwork interlaced 3-piece belt buckle hardware set"
+                    },
+                    {
+                            "name": "11.jpg",
+                            "type": "image",
+                            "subType": "JPEG image",
+                            "src": "images/jewelry-inspiration/11.jpg",
+                            "size": "397 KB",
+                            "sizeBytes": "397366",
+                            "created": "12/15/2025, 03:37:19 AM",
+                            "modified": "12/15/2025, 03:37:19 AM",
+                            "contentType": "image/jpeg",
+                            "dimensions": "675 × 1024",
+                            "caption": "Jewelry Inspiration — Architectural engraving of Gothic tracery roundels & medallions"
+                    },
+                    {
+                            "name": "12.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/12.png",
+                            "size": "954 KB",
+                            "sizeBytes": "953730",
+                            "created": "01/08/2026, 04:12:00 AM",
+                            "modified": "01/08/2026, 04:19:44 AM",
+                            "contentType": "image/png",
+                            "dimensions": "800 × 800",
+                            "caption": "Jewelry Inspiration — Carved floral rosettes & ornamental acanthus medallions"
+                    },
+                    {
+                            "name": "13.jpg",
+                            "type": "image",
+                            "subType": "JPEG image",
+                            "src": "images/jewelry-inspiration/13.jpg",
+                            "size": "257 KB",
+                            "sizeBytes": "257473",
+                            "created": "01/22/2026, 02:18:45 PM",
+                            "modified": "01/22/2026, 02:30:00 PM",
+                            "contentType": "image/jpeg",
+                            "dimensions": "736 × 978",
+                            "caption": "Jewelry Inspiration — Gothic flamboyant stone tracery with cathedral gargoyle"
+                    },
+                    {
+                            "name": "14.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/14.png",
+                            "size": "384 KB",
+                            "sizeBytes": "384139",
+                            "created": "02/03/2026, 01:05:28 AM",
+                            "modified": "02/03/2026, 01:05:28 AM",
+                            "contentType": "image/png",
+                            "dimensions": "300 × 470",
+                            "caption": "Jewelry Inspiration — Gothic arch tracery detail with relief spire carving"
+                    },
+                    {
+                            "name": "15.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/15.png",
+                            "size": "717 KB",
+                            "sizeBytes": "717326",
+                            "created": "02/19/2026, 11:42:10 AM",
+                            "modified": "02/19/2026, 11:55:02 AM",
+                            "contentType": "image/png",
+                            "dimensions": "740 × 493",
+                            "caption": "Jewelry Inspiration — Gothic openwork tracery window with quatrefoil balustrade"
+                    },
+                    {
+                            "name": "16.jpg",
+                            "type": "image",
+                            "subType": "JPEG image",
+                            "src": "images/jewelry-inspiration/16.jpg",
+                            "size": "325 KB",
+                            "sizeBytes": "325390",
+                            "created": "03/07/2026, 03:50:41 AM",
+                            "modified": "03/07/2026, 03:50:41 AM",
+                            "contentType": "image/jpeg",
+                            "dimensions": "631 × 1024",
+                            "caption": "Jewelry Inspiration — Antique bronze grotesque door pull & keyhole plate"
+                    },
+                    {
+                            "name": "17.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/17.png",
+                            "size": "800 KB",
+                            "sizeBytes": "799791",
+                            "created": "03/24/2026, 09:15:20 PM",
+                            "modified": "03/24/2026, 09:40:11 PM",
+                            "contentType": "image/png",
+                            "dimensions": "463 × 828",
+                            "caption": "Jewelry Inspiration — Traditional silver filigree beads with purple cord & articulated chain"
+                    },
+                    {
+                            "name": "18.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/18.png",
+                            "size": "955 KB",
+                            "sizeBytes": "954846",
+                            "created": "04/11/2026, 02:29:55 AM",
+                            "modified": "04/11/2026, 02:35:10 AM",
+                            "contentType": "image/png",
+                            "dimensions": "457 × 806",
+                            "caption": "Jewelry Inspiration — Cathedral stone portal with deeply carved arch archivolts"
+                    },
+                    {
+                            "name": "19.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/jewelry-inspiration/19.png",
+                            "size": "629 KB",
+                            "sizeBytes": "629059",
+                            "created": "05/02/2026, 04:03:12 AM",
+                            "modified": "05/02/2026, 04:03:12 AM",
+                            "contentType": "image/png",
+                            "dimensions": "458 × 808",
+                            "caption": "Jewelry Inspiration — Wrought iron cast cartouche escutcheon with volute scrolls"
+                    }
             ]
-        },
-        {
-            id: "nomod",
-            name: "NOMOD",
-            displayPath: "NOMOD",
-            category: "Product Design, 2025",
-            portfolioLink: "index.html#project-1",
-            description: "Sistema di oggetti monolitici per la casa e l'illuminazione da tavolo in alluminio anodizzato e vetro borosilicato.",
-            files: [
-                {
-                    name: "nmd_01.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/nomod/nmd_01.jpg",
-                    size: "1.4 MB",
-                    sizeBytes: "1370370",
-                    created: "5/29/2024, 12:27:05 AM",
-                    modified: "5/29/2024, 12:27:05 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "NMD_01.JPG — Lampada monolitica da tavolo"
-                },
-                {
-                    name: "nmd_02.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/nomod/nmd_02.jpg",
-                    size: "1.4 MB",
-                    sizeBytes: "1398243",
-                    created: "5/29/2024, 12:27:33 AM",
-                    modified: "5/29/2024, 12:27:33 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "NMD_02.JPG — Dettaglio alluminio spazzolato"
-                },
-                {
-                    name: "nmd_03.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/nomod/nmd_03.jpg",
-                    size: "1.5 MB",
-                    sizeBytes: "1487063",
-                    created: "5/29/2024, 12:28:01 AM",
-                    modified: "5/29/2024, 12:28:01 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "NMD_03.JPG — Diffusore vetro borosilicato"
-                },
-                {
-                    name: "nmd_04.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/nomod/nmd_04.jpg",
-                    size: "1.8 MB",
-                    sizeBytes: "1794166",
-                    created: "5/29/2024, 12:28:42 AM",
-                    modified: "5/29/2024, 12:28:42 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "NMD_04.JPG — Vista d'insieme collezione"
-                }
-            ]
-        },
-        {
-            id: "luca",
-            name: "LUCA",
-            displayPath: "LUCA",
-            category: "Eyewear & Hardware, 2024",
-            portfolioLink: "index.html#project-2",
-            description: "Dettagli metallici delle cerniere e struttura delle montature in acetato, tra ingegneria di precisione e moda.",
-            files: [
-                {
-                    name: "luca_01.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/luca/luca_01.jpg",
-                    size: "1.4 MB",
-                    sizeBytes: "1374229",
-                    created: "5/29/2024, 1:07:21 AM",
-                    modified: "5/29/2024, 1:07:21 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "LUCA_01.JPG — Montatura e cerniere custom"
-                },
-                {
-                    name: "luca_02.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/luca/luca_02.jpg",
-                    size: "1.1 MB",
-                    sizeBytes: "1129112",
-                    created: "5/29/2024, 1:07:42 AM",
-                    modified: "5/29/2024, 1:07:42 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "LUCA_02.JPG — Vista profilo acetato lucido"
-                },
-                {
-                    name: "luca_03.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/luca/luca_03.jpg",
-                    size: "1.3 MB",
-                    sizeBytes: "1269051",
-                    created: "5/29/2024, 1:08:38 AM",
-                    modified: "5/29/2024, 1:08:38 AM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "LUCA_03.JPG — Ingegneria cerniera a filo"
-                }
-            ]
-        },
-        {
-            id: "hobbies",
-            name: "HOBBIES",
-            displayPath: "HOBBIES",
-            category: "Personal Experiments, 2024-2026",
-            portfolioLink: "index.html",
-            description: "Sperimentazioni materiche personali: prototipazione rapida, scultura 3D, fotografia analogica 35mm e riparazione tech.",
-            files: [
-                {
-                    name: "analogue_35mm_street.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/aether/ath_02.jpg",
-                    size: "1.2 MB",
-                    sizeBytes: "1254300",
-                    created: "10/12/2025, 3:15:20 PM",
-                    modified: "10/12/2025, 3:15:20 PM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "Fotografia analogica 35mm — Architettura e ombre"
-                },
-                {
-                    name: "3d_sculpture_generative.obj",
-                    type: "model",
-                    subType: "3D Wavefront OBJ",
-                    src: "images/aether/ath_04.jpg",
-                    size: "4.8 MB",
-                    sizeBytes: "4982110",
-                    created: "10/12/2025, 4:18:22 PM",
-                    modified: "10/12/2025, 4:18:22 PM",
-                    contentType: "model/obj",
-                    dimensions: "Mesh 3D (Vertices: 48k)",
-                    caption: "Scultura 3D generativa — Mesh organica per resina"
-                },
-                {
-                    name: "custom_hardware_modding.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/luca/luca_02.jpg",
-                    size: "1.6 MB",
-                    sizeBytes: "1642100",
-                    created: "11/04/2025, 6:40:11 PM",
-                    modified: "11/04/2025, 6:40:11 PM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "Custom PC & Hardware Modding — Assemblaggio e circuiti"
-                },
-                {
-                    name: "upcycling_tech_lab.jpg",
-                    type: "image",
-                    subType: "JPEG image",
-                    src: "images/nomod/nmd_02.jpg",
-                    size: "2.1 MB",
-                    sizeBytes: "2198400",
-                    created: "01/18/2026, 2:10:45 PM",
-                    modified: "01/18/2026, 2:10:45 PM",
-                    contentType: "image/jpeg",
-                    dimensions: "1920 × 2400",
-                    caption: "Upcycling Tech Project — Secondo classificato Hackathon 2023"
-                }
-            ]
-        }
+    }
     ];
 
-    // --------------- Virgil Abloh public---domain 3-Column Miller File Manager ---------------
+    // --------------- Virgil Abloh & macOS Yosemite Finder File Manager ---------------
     function initPublicDomainFileManager() {
-        const foldersContainer = document.getElementById('pd-folders-list');
-        const filesContainer = document.getElementById('pd-files-list');
-        const pathLabel = document.getElementById('pd-path-label');
+        // View Switcher & Containers
+        const btnViewIcons = document.getElementById('pd-view-icons');
+        const btnViewColumns = document.getElementById('pd-view-columns');
+        const viewIcons = document.getElementById('pd-icons-view');
+        const viewColumns = document.getElementById('pd-columns-view');
+
+        // Breadcrumbs & Navigation
+        const crumbRoot = document.getElementById('pd-crumb-root');
+        const crumbSep = document.getElementById('pd-crumb-sep');
+        const crumbSub = document.getElementById('pd-crumb-sub');
         const countLabel = document.getElementById('pd-item-count');
         const btnBack = document.getElementById('pd-btn-back');
         const btnFwd = document.getElementById('pd-btn-forward');
 
-        // Column 3: Inspector / Preview elements
+        // Finder Icon View Elements
+        const sidebarFolders = document.getElementById('pd-sidebar-folders');
+        const finderGrid = document.getElementById('pd-finder-grid');
+
+        // Column View Elements
+        const foldersContainer = document.getElementById('pd-folders-list');
+        const filesContainer = document.getElementById('pd-files-list');
         const previewImg = document.getElementById('pd-preview-img');
         const previewTitle = document.getElementById('pd-preview-title');
         const previewSub = document.getElementById('pd-preview-sub');
@@ -1088,20 +1020,329 @@
         const metaProject = document.getElementById('pd-meta-project');
         const previewLink = document.getElementById('pd-preview-link');
         const statusSummary = document.getElementById('pd-status-summary');
+        const statusLeft = document.getElementById('pd-status-left');
+        const inspectorIcons = document.getElementById('pd-inspector-icons');
+        const inspectorColumns = document.getElementById('pd-inspector');
+        const closeBtnIcons = document.getElementById('pd-close-inspector-icons');
+        const closeBtnCols = document.getElementById('pd-close-inspector-cols');
+        const finderMain = document.getElementById('pd-finder-main');
 
-        if (!foldersContainer || !filesContainer) return;
+        if (!viewIcons || !viewColumns) return;
 
+        let currentView = 'icons'; // 'icons' or 'columns'
+        let inRoot = true; // In icons view: true = looking at all folders; false = inside a folder
         let activeFolderIdx = 0;
-        let activeFileIdx = 0;
-        let history = [0];
+        let activeFileIdx = -1; // -1 = no file selected initially
+        let isPreviewOpen = false; // Preview pane hidden by default until image click
+        let history = [{ view: 'icons', inRoot: true, folderIdx: 0 }];
         let historyIdx = 0;
+
+        function openPreview(fileIdx) {
+            activeFileIdx = fileIdx;
+            isPreviewOpen = true;
+            selectFile(fileIdx);
+
+            if (currentView === 'icons') {
+                if (inspectorIcons) {
+                    inspectorIcons.style.display = 'flex';
+                    inspectorIcons.classList.add('is-open');
+                }
+            } else {
+                if (inspectorColumns) {
+                    inspectorColumns.style.display = 'flex';
+                    inspectorColumns.classList.add('is-open');
+                }
+            }
+        }
+
+        function closePreview() {
+            activeFileIdx = -1;
+            isPreviewOpen = false;
+            if (inspectorIcons) {
+                inspectorIcons.style.display = 'none';
+                inspectorIcons.classList.remove('is-open');
+            }
+            if (inspectorColumns) {
+                inspectorColumns.style.display = 'none';
+                inspectorColumns.classList.remove('is-open');
+            }
+            if (finderGrid) {
+                finderGrid.querySelectorAll('.pd-file-card').forEach(c => c.classList.remove('is-selected'));
+            }
+            if (filesContainer) {
+                filesContainer.querySelectorAll('.pd-file-row').forEach(r => {
+                    r.classList.remove('active');
+                    r.setAttribute('aria-selected', 'false');
+                });
+            }
+        }
+
+        if (closeBtnIcons) {
+            closeBtnIcons.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closePreview();
+            });
+        }
+
+        if (closeBtnCols) {
+            closeBtnCols.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closePreview();
+            });
+        }
+
+        if (finderMain) {
+            finderMain.addEventListener('click', (e) => {
+                if (!e.target.closest('.pd-finder-item') && !e.target.closest('.pd-col-inspector')) {
+                    closePreview();
+                }
+            });
+        }
 
         function updateHistoryButtons() {
             if (btnBack) btnBack.disabled = (historyIdx <= 0);
             if (btnFwd) btnFwd.disabled = (historyIdx >= history.length - 1);
         }
 
+        function pushHistory(state) {
+            history = history.slice(0, historyIdx + 1);
+            history.push(state);
+            historyIdx = history.length - 1;
+            updateHistoryButtons();
+        }
+
+        // ========================================================
+        // 1. VIEW SWITCHER
+        // ========================================================
+        function switchView(targetView) {
+            currentView = targetView;
+            if (targetView === 'icons') {
+                if (btnViewIcons) btnViewIcons.classList.add('active');
+                if (btnViewColumns) btnViewColumns.classList.remove('active');
+                viewIcons.style.display = 'flex';
+                viewColumns.style.display = 'none';
+                renderFinderView();
+            } else {
+                if (btnViewColumns) btnViewColumns.classList.add('active');
+                if (btnViewIcons) btnViewIcons.classList.remove('active');
+                viewColumns.style.display = 'flex';
+                viewIcons.style.display = 'none';
+                renderColumnView(activeFolderIdx);
+            }
+            updateBreadcrumbs();
+            updateHistoryButtons();
+        }
+
+        if (btnViewIcons) {
+            btnViewIcons.addEventListener('click', () => {
+                if (currentView !== 'icons') {
+                    pushHistory({ view: 'icons', inRoot, folderIdx: activeFolderIdx });
+                    switchView('icons');
+                }
+            });
+        }
+
+        if (btnViewColumns) {
+            btnViewColumns.addEventListener('click', () => {
+                if (currentView !== 'columns') {
+                    pushHistory({ view: 'columns', inRoot: false, folderIdx: activeFolderIdx });
+                    switchView('columns');
+                }
+            });
+        }
+
+        // ========================================================
+        // 2. BREADCRUMBS
+        // ========================================================
+        function updateBreadcrumbs() {
+            if (!crumbRoot || !crumbSep || !crumbSub) return;
+
+            if (currentView === 'icons' && inRoot) {
+                crumbRoot.classList.add('active');
+                crumbSep.style.display = 'none';
+                crumbSub.style.display = 'none';
+                crumbSub.textContent = '';
+                if (countLabel) countLabel.textContent = `${PROJECT_FOLDERS.length} ${PROJECT_FOLDERS.length === 1 ? 'cartella' : 'cartelle'}`;
+            } else {
+                const folder = PROJECT_FOLDERS[activeFolderIdx] || PROJECT_FOLDERS[0];
+                crumbRoot.classList.remove('active');
+                crumbSep.style.display = 'inline-block';
+                crumbSub.style.display = 'inline-block';
+                crumbSub.textContent = folder.name;
+                crumbSub.classList.add('active');
+                if (countLabel) countLabel.textContent = `${folder.files.length} elementi`;
+            }
+        }
+
+        if (crumbRoot) {
+            crumbRoot.addEventListener('click', () => {
+                if (currentView === 'icons' && !inRoot) {
+                    inRoot = true;
+                    closePreview();
+                    pushHistory({ view: 'icons', inRoot: true, folderIdx: activeFolderIdx });
+                    renderFinderView();
+                    updateBreadcrumbs();
+                }
+            });
+        }
+
+        // ========================================================
+        // 3. FINDER ICON VIEW (macOS Yosemite Style)
+        // ========================================================
+        function renderSidebar() {
+            if (!sidebarFolders) return;
+            sidebarFolders.innerHTML = `
+                <li class="pd-sidebar-item ${inRoot ? 'active' : ''}" data-action="root">
+                    <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor">
+                        <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h3.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A.5.5 0 0 0 8.914 4H13.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/>
+                    </svg>
+                    <span>My Stuff</span>
+                </li>
+                ${PROJECT_FOLDERS.map((f, idx) => `
+                    <li class="pd-sidebar-item ${(!inRoot && idx === activeFolderIdx) ? 'active' : ''}" data-idx="${idx}">
+                        <span class="pd-tag-dot tag-${f.tagColor || 'blue'}"></span>
+                        <span>${escapeHTML(f.name)}</span>
+                    </li>
+                `).join('')}
+            `;
+
+            sidebarFolders.querySelectorAll('.pd-sidebar-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (item.dataset.action === 'root') {
+                        inRoot = true;
+                        closePreview();
+                        pushHistory({ view: 'icons', inRoot: true, folderIdx: activeFolderIdx });
+                        renderFinderView();
+                        updateBreadcrumbs();
+                    } else if (item.dataset.idx !== undefined) {
+                        const idx = parseInt(item.dataset.idx, 10);
+                        inRoot = false;
+                        activeFolderIdx = idx;
+                        closePreview();
+                        pushHistory({ view: 'icons', inRoot: false, folderIdx: idx });
+                        renderFinderView();
+                        updateBreadcrumbs();
+                    }
+                });
+            });
+        }
+
+        function renderFinderView() {
+            if (!finderGrid) return;
+            renderSidebar();
+
+            if (inRoot) {
+                closePreview();
+                // Render root: folders grid
+                finderGrid.innerHTML = PROJECT_FOLDERS.map((folder, idx) => `
+                    <div class="pd-finder-item pd-folder-card" data-folder-idx="${idx}" tabindex="0" role="button" title="Doppio clic o Invio per aprire ${escapeHTML(folder.name)}">
+                        <div class="pd-folder-graphic">
+                            <svg viewBox="0 0 74 60" width="70" height="58" fill="none">
+                                <path d="M4 10a4 4 0 0 1 4-4h20l6 6h36a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V10z" fill="#007aff"/>
+                                <rect x="8" y="14" width="58" height="5" rx="1.5" fill="#005ecb" opacity="0.6"/>
+                                <path d="M3 18a4 4 0 0 1 4-4h60a4 4 0 0 1 4 4v32a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V18z" fill="#38a5ff"/>
+                                <path d="M7 16h60a4 4 0 0 1 4 4v1H3v-1a4 4 0 0 1 4-4z" fill="#6bc0ff" opacity="0.4"/>
+                            </svg>
+                        </div>
+                        <span class="pd-finder-label">${escapeHTML(folder.name)}</span>
+                        <div class="pd-finder-tag-row">
+                            <span class="pd-tag-dot tag-${folder.tagColor || 'blue'}"></span>
+                            <span class="pd-finder-sub">${folder.files.length} file</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                finderGrid.querySelectorAll('.pd-folder-card').forEach(card => {
+                    const enterFolder = () => {
+                        const idx = parseInt(card.dataset.folderIdx, 10);
+                        inRoot = false;
+                        activeFolderIdx = idx;
+                        closePreview();
+                        pushHistory({ view: 'icons', inRoot: false, folderIdx: idx });
+                        renderFinderView();
+                        updateBreadcrumbs();
+                    };
+
+                    card.addEventListener('click', (e) => {
+                        finderGrid.querySelectorAll('.pd-finder-item').forEach(c => c.classList.remove('is-selected'));
+                        card.classList.add('is-selected');
+                        closePreview();
+                    });
+
+                    card.addEventListener('dblclick', enterFolder);
+                    card.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            enterFolder();
+                        }
+                    });
+                });
+
+                if (statusSummary) {
+                    const totalFiles = PROJECT_FOLDERS.reduce((acc, f) => acc + f.files.length, 0);
+                    statusSummary.textContent = `${totalFiles} file • Jewelry Inspiration`;
+                }
+            } else {
+                // Render files inside active folder
+                const folder = PROJECT_FOLDERS[activeFolderIdx] || PROJECT_FOLDERS[0];
+                finderGrid.innerHTML = folder.files.map((file, idx) => `
+                    <div class="pd-finder-item pd-file-card ${idx === activeFileIdx ? 'is-selected' : ''}" data-file-idx="${idx}" tabindex="0" role="button" title="${escapeHTML(file.name)} (${file.size})">
+                        <div class="pd-file-graphic">
+                            ${file.type === 'image' ? `
+                                <img src="${file.src}" alt="${escapeHTML(file.name)}" class="pd-file-thumb-img" loading="lazy">
+                            ` : `
+                                <svg viewBox="0 0 42 50" width="46" height="52" fill="none">
+                                    <path d="M4 3C4 1.89543 4.89543 1 6 1H28L38 11V47C38 48.1046 37.1046 49 36 49H6C4.89543 49 4 48.1046 4 47V3Z" fill="#FFFFFF" stroke="#c0c4cc" stroke-width="1.3" stroke-linejoin="round"/>
+                                    <path d="M28 1V9C28 10.1046 28.8954 11 30 11H38" fill="#F3F4F6" stroke="#c0c4cc" stroke-width="1.3" stroke-linejoin="round"/>
+                                    <rect x="9" y="24" width="22" height="3" rx="1" fill="#475569"/>
+                                    <rect x="9" y="31" width="16" height="3" rx="1" fill="#94A3B8"/>
+                                </svg>
+                            `}
+                        </div>
+                        <span class="pd-finder-label">${escapeHTML(file.name)}</span>
+                        <div class="pd-finder-tag-row">
+                            <span class="pd-tag-dot tag-${folder.tagColor || 'blue'}"></span>
+                            <span class="pd-finder-sub">${file.size}</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                finderGrid.querySelectorAll('.pd-file-card').forEach(card => {
+                    const fIdx = parseInt(card.dataset.fileIdx, 10);
+
+                    const pick = (e) => {
+                        e.stopPropagation();
+                        openPreview(fIdx);
+                    };
+
+                    card.addEventListener('click', pick);
+                    card.addEventListener('dblclick', pick);
+
+                    card.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            pick(e);
+                        }
+                    });
+                });
+
+                if (isPreviewOpen && activeFileIdx >= 0) {
+                    openPreview(activeFileIdx);
+                } else {
+                    closePreview();
+                }
+
+                if (statusSummary) {
+                    statusSummary.textContent = `${folder.files.length} file • ${folder.name}`;
+                }
+            }
+        }
+
+        // ========================================================
+        // 4. COLUMN VIEW (Virgil Abloh public---domain Style)
+        // ========================================================
         function renderFolderList() {
+            if (!foldersContainer) return;
             foldersContainer.innerHTML = PROJECT_FOLDERS.map((f, idx) => `
                 <div class="pd-folder-row ${idx === activeFolderIdx ? 'active' : ''}" data-idx="${idx}" tabindex="0" role="button" aria-selected="${idx === activeFolderIdx ? 'true' : 'false'}">
                     <span class="pd-folder-name">${escapeHTML(f.name)}</span>
@@ -1113,10 +1354,10 @@
                 const handleFolderSelect = () => {
                     const idx = parseInt(row.dataset.idx, 10);
                     if (idx !== activeFolderIdx) {
-                        history = history.slice(0, historyIdx + 1);
-                        history.push(idx);
-                        historyIdx = history.length - 1;
-                        selectFolder(idx);
+                        activeFolderIdx = idx;
+                        pushHistory({ view: 'columns', inRoot: false, folderIdx: idx });
+                        renderColumnView(idx);
+                        updateBreadcrumbs();
                     }
                 };
 
@@ -1131,57 +1372,72 @@
         }
 
         function selectFile(fileIdx) {
-            const folder = PROJECT_FOLDERS[activeFolderIdx];
+            const folder = PROJECT_FOLDERS[activeFolderIdx] || PROJECT_FOLDERS[0];
             if (!folder || !folder.files || !folder.files[fileIdx]) return;
 
             activeFileIdx = fileIdx;
             const file = folder.files[fileIdx];
 
-            // 1. Highlight file row in Column 2 with system blue #007aff
-            const rows = filesContainer.querySelectorAll('.pd-file-row');
-            rows.forEach((r, idx) => {
-                if (idx === fileIdx) {
-                    r.classList.add('active');
-                    r.setAttribute('aria-selected', 'true');
-                    // Scroll into view if needed
-                    r.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-                } else {
-                    r.classList.remove('active');
-                    r.setAttribute('aria-selected', 'false');
-                }
+            // 1. Column view file rows active state
+            if (filesContainer) {
+                const rows = filesContainer.querySelectorAll('.pd-file-row');
+                rows.forEach((r, idx) => {
+                    if (idx === fileIdx) {
+                        r.classList.add('active');
+                        r.setAttribute('aria-selected', 'true');
+                        r.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                    } else {
+                        r.classList.remove('active');
+                        r.setAttribute('aria-selected', 'false');
+                    }
+                });
+            }
+
+            // 2. Icon view file cards active state
+            if (finderGrid) {
+                const cards = finderGrid.querySelectorAll('.pd-file-card');
+                cards.forEach((c, idx) => {
+                    if (idx === fileIdx) {
+                        c.classList.add('is-selected');
+                    } else {
+                        c.classList.remove('is-selected');
+                    }
+                });
+            }
+
+            // 3. Update both Inspectors (Icon mode & Column mode)
+            document.querySelectorAll('.pd-preview-img-target').forEach(img => {
+                img.src = file.src;
+                img.alt = file.name;
             });
-
-            // 2. Update Column 3 Inspector Pane
-            if (previewImg) {
-                previewImg.src = file.src;
-                previewImg.alt = file.name;
-            }
-            if (previewTitle) {
-                previewTitle.textContent = file.name;
-            }
-            if (previewSub) {
-                previewSub.textContent = `${file.subType || 'JPEG image'} - ${file.size}`;
-            }
-
-            // 3. Update Key-Value Metadata Table (Exact match to reference)
-            if (metaCreated) metaCreated.textContent = file.created || "5/29/2024, 12:09:41 AM";
-            if (metaModified) metaModified.textContent = file.modified || file.created || "5/29/2024, 12:09:41 AM";
-            if (metaSize) metaSize.textContent = file.sizeBytes || file.size;
-            if (metaType) metaType.textContent = file.contentType || "image/jpeg";
-            if (metaDims) metaDims.textContent = file.dimensions || "1920 × 2400";
-            if (metaProject) metaProject.textContent = `${folder.name} (${folder.category})`;
-
-            // 4. Update Portfolio Action Link
-            if (previewLink) {
-                previewLink.href = folder.portfolioLink || 'index.html';
-                const linkLabel = previewLink.querySelector('span:first-child');
-                if (linkLabel) {
-                    linkLabel.textContent = folder.id === 'hobbies' ? 'Esplora nel Portfolio' : 'Apri nel Portfolio';
-                }
-            }
+            document.querySelectorAll('.pd-preview-title-target').forEach(el => {
+                el.textContent = file.name;
+            });
+            document.querySelectorAll('.pd-preview-sub-target').forEach(el => {
+                el.textContent = `${file.subType || 'PNG image'} - ${file.size}`;
+            });
+            document.querySelectorAll('.pd-meta-created-target').forEach(el => {
+                el.textContent = file.created || "08/14/2025, 02:41:18 AM";
+            });
+            document.querySelectorAll('.pd-meta-modified-target').forEach(el => {
+                el.textContent = file.modified || file.created || "08/14/2025, 02:41:18 AM";
+            });
+            document.querySelectorAll('.pd-meta-size-target').forEach(el => {
+                el.textContent = file.sizeBytes || file.size;
+            });
+            document.querySelectorAll('.pd-meta-type-target').forEach(el => {
+                el.textContent = file.contentType || "image/png";
+            });
+            document.querySelectorAll('.pd-meta-dims-target').forEach(el => {
+                el.textContent = file.dimensions || "1024 × 1024";
+            });
+            document.querySelectorAll('.pd-meta-project-target').forEach(el => {
+                el.textContent = `${folder.name} (${folder.category})`;
+            });
         }
 
         function renderFilesList(folder) {
+            if (!filesContainer) return;
             filesContainer.innerHTML = folder.files.map((file, idx) => `
                 <div class="pd-file-row ${idx === activeFileIdx ? 'active' : ''}" data-file-idx="${idx}" tabindex="0" role="button" aria-selected="${idx === activeFileIdx ? 'true' : 'false'}" title="${escapeHTML(file.name)}">
                     <div class="pd-file-left">
@@ -1199,46 +1455,52 @@
             `).join('');
 
             filesContainer.querySelectorAll('.pd-file-row').forEach(row => {
-                const handleSelect = () => {
+                const handleSelect = (e) => {
+                    e.stopPropagation();
                     const fIdx = parseInt(row.dataset.fileIdx, 10);
-                    selectFile(fIdx);
+                    openPreview(fIdx);
                 };
 
                 row.addEventListener('click', handleSelect);
                 row.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        handleSelect();
+                        handleSelect(e);
                     }
                 });
             });
         }
 
-        function selectFolder(idx) {
+        function renderColumnView(idx) {
             activeFolderIdx = idx;
-            activeFileIdx = 0;
             const folder = PROJECT_FOLDERS[idx];
             if (!folder) return;
 
-            if (pathLabel) pathLabel.textContent = folder.name;
-            if (countLabel) countLabel.textContent = `${folder.files.length} items`;
-
-            if (statusSummary) {
-                const totalFiles = PROJECT_FOLDERS.reduce((acc, f) => acc + f.files.length, 0);
-                statusSummary.textContent = `${totalFiles} file • Archivio Progetti & Hobbies`;
-            }
-
             renderFolderList();
             renderFilesList(folder);
-            selectFile(0);
-            updateHistoryButtons();
+            if (isPreviewOpen && activeFileIdx >= 0) {
+                openPreview(activeFileIdx);
+            } else {
+                closePreview();
+            }
         }
 
+        // ========================================================
+        // 5. HISTORY (BACK / FORWARD)
+        // ========================================================
         if (btnBack) {
             btnBack.addEventListener('click', () => {
                 if (historyIdx > 0) {
                     historyIdx--;
-                    selectFolder(history[historyIdx]);
+                    const state = history[historyIdx];
+                    currentView = state.view;
+                    inRoot = state.inRoot;
+                    activeFolderIdx = state.folderIdx;
+                    switchView(state.view);
+                } else if (currentView === 'icons' && !inRoot) {
+                    inRoot = true;
+                    renderFinderView();
+                    updateBreadcrumbs();
                 }
             });
         }
@@ -1247,51 +1509,22 @@
             btnFwd.addEventListener('click', () => {
                 if (historyIdx < history.length - 1) {
                     historyIdx++;
-                    selectFolder(history[historyIdx]);
+                    const state = history[historyIdx];
+                    currentView = state.view;
+                    inRoot = state.inRoot;
+                    activeFolderIdx = state.folderIdx;
+                    switchView(state.view);
                 }
             });
         }
 
-        // Keyboard arrow navigation (Up/Down for files, Left/Right for folders)
-        const projectsWin = document.getElementById('kali-win-projects');
-        if (projectsWin) {
-            projectsWin.addEventListener('keydown', (e) => {
-                // Ignore if typing inside input or textarea
-                if (e.target.matches('input, textarea')) return;
-
-                const folder = PROJECT_FOLDERS[activeFolderIdx];
-                if (!folder) return;
-
-                if (e.key === 'ArrowDown') {
-                    if (activeFileIdx < folder.files.length - 1) {
-                        e.preventDefault();
-                        selectFile(activeFileIdx + 1);
-                    }
-                } else if (e.key === 'ArrowUp') {
-                    if (activeFileIdx > 0) {
-                        e.preventDefault();
-                        selectFile(activeFileIdx - 1);
-                    }
-                } else if (e.key === 'ArrowLeft') {
-                    if (activeFolderIdx > 0) {
-                        e.preventDefault();
-                        history.push(activeFolderIdx - 1);
-                        historyIdx = history.length - 1;
-                        selectFolder(activeFolderIdx - 1);
-                    }
-                } else if (e.key === 'ArrowRight') {
-                    if (activeFolderIdx < PROJECT_FOLDERS.length - 1) {
-                        e.preventDefault();
-                        history.push(activeFolderIdx + 1);
-                        historyIdx = history.length - 1;
-                        selectFolder(activeFolderIdx + 1);
-                    }
-                }
-            });
-        }
-
-        // Initial selection: AETHER (folder 0, file 0)
-        selectFolder(0);
+        // ========================================================
+        // 6. INITIALIZATION
+        // ========================================================
+        renderFolderList();
+        renderFinderView();
+        updateBreadcrumbs();
+        updateHistoryButtons();
     }
 
     function escapeHTML(str) {
@@ -1308,81 +1541,84 @@
 
         const winCv = windows['cv'];
         const winProjects = windows['projects'];
-        const winReel = windows['reel'];
         const winContact = windows['contact'];
 
         if (!winCv || !winProjects) return;
 
         if (w >= 1400) {
             // Large screens (Exact match to requested user composition):
-            // 1. Archive in center-top
-            // 2. Contacts in lower-left
-            // 3. CV on right
+            // 1. Contacts in lower-left
+            // 2. My Stuff in center-top (positioned right of contacts to avoid any overlap)
+            // 3. CV on right (enlarged to 640px x 910px)
 
-            // Archive (Center-Top)
-            if (!winProjects.hasBeenDragged && !winProjects.isMaximized) {
-                const projW = Math.round(Math.min(740, w * 0.38));
-                const projLeft = Math.round(w * 0.285);
-                const projTop = Math.round(Math.max(46, desktopH * 0.05));
-                const projH = Math.round(Math.min(590, desktopH * 0.64));
-                winProjects.el.style.left = `${projLeft}px`;
-                winProjects.el.style.top = `${projTop}px`;
-                winProjects.el.style.width = `${projW}px`;
-                winProjects.el.style.height = `${projH}px`;
-            }
-
-            // Contacts (Lower-Left, shifted slightly right)
+            // Contacts (Lower-Left)
+            let contactRight = 400;
             if (winContact && !winContact.hasBeenDragged && !winContact.isMaximized) {
-                const contactW = Math.round(Math.min(390, w * 0.245));
-                const contactLeft = Math.round(Math.max(80, w * 0.095));
+                const contactW = Math.round(Math.min(370, Math.max(320, w * 0.22)));
+                const contactLeft = Math.round(Math.max(48, Math.min(80, w * 0.05)));
                 const contactTop = Math.round(Math.max(220, desktopH * 0.36));
                 const contactH = Math.round(Math.min(460, desktopH * 0.52));
                 winContact.el.style.left = `${contactLeft}px`;
                 winContact.el.style.top = `${contactTop}px`;
                 winContact.el.style.width = `${contactW}px`;
                 winContact.el.style.height = `${contactH}px`;
+                contactRight = contactLeft + contactW;
             }
 
-            // CV (Right side)
-            if (!winCv.hasBeenDragged && !winCv.isMaximized) {
-                const cvW = Math.round(Math.min(460, w * 0.27));
-                const cvLeft = Math.round(Math.min(w - cvW - 28, w * 0.70));
-                const cvTop = Math.round(Math.max(68, desktopH * 0.08));
-                const cvH = Math.round(Math.min(700, desktopH * 0.76));
-                winCv.el.style.left = `${cvLeft}px`;
-                winCv.el.style.top = `${cvTop}px`;
-                winCv.el.style.width = `${cvW}px`;
-                winCv.el.style.height = `${cvH}px`;
-            }
-        } else if (w >= 980) {
-            // Medium screens (1024 - 1399px)
+            // My Stuff (Shifted right so it never overlaps contacts)
             if (!winProjects.hasBeenDragged && !winProjects.isMaximized) {
-                const projW = Math.round(Math.min(540, w * 0.40));
-                const projLeft = Math.round(w * 0.27);
-                const projTop = 44;
-                const projH = Math.round(Math.min(520, desktopH * 0.63));
+                const projLeft = Math.round(Math.max(contactRight + 18, w * 0.30));
+                const projW = Math.round(Math.min(840, Math.max(720, w * 0.44)));
+                const projTop = Math.round(Math.max(42, desktopH * 0.045));
+                const projH = Math.round(Math.min(640, desktopH * 0.70));
                 winProjects.el.style.left = `${projLeft}px`;
                 winProjects.el.style.top = `${projTop}px`;
                 winProjects.el.style.width = `${projW}px`;
                 winProjects.el.style.height = `${projH}px`;
             }
 
+            // CV (Right side, enlarged to 640px x 910px as requested)
+            if (!winCv.hasBeenDragged && !winCv.isMaximized) {
+                const cvW = 640;
+                const cvLeft = Math.round(w - cvW - 24);
+                const cvTop = Math.round(Math.max(40, desktopH * 0.03));
+                const cvH = Math.round(Math.min(910, desktopH - 12));
+                winCv.el.style.left = `${cvLeft}px`;
+                winCv.el.style.top = `${cvTop}px`;
+                winCv.el.style.width = `${cvW}px`;
+                winCv.el.style.height = `${cvH}px`;
+            }
+        } else if (w >= 980) {
+            // Medium screens (980 - 1399px)
+            let contactRight = 360;
             if (winContact && !winContact.hasBeenDragged && !winContact.isMaximized) {
-                const contactW = Math.round(Math.min(350, w * 0.25));
-                const contactLeft = Math.round(Math.max(60, w * 0.085));
+                const contactW = Math.round(Math.min(340, Math.max(280, w * 0.24)));
+                const contactLeft = Math.round(Math.max(24, w * 0.03));
                 const contactTop = Math.round(Math.max(190, desktopH * 0.38));
                 const contactH = Math.round(Math.min(420, desktopH * 0.50));
                 winContact.el.style.left = `${contactLeft}px`;
                 winContact.el.style.top = `${contactTop}px`;
                 winContact.el.style.width = `${contactW}px`;
                 winContact.el.style.height = `${contactH}px`;
+                contactRight = contactLeft + contactW;
+            }
+
+            if (!winProjects.hasBeenDragged && !winProjects.isMaximized) {
+                const projLeft = Math.round(contactRight + 14);
+                const projW = Math.round(Math.min(700, Math.max(540, w * 0.44)));
+                const projTop = 44;
+                const projH = Math.round(Math.min(540, desktopH * 0.65));
+                winProjects.el.style.left = `${projLeft}px`;
+                winProjects.el.style.top = `${projTop}px`;
+                winProjects.el.style.width = `${projW}px`;
+                winProjects.el.style.height = `${projH}px`;
             }
 
             if (!winCv.hasBeenDragged && !winCv.isMaximized) {
-                const cvW = Math.round(Math.min(390, w * 0.28));
-                const cvLeft = Math.round(Math.min(w - cvW - 20, w * 0.69));
-                const cvTop = Math.round(Math.max(72, desktopH * 0.09));
-                const cvH = Math.round(Math.min(590, desktopH * 0.74));
+                const cvW = Math.min(640, Math.round(w * 0.48));
+                const cvLeft = Math.round(w - cvW - 16);
+                const cvTop = Math.round(Math.max(42, desktopH * 0.04));
+                const cvH = Math.round(Math.min(910, desktopH - 12));
                 winCv.el.style.left = `${cvLeft}px`;
                 winCv.el.style.top = `${cvTop}px`;
                 winCv.el.style.width = `${cvW}px`;
@@ -1390,28 +1626,28 @@
             }
         } else if (w > 768) {
             // Small desktop / Tablet landscape (769 - 979px)
-            if (!winProjects.hasBeenDragged && !winProjects.isMaximized) {
-                winProjects.el.style.left = '190px';
-                winProjects.el.style.top = '40px';
-                winProjects.el.style.width = `${Math.min(440, w - 210)}px`;
-                winProjects.el.style.height = `${Math.min(460, desktopH * 0.58)}px`;
-            }
             if (winContact && !winContact.hasBeenDragged && !winContact.isMaximized) {
-                winContact.el.style.left = '45px';
+                winContact.el.style.left = '24px';
                 winContact.el.style.top = `${Math.round(desktopH * 0.44)}px`;
-                winContact.el.style.width = '300px';
+                winContact.el.style.width = '290px';
                 winContact.el.style.height = `${Math.min(380, desktopH * 0.50)}px`;
             }
+            if (!winProjects.hasBeenDragged && !winProjects.isMaximized) {
+                winProjects.el.style.left = '328px';
+                winProjects.el.style.top = '40px';
+                winProjects.el.style.width = `${Math.min(460, w - 344)}px`;
+                winProjects.el.style.height = `${Math.min(460, desktopH * 0.58)}px`;
+            }
             if (!winCv.hasBeenDragged && !winCv.isMaximized) {
-                const cvW = 300;
-                winCv.el.style.left = `${w - cvW - 16}px`;
-                winCv.el.style.top = '70px';
+                const cvW = Math.min(640, Math.round(w * 0.55));
+                winCv.el.style.left = `${w - cvW - 12}px`;
+                winCv.el.style.top = '42px';
                 winCv.el.style.width = `${cvW}px`;
-                winCv.el.style.height = `${Math.min(500, desktopH * 0.70)}px`;
+                winCv.el.style.height = `${Math.min(910, desktopH - 12)}px`;
             }
         } else {
             // Mobile & small screens (w <= 768): Clean fluid vertical cascade
-            [winCv, winProjects, winReel, winContact].forEach(wObj => {
+            [winCv, winProjects, winContact].forEach(wObj => {
                 if (wObj && !wObj.hasBeenDragged) {
                     wObj.el.style.left = '';
                     wObj.el.style.top = '';
@@ -1420,37 +1656,17 @@
                 }
             });
         }
-
-        // Configure reel position if opened later by clicking icon
-        if (winReel && !winReel.hasBeenDragged && !winReel.isMaximized) {
-            const reelW = Math.min(480, Math.floor(w * 0.32));
-            winReel.el.style.width = `${reelW}px`;
-            winReel.el.style.height = `${Math.min(340, Math.floor(desktopH * 0.50))}px`;
-            winReel.el.style.left = `${Math.max(20, w - reelW - 36)}px`;
-            winReel.el.style.top = '60px';
-        }
     }
 
     function openScatteredWorkspace() {
         arrangeScatteredWindows();
 
         // Staggered animated opening sequence: CV -> Contact -> Archive (Projects in front)
-        // reel.mp4 is kept closed initially, ready to open on icon click
         const sequence = [
             { key: 'cv', delay: 40 },
             { key: 'contact', delay: 140 },
             { key: 'projects', delay: 280 }
         ];
-
-        // Ensure reel is closed on start
-        const winReel = windows['reel'];
-        if (winReel) {
-            winReel.el.classList.add('is-closed');
-            winReel.el.classList.remove('is-focused');
-            if (winReel.tab) winReel.tab.style.display = 'none';
-            const vid = document.getElementById('kali-os-video');
-            if (vid) vid.pause();
-        }
 
         sequence.forEach(({ key, delay }) => {
             setTimeout(() => {
@@ -1612,7 +1828,6 @@
         initWindows();
         initDesktopIcons();
         initCvControls();
-        initVideoControls();
         initPublicDomainFileManager();
         initContactWindowActions();
         initMacosSpacesDesktopTransition();

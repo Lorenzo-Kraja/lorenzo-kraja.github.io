@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { padding: 40px; background: #eaeaea; }
+        .test-section { margin-bottom: 80px; background: #fff; padding: 40px; border: 1px solid #ccc; max-width: 1440px; margin-left: auto; margin-right: auto; }
+        h2 { font-family: monospace; margin-bottom: 24px; }
+
+        /* Proposal A: Plate 5 full width hero (~1360px max), then Plate 6 & 7 pair */
+        .digital-editorial-hero {
+            width: 100%;
+            max-width: 1360px;
+            margin: 0 auto 40px auto;
+        }
+        .digital-editorial-hero .digital-image-box {
+            border: 1.5px dashed rgba(0, 0, 0, 0.28);
+            padding: 6px;
+            background: #ffffff;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .digital-editorial-hero img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Proposal B: Row 3 with Plate 5 (larger left column) and Plate 6 + 7 stacked on right?
+           Or Plate 5 (wide), Plate 6 and Plate 7 in a 3-item layout */
+        .digital-row3-trio-staggered {
+            display: grid;
+            grid-template-columns: 1.5fr 1.2fr 1fr;
+            gap: 28px;
+            align-items: end;
+            max-width: 1360px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="fos-project-body">
+    <div class="test-section">
+        <h2>Proposal A: Plate 5 Hero (Much Bigger, 100% width) + Plate 06 & 07 Editorial Pair</h2>
+        <div class="digital-tree-node digital-plate-node">
+            <div class="digital-node-header">
+                <span class="digital-plate-badge">ROW 03</span>
+                <span class="digital-plate-title">&mdash;&mdash; PLATE 05 &bull; 06 &bull; 07</span>
+            </div>
+            <div class="digital-sub-branch">
+                <!-- Plate 05 Hero (Much bigger) -->
+                <div class="digital-editorial-hero" id="prop-a-plate-05">
+                    <div class="digital-image-box">
+                        <img src="../images/Jewelry/5_6_joined.jpg" alt="Plate 05">
+                    </div>
+                </div>
+                <!-- Editorial Pair: Plate 06 (model) & Plate 07 (clasp) -->
+                <div class="digital-editorial-pair" style="margin-top: 36px;">
+                    <div class="digital-editorial-item digital-item-6" id="prop-a-plate-06">
+                        <div class="digital-image-box">
+                            <img src="../images/Jewelry/6008163273330592822.jpg" alt="Plate 06">
+                        </div>
+                    </div>
+                    <div class="digital-editorial-item digital-item-7" id="prop-a-plate-07" style="margin-top: 40px;">
+                        <div class="digital-image-box">
+                            <img src="../images/Jewelry/7.png" alt="Plate 07">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Proposal B: 2-Column with Plate 5 on left (enlarged) and Plate 6 + 7 arranged</h2>
+        <div class="digital-tree-node digital-plate-node">
+            <div class="digital-node-header">
+                <span class="digital-plate-badge">ROW 03</span>
+                <span class="digital-plate-title">&mdash;&mdash; PLATE 05 &bull; 06 &bull; 07 (AS VARIANT)</span>
+            </div>
+            <div class="digital-sub-branch">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 36px; max-width: 1360px; margin: 0 auto; align-items: start;">
+                    <!-- Left: Plate 5 (enlarged) and Plate 6 -->
+                    <div style="display: flex; flex-direction: column; gap: 36px;">
+                        <div class="digital-image-box" style="border: 1.5px dashed rgba(0,0,0,0.28); padding: 6px; background: #fff;">
+                            <img src="../images/Jewelry/5_6_joined.jpg" alt="Plate 05" style="width: 100%; display: block;">
+                        </div>
+                        <div class="digital-image-box" style="border: 1.5px dashed rgba(0,0,0,0.28); padding: 6px; background: #fff;">
+                            <img src="../images/Jewelry/6008163273330592822.jpg" alt="Plate 06" style="width: 100%; display: block;">
+                        </div>
+                    </div>
+                    <!-- Right: Plate 7 (tall) -->
+                    <div>
+                        <div class="digital-image-box" style="border: 1.5px dashed rgba(0,0,0,0.28); padding: 6px; background: #fff;">
+                            <img src="../images/Jewelry/7.png" alt="Plate 07" style="width: 100%; display: block;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
