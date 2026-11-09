@@ -15,7 +15,8 @@
     // --------------- State ---------------
     let highestZIndex = 50;
     const windows = {};
-    const winKeys = ['cv', 'projects', 'contact'];
+    const winKeys = ['cv', 'projects', 'contact', 'preview'];
+    let activePreviewFile = null;
     let activeWinKey = 'projects';
     let allMinimized = false;
     let prevStatesBeforeShowDesktop = {};
@@ -239,8 +240,9 @@
     function getWindowTitle(key) {
         switch (key) {
             case 'cv': return 'curriculum.pdf — Document Viewer';
-            case 'projects': return 'My Stuff';
+            case 'projects': return 'Personal Stuff';
             case 'contact': return 'contacts.txt — Text Editor';
+            case 'preview': return activePreviewFile ? `${activePreviewFile.name} — Image Viewer` : 'Image Viewer';
             default: return 'Desktop';
         }
     }
@@ -725,7 +727,7 @@
         }
     }
 
-    // --------------- Projects Data (macOS Finder / My Stuff) ---------------
+    // --------------- Projects Data (macOS Finder / Personal Stuff) ---------------
     const PROJECT_FOLDERS = [
     {
             "id": "jewelry-inspiration",
@@ -1037,6 +1039,50 @@
         let history = [{ view: 'icons', inRoot: true, folderIdx: 0 }];
         let historyIdx = 0;
 
+        function openImageWindow(file, folder) {
+            if (!file) return;
+            activePreviewFile = file;
+
+            const winEl = document.getElementById('kali-win-preview');
+            const imgEl = document.getElementById('preview-win-img');
+            const titleEl = document.getElementById('preview-win-title');
+            const tabLabel = document.getElementById('tab-preview-label');
+            const statusLeft = document.getElementById('preview-win-status-left');
+            const statusRight = document.getElementById('preview-win-status-right');
+
+            if (imgEl) {
+                imgEl.src = file.src;
+                imgEl.alt = file.name;
+            }
+
+            const titleText = `${file.name} — Image Viewer`;
+            if (titleEl) titleEl.textContent = titleText;
+            if (tabLabel) tabLabel.textContent = file.name;
+            if (statusLeft) {
+                statusLeft.textContent = `${file.name} • ${file.subType || 'PNG image'} • ${file.size}`;
+            }
+            if (statusRight) {
+                statusRight.textContent = `${folder ? folder.name : 'Personal Stuff'} • 100%`;
+            }
+
+            if (winEl && windows['preview'] && !windows['preview'].hasBeenDragged && !windows['preview'].isMaximized) {
+                const desktop = document.getElementById('kali-os-desktop') || document.body;
+                const dw = desktop.clientWidth || window.innerWidth;
+                const dh = desktop.clientHeight || window.innerHeight;
+                const winW = Math.min(700, Math.round(dw * 0.72));
+                const winH = Math.min(540, Math.round(dh * 0.72));
+                const left = Math.max(30, Math.round((dw - winW) / 2));
+                const top = Math.max(40, Math.round((dh - winH) / 2));
+
+                winEl.style.width = `${winW}px`;
+                winEl.style.height = `${winH}px`;
+                winEl.style.left = `${left}px`;
+                winEl.style.top = `${top}px`;
+            }
+
+            openWindow('preview');
+        }
+
         function openPreview(fileIdx) {
             activeFileIdx = fileIdx;
             isPreviewOpen = true;
@@ -1196,7 +1242,7 @@
                     <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor">
                         <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h3.879a1.5 1.5 0 0 1 1.06.44l1.122 1.12A.5.5 0 0 0 8.914 4H13.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/>
                     </svg>
-                    <span>My Stuff</span>
+                    <span>Personal Stuff</span>
                 </li>
                 ${PROJECT_FOLDERS.map((f, idx) => `
                     <li class="pd-sidebar-item ${(!inRoot && idx === activeFolderIdx) ? 'active' : ''}" data-idx="${idx}">
@@ -1315,13 +1361,22 @@
                         openPreview(fIdx);
                     };
 
+                    const openDirect = (e) => {
+                        e.stopPropagation();
+                        openPreview(fIdx);
+                        const file = folder.files[fIdx];
+                        if (file) {
+                            openImageWindow(file, folder);
+                        }
+                    };
+
                     card.addEventListener('click', pick);
-                    card.addEventListener('dblclick', pick);
+                    card.addEventListener('dblclick', openDirect);
 
                     card.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter') {
                             e.preventDefault();
-                            pick(e);
+                            openDirect(e);
                         }
                     });
                 });
@@ -1409,6 +1464,12 @@
             document.querySelectorAll('.pd-preview-img-target').forEach(img => {
                 img.src = file.src;
                 img.alt = file.name;
+                img.style.cursor = 'pointer';
+                img.title = 'Fai doppio clic per aprire la finestra';
+                img.ondblclick = (e) => {
+                    e.stopPropagation();
+                    openImageWindow(file, folder);
+                };
             });
             document.querySelectorAll('.pd-preview-title-target').forEach(el => {
                 el.textContent = file.name;
@@ -1455,17 +1516,28 @@
             `).join('');
 
             filesContainer.querySelectorAll('.pd-file-row').forEach(row => {
+                const fIdx = parseInt(row.dataset.fileIdx, 10);
+
                 const handleSelect = (e) => {
                     e.stopPropagation();
-                    const fIdx = parseInt(row.dataset.fileIdx, 10);
                     openPreview(fIdx);
                 };
 
+                const handleOpen = (e) => {
+                    e.stopPropagation();
+                    openPreview(fIdx);
+                    const file = folder.files[fIdx];
+                    if (file) {
+                        openImageWindow(file, folder);
+                    }
+                };
+
                 row.addEventListener('click', handleSelect);
+                row.addEventListener('dblclick', handleOpen);
                 row.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        handleSelect(e);
+                        handleOpen(e);
                     }
                 });
             });
@@ -1548,7 +1620,7 @@
         if (w >= 1400) {
             // Large screens (Exact match to requested user composition):
             // 1. Contacts in lower-left
-            // 2. My Stuff in center-top (positioned right of contacts to avoid any overlap)
+            // 2. Personal Stuff in center-top (positioned right of contacts to avoid any overlap)
             // 3. CV on right (enlarged to 640px x 910px)
 
             // Contacts (Lower-Left)
@@ -1565,7 +1637,7 @@
                 contactRight = contactLeft + contactW;
             }
 
-            // My Stuff (Shifted right so it never overlaps contacts)
+            // Personal Stuff (Shifted right so it never overlaps contacts)
             if (!winProjects.hasBeenDragged && !winProjects.isMaximized) {
                 const projLeft = Math.round(Math.max(contactRight + 18, w * 0.30));
                 const projW = Math.round(Math.min(840, Math.max(720, w * 0.44)));

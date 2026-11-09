@@ -102,9 +102,9 @@
         <!-- DESKTOP ICONS (Disposte in modo casuale / organico, non troppo sparse) -->
         <div class="kali-desktop-icons-layer" id="kali-icons-layer">
 
-            <!-- Icon 1: MY STUFF (macOS / public---domain Cyan Folder) -->
+            <!-- Icon 1: PERSONAL STUFF (macOS / public---domain Cyan Folder) -->
             <div class="kali-desktop-icon kali-icon-dir" id="icon-projects" tabindex="0" role="button"
-                aria-label="Apri My Stuff" title="Doppio clic o Invio per aprire My Stuff"
+                aria-label="Apri Personal Stuff" title="Doppio clic o Invio per aprire Personal Stuff"
                 style="top: 24px; left: 24px;">
                 <div class="kali-icon-thumb kali-thumb-cyan-folder">
                     <svg viewBox="0 0 54 44" width="48" height="40" fill="none">
@@ -117,7 +117,7 @@
                     </svg>
                     <span class="kali-icon-badge kali-badge-cyan">STUFF</span>
                 </div>
-                <span class="kali-icon-label">My Stuff</span>
+                <span class="kali-icon-label">Personal Stuff</span>
             </div>
 
             <!-- Icon 2: contacts.txt (Text File) -->
@@ -382,10 +382,10 @@
         </div>
 
         <!-- ========================================================
-             WINDOW 3: MY STUFF (macOS Finder / public---domain Style)
+             WINDOW 3: PERSONAL STUFF (macOS Finder / public---domain Style)
              ======================================================== -->
         <div class="kali-window kali-window-projects is-closed" id="kali-win-projects" role="region"
-            aria-label="My Stuff — File Manager">
+            aria-label="Personal Stuff — File Manager">
             <!-- Titlebar (macOS / Virgil Abloh Style with Gray Gradient) -->
             <div class="kali-titlebar" id="kali-tb-projects">
                 <div class="kali-controls">
@@ -397,7 +397,7 @@
                         title="Ingrandisci"></button>
                 </div>
                 <div class="kali-title-info">
-                    <span class="kali-title-text">My Stuff</span>
+                    <span class="kali-title-text">Personal Stuff</span>
                 </div>
                 <div class="kali-titlebar-spacer" aria-hidden="true"></div>
             </div>
@@ -432,7 +432,7 @@
                     </div>
 
                     <div class="pd-breadcrumbs" id="pd-breadcrumbs-wrap">
-                        <span class="pd-breadcrumb-item active" id="pd-crumb-root">My Stuff</span>
+                        <span class="pd-breadcrumb-item active" id="pd-crumb-root">Personal Stuff</span>
                         <span class="pd-breadcrumb-sep" id="pd-crumb-sep" style="display:none;">&rsaquo;</span>
                         <span class="pd-breadcrumb-item" id="pd-crumb-sub" style="display:none;"></span>
                     </div>
@@ -520,7 +520,7 @@
             <!-- VIEW 2: 3-Column Miller Columns Body from public---domain Reference (Toggleable) -->
             <div class="pd-fm-body pd-3col-body" id="pd-columns-view" style="display:none;">
                 <!-- Column 1: Folders List with count pills -->
-                <nav class="pd-col-folders" id="pd-folders-list" aria-label="Cartelle My Stuff">
+                <nav class="pd-col-folders" id="pd-folders-list" aria-label="Cartelle Personal Stuff">
                     <!-- Injected dynamically by desktop.js with Jewelry Inspiration -->
                 </nav>
 
@@ -586,7 +586,7 @@
                     <span id="pd-status-summary">19 file &bull; Jewelry Inspiration</span>
                 </div>
                 <div class="kali-status-right">
-                    <span>My Stuff &bull; Fai doppio clic su una cartella per aprirla</span>
+                    <span>Personal Stuff &bull; Fai doppio clic su una cartella per aprirla</span>
                 </div>
             </div>
         </div>
@@ -659,6 +659,42 @@
             </div>
         </div>
 
+        <!-- ========================================================
+             WINDOW 5: IMAGE VIEWER / PREVIEW
+             ======================================================== -->
+        <div class="kali-window kali-window-preview is-closed" id="kali-win-preview" role="region"
+            aria-label="Anteprima immagine — Image Viewer">
+            <!-- Titlebar -->
+            <div class="kali-titlebar" id="kali-tb-preview">
+                <div class="kali-controls">
+                    <button class="kali-btn kali-btn-close" data-win="preview" aria-label="Chiudi" title="Chiudi"></button>
+                    <button class="kali-btn kali-btn-min" data-win="preview" aria-label="Riduci a icona" title="Riduci a icona"></button>
+                    <button class="kali-btn kali-btn-max" data-win="preview" aria-label="Ingrandisci" title="Ingrandisci"></button>
+                </div>
+                <div class="kali-title-info">
+                    <span class="kali-title-text" id="preview-win-title">01.png — Image Viewer</span>
+                </div>
+                <div class="kali-titlebar-spacer" aria-hidden="true"></div>
+            </div>
+
+            <!-- Content Area: Image Viewer Body -->
+            <div class="kali-preview-body" id="preview-win-body">
+                <div class="kali-preview-img-wrap">
+                    <img id="preview-win-img" src="" alt="Anteprima file" draggable="false">
+                </div>
+            </div>
+
+            <!-- Statusbar -->
+            <div class="kali-statusbar">
+                <div class="kali-status-left" id="preview-win-status-left">
+                    <span>01.png &bull; PNG image</span>
+                </div>
+                <div class="kali-status-right" id="preview-win-status-right">
+                    <span>Personal Stuff &bull; 100%</span>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- Applications Popup Menu -->
@@ -674,7 +710,7 @@
             </button>
             <button class="kali-app-menu-item" data-action="win" data-target="projects">
                 <span class="kali-app-icon">&#128193;</span>
-                <span class="kali-app-name">My Stuff — File Manager</span>
+                <span class="kali-app-name">Personal Stuff — File Manager</span>
             </button>
             <button class="kali-app-menu-item" data-action="win" data-target="contact">
                 <span class="kali-app-icon">&#128221;</span>
@@ -717,11 +753,15 @@
             </button>
             <button class="kali-task-tab active" data-win="projects" id="tab-projects">
                 <span class="kali-tab-dot"></span>
-                <span>My Stuff</span>
+                <span>Personal Stuff</span>
             </button>
             <button class="kali-task-tab" data-win="contact" id="tab-contact" style="display:none;">
                 <span class="kali-tab-dot"></span>
                 <span>contacts.txt</span>
+            </button>
+            <button class="kali-task-tab" data-win="preview" id="tab-preview" style="display:none;">
+                <span class="kali-tab-dot"></span>
+                <span id="tab-preview-label">Image Viewer</span>
             </button>
         </div>
 

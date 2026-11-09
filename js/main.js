@@ -35,21 +35,27 @@ const PROJECTS = [
         items: [
             {
                 image: "images/harp-chair/01.gif",
+                video: "images/harp-chair/01.mp4",
                 caption: "HARP_01.GIF",
                 aspect: "landscape",
                 overlayLeft: "HARP CHAIR",
                 overlayCenter: "FURNITURE DESIGN",
                 overlayRight: "2025",
+                duration: 4700,
             },
             {
                 image: "images/harp-chair/02.gif",
+                video: "images/harp-chair/02.mp4",
                 caption: "HARP_02.GIF",
                 aspect: "landscape",
+                duration: 2100,
             },
             {
                 image: "images/harp-chair/03.gif",
+                video: "images/harp-chair/03.mp4",
                 caption: "HARP_03.GIF",
                 aspect: "landscape",
+                duration: 2100,
             },
         ],
     },
@@ -461,11 +467,15 @@ function renderProjectWindow(project, idx, customClass = "") {
     const winId = "project-win-" + idx;
     const fileSlug = (project.title || "project").toLowerCase().replace(/[^a-z0-9]/g, "_") + ".prj";
 
-    const slidesHtml = items.map((item, i) => `
+    const slidesHtml = items.map((item, i) => {
+        const mediaTag = item.video
+            ? `<video src="${escapeHTML(item.video)}" poster="${escapeHTML(item.image)}" muted playsinline webkit-playsinline preload="auto" draggable="false"></video>`
+            : `<img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.caption || project.title)}" loading="lazy" draggable="false">`;
+        return `
         <div class="fg-slide ${i === 0 ? 'is-active' : ''}" data-slide-index="${i}">
-            <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.caption || project.title)}" loading="lazy" draggable="false">
-        </div>
-    `).join("");
+            ${mediaTag}
+        </div>`;
+    }).join("");
 
     const totalCountStr = String(items.length).padStart(2, '0');
 
@@ -494,45 +504,7 @@ function renderProjectWindow(project, idx, customClass = "") {
                 <div class="kali-titlebar-spacer" aria-hidden="true"></div>
             </div>
 
-            <!-- 2. Menubar (macOS / XFCE Style) -->
-            <div class="kali-menubar">
-                <span class="kali-menu-item" data-i18n="win.menu.file">File</span>
-                <span class="kali-menu-item" data-i18n="win.menu.edit">Modifica</span>
-                <span class="kali-menu-item" data-i18n="win.menu.view">Vista</span>
-                <span class="kali-menu-item" data-i18n="win.menu.go">Vai</span>
-                <span class="kali-menu-item" data-i18n="win.menu.help">Aiuto</span>
-            </div>
-
-            <!-- 3. Toolbar -->
-            <div class="kali-nav-toolbar">
-                <div class="kali-tool-group">
-                    <a href="${escapeHTML(project.url)}" class="kali-tb-btn fg-window-view-btn" title="Apri pagina del progetto">
-                        <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 9v4H3V4h4M9 3h4v4M13 3L7 9" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span class="kali-tb-label" data-i18n="nav.fullProject">Full Project</span>
-                    </a>
-                </div>
-                <div class="kali-tb-sep"></div>
-                <div class="kali-tool-group">
-                    <button class="kali-tb-btn fg-win-prev-btn" type="button" title="Immagine precedente" aria-label="Immagine precedente">
-                        <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
-                            <path d="M10 3L5 8l5 5V3z"/>
-                        </svg>
-                    </button>
-                    <button class="kali-tb-btn fg-win-next-btn" type="button" title="Immagine successiva" aria-label="Immagine successiva">
-                        <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
-                            <path d="M6 3l5 5-5 5V3z"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="kali-tb-sep"></div>
-                <div class="kali-tool-group kali-tb-right">
-                    <span class="kali-tb-info" data-meta-idx="${idx}">${escapeHTML(getProjectMeta(idx))}</span>
-                </div>
-            </div>
-
-            <!-- 4. Content Area (16:9 Landscape Format, Smooth Fade Slideshow, Superimposed "FULL PROJECT" on Hover) -->
+            <!-- Content Area (16:9 Landscape Format, Smooth Fade Slideshow) -->
             <a href="${escapeHTML(project.url)}" class="fg-hero-window-content fg-project-slideshow" aria-label="Apri progetto: ${escapeHTML(project.title)}">
                 <div class="fg-slides-track">
                     ${slidesHtml}
@@ -540,16 +512,9 @@ function renderProjectWindow(project, idx, customClass = "") {
                 <div class="fg-slides-counter">
                     <span class="fg-slide-cur">01</span> / <span class="fg-slide-total">${totalCountStr}</span>
                 </div>
-                <!-- Superimposed "FULL PROJECT" Overlay on hover -->
-                <div class="fg-project-overlay" aria-hidden="true">
-                    <div class="fg-project-overlay-center">
-                        <span class="fg-overlay-badge" data-i18n="nav.fullProject">FULL PROJECT</span>
-                        <span class="fg-overlay-arrow">&rarr;</span>
-                    </div>
-                </div>
             </a>
 
-            <!-- 5. Statusbar -->
+            <!-- Statusbar -->
             <div class="kali-statusbar">
                 <div class="kali-status-left">
                     <span>${escapeHTML(project.title)}</span>
@@ -557,7 +522,7 @@ function renderProjectWindow(project, idx, customClass = "") {
                     <span data-meta-idx="${idx}">${escapeHTML(getProjectMeta(idx))}</span>
                 </div>
                 <div class="kali-status-right">
-                    <span>16:9 Landscape &bull; Lorenzo Kraja OS</span>
+                    <span>Lorenzo Kraja</span>
                 </div>
             </div>
         </div>`;
@@ -606,12 +571,33 @@ function initProjectSlideshows() {
         if (totalCount <= 0) return;
 
         const curCounterEl = winEl.querySelector('.fg-slide-cur');
-        const prevBtn = winEl.querySelector('.fg-win-prev-btn');
-        const nextBtn = winEl.querySelector('.fg-win-next-btn');
 
         let currentIndex = 0;
         let autoplayTimer = null;
         let isPaused = false;
+
+        function getSlideDuration(idx) {
+            if (proj.items && proj.items[idx] && proj.items[idx].duration) {
+                return proj.items[idx].duration;
+            }
+            return 3200;
+        }
+
+        // Attach ended listener to video slides so each animation plays exactly once to completion
+        slides.forEach((slide, sIdx) => {
+            const vid = slide.querySelector('video');
+            if (vid) {
+                vid.addEventListener('ended', () => {
+                    if (!isPaused && sIdx === currentIndex) {
+                        setTimeout(() => {
+                            if (!isPaused && sIdx === currentIndex) {
+                                goToSlide(currentIndex + 1);
+                            }
+                        }, 250);
+                    }
+                });
+            }
+        });
 
         function goToSlide(idx) {
             if (idx < 0) idx = totalCount - 1;
@@ -619,67 +605,82 @@ function initProjectSlideshows() {
             currentIndex = idx;
 
             slides.forEach((slide, i) => {
+                const vid = slide.querySelector('video');
                 if (i === currentIndex) {
                     slide.classList.add('is-active');
+                    if (vid) {
+                        try {
+                            vid.currentTime = 0;
+                            const playPromise = vid.play();
+                            if (playPromise !== undefined) {
+                                playPromise.catch(() => {});
+                            }
+                        } catch {}
+                    }
                 } else {
                     slide.classList.remove('is-active');
+                    if (vid) {
+                        try {
+                            vid.pause();
+                            vid.currentTime = 0;
+                        } catch {}
+                    }
                 }
             });
 
             if (curCounterEl) {
                 curCounterEl.textContent = String(currentIndex + 1).padStart(2, '0');
             }
+
+            scheduleNext();
         }
 
-        function startAutoplay() {
-            if (totalCount <= 1) return;
-            stopAutoplay();
-            const interval = (pIdx === 0) ? 4000 : 3200;
-            autoplayTimer = setInterval(() => {
+        function scheduleNext() {
+            if (autoplayTimer) {
+                clearTimeout(autoplayTimer);
+                autoplayTimer = null;
+            }
+            if (totalCount <= 1 || isPaused) return;
+
+            const activeVid = slides[currentIndex]?.querySelector('video');
+            // If the active slide has a video, native 'ended' handles advancement;
+            // timeout serves as safety fallback
+            const dur = getSlideDuration(currentIndex) + (activeVid ? 800 : 0);
+            autoplayTimer = setTimeout(() => {
                 if (!isPaused) {
                     goToSlide(currentIndex + 1);
                 }
-            }, interval);
+            }, dur);
         }
 
-        function stopAutoplay() {
-            if (autoplayTimer) {
-                clearInterval(autoplayTimer);
-                autoplayTimer = null;
-            }
-        }
-
-        // Prev & Next Toolbar Buttons
-        if (prevBtn) {
-            prevBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                goToSlide(currentIndex - 1);
-                startAutoplay();
-            });
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                goToSlide(currentIndex + 1);
-                startAutoplay();
-            });
-        }
-
-        // Pause slideshow on hover to invite viewing / clicking "FULL PROJECT"
+        // Pause slideshow on hover to invite viewing / examining project details
         winEl.addEventListener('mouseenter', () => {
             isPaused = true;
+            if (autoplayTimer) {
+                clearTimeout(autoplayTimer);
+                autoplayTimer = null;
+            }
+            const activeVid = slides[currentIndex]?.querySelector('video');
+            if (activeVid) activeVid.pause();
         });
 
         winEl.addEventListener('mouseleave', () => {
             isPaused = false;
+            const activeVid = slides[currentIndex]?.querySelector('video');
+            if (activeVid) {
+                if (activeVid.ended) {
+                    goToSlide(currentIndex + 1);
+                } else {
+                    activeVid.play().catch(() => {});
+                    scheduleNext();
+                }
+            } else {
+                scheduleNext();
+            }
         });
 
-        // Initialize first slide and start continuous crossfade autoplay
+        // Initialize first slide and start rotation
         goToSlide(0);
-        startAutoplay();
     });
 }
 
@@ -1665,12 +1666,15 @@ function initHeroWindows() {
                 e.preventDefault();
                 isMin = !isMin;
                 const tb = winEl.querySelector('.vlc-toolbar') || winEl.querySelector('.kali-nav-toolbar');
+                const sb = winEl.querySelector('.kali-statusbar');
                 if (isMin) {
                     if (contentEl) contentEl.style.display = 'none';
                     if (tb) tb.style.display = 'none';
+                    if (sb) sb.style.display = 'none';
                 } else {
                     if (contentEl) contentEl.style.display = '';
                     if (tb) tb.style.display = '';
+                    if (sb) sb.style.display = '';
                 }
             });
         }
