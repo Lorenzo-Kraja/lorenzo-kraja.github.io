@@ -219,6 +219,21 @@
             <a href="index.html" class="fos-nav-link" data-i18n="nav.backHome">&larr; Torna alla Home</a>
             <a href="jewelry.html" class="fos-nav-link" data-i18n="mikk.next">Prossimo Progetto: JEWELRY (2025) &rarr;</a>
         </footer>
+
+        <!-- Global Brand Footer with Working Interactive Links -->
+        <footer class="nb-footer nb-project-page-footer" id="contact">
+            <div class="nb-footer-links">
+                <a href="mailto:lorenzokraja99@gmail.com" class="nb-footer-link" id="footer-contact-link" data-i18n="nav.contact">Contacts</a>
+                <span class="nb-footer-sep">&bull;</span>
+                <a href="https://www.instagram.com/lorenzo.kraja?vrfl=emV0cDFlbW51NWFm" target="_blank" rel="noopener noreferrer" class="nb-footer-link">Instagram</a>
+                <span class="nb-footer-sep">&bull;</span>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="nb-footer-link">LinkedIn</a>
+                <span class="nb-footer-sep">&bull;</span>
+                <a href="mailto:lorenzokraja99@gmail.com" class="nb-footer-link">Email</a>
+            </div>
+            <div class="nb-footer-center">&copy; 2026 Lorenzo Kraja</div>
+            <div class="nb-footer-end" data-i18n="footer.rights">All rights reserved</div>
+        </footer>
     </main>
 
     <!-- i18n Translation Engine -->
@@ -226,26 +241,11 @@
 
     <!-- THEME & CLOCK SCRIPT -->
     <script>
-        // Live Clock
+        // Live Clock (Geolocation / User Timezone Synced)
         function startClock() {
-            const el = document.getElementById("live-clock");
-            if (!el) return;
-            const tick = () => {
-                try {
-                    const now = new Date();
-                    el.textContent = new Intl.DateTimeFormat("en-US", {
-                        timeZone: "Europe/Rome",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-                        hour12: false,
-                    }).format(now) + " RM";
-                } catch {
-                    el.textContent = "08:22:30 RM";
-                }
-            };
-            tick();
-            setInterval(tick, 1000);
+            if (window.I18N && typeof window.I18N.initLiveClock === 'function') {
+                window.I18N.initLiveClock('live-clock');
+            }
         }
 
         // Theme Toggle

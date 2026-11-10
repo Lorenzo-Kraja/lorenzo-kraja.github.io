@@ -29,34 +29,135 @@
     <!-- Animated Film Grain Background Overlay (same as main site) -->
     <div class="film-grain" aria-hidden="true"></div>
 
-    <!-- TOP SYSTEM BAR (Public Domain / Kali Linux Panel) -->
-    <header class="kali-os-topbar" role="banner">
-        <div class="kali-topbar-left">
-            <a href="index.html" class="kali-topbar-back" title="Torna alla Home">
-                <span class="kali-back-arrow">&#8592;</span>
-                <span class="kali-back-label">HOME</span>
+    <!-- CLASSIC MAC OS TOP MENU BAR (Synchronized with Home) -->
+    <nav class="mac-top-nav" id="mac-top-nav" aria-label="Mac OS System Menu Bar">
+        <div class="mac-nav-left">
+            <!-- App / Brand Name -->
+            <a href="index.html" class="mac-nav-brand nb-nav-home-link" aria-label="Lorenzo Kraja — Home">
+                <span class="nb-nav-home-text">Lorenzo Kraja</span>
             </a>
-            <span class="kali-topbar-sep">|</span>
-            <div class="kali-topbar-brand">
-                <span class="kali-brand-text">LORENZO KRAJA // OS</span>
-                <span class="kali-brand-tag">v2.4 [PUBLIC DOMAIN]</span>
+
+            <!-- Mac OS System Menus (Projects Dropdown & Contacts Dropdown) -->
+            <div class="mac-menu-bar-items" role="menubar">
+                <!-- 1. PROJECTS (Opens dropdown directly on hover or click) -->
+                <div class="mac-menu-item mac-menu-has-dropdown" id="mac-menu-projects" data-menu="projects">
+                    <button type="button" class="mac-menu-title" id="mac-projects-btn" aria-haspopup="true" aria-expanded="false">
+                        <span class="mac-menu-label" data-i18n="nav.projects">Projects</span>
+                        <span class="mac-dropdown-arrow" aria-hidden="true">&#9662;</span>
+                    </button>
+
+                    <!-- Dropdown Menu ("Tendina Progetti") -->
+                    <div class="mac-dropdown-menu" id="mac-projects-dropdown" role="menu" aria-label="Projects">
+                        <a href="index.html#hero-win-vlc" class="mac-dropdown-item mac-project-dropdown-item" role="menuitem">
+                            <span class="mac-item-badge">[ 02 ]</span>
+                            <span class="mac-item-text">Motion Reel</span>
+                            <span class="mac-item-arrow">&#9654;</span>
+                        </a>
+                        <div class="mac-dropdown-divider" role="separator"></div>
+                        <a href="harp-chair.html" class="mac-dropdown-item mac-project-dropdown-item" role="menuitem">
+                            <span class="mac-item-badge">[ 03 ]</span>
+                            <span class="mac-item-text">Harp Chair</span>
+                            <span class="mac-item-arrow">&rarr;</span>
+                        </a>
+                        <a href="mikk.html" class="mac-dropdown-item mac-project-dropdown-item" role="menuitem">
+                            <span class="mac-item-badge">[ 04 ]</span>
+                            <span class="mac-item-text">Mikk</span>
+                            <span class="mac-item-arrow">&rarr;</span>
+                        </a>
+                        <a href="jewelry.html" class="mac-dropdown-item mac-project-dropdown-item" role="menuitem">
+                            <span class="mac-item-badge">[ 05 ]</span>
+                            <span class="mac-item-text">Jewelry</span>
+                            <span class="mac-item-arrow">&rarr;</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 2. CONTACT (Opens dropdown directly on hover or click) -->
+                <div class="mac-menu-item mac-menu-has-dropdown" id="mac-menu-contact" data-menu="contact">
+                    <button type="button" class="mac-menu-title" id="mac-contact-btn" aria-haspopup="true" aria-expanded="false">
+                        <span class="mac-menu-label" data-i18n="nav.contact">Contatti</span>
+                        <span class="mac-dropdown-arrow" aria-hidden="true">&#9662;</span>
+                    </button>
+
+                    <!-- Dropdown Menu ("Tendina Contatti") -->
+                    <div class="mac-dropdown-menu" id="mac-contact-dropdown" role="menu" aria-label="Contact Channels">
+                        <a href="about.html" class="mac-dropdown-item" role="menuitem">
+                            <span class="mac-item-icon">
+                                <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+                                    <path d="M2 2h12v9H2V2zm1 1v7h10V3H3zm-2 9h14v2H1v-2zm5 1h4v-0.5H6v0.5z"/>
+                                </svg>
+                            </span>
+                            <span class="mac-item-text" data-i18n="nav.about">Chi Sono...</span>
+                        </a>
+
+                        <div class="mac-dropdown-divider" role="separator"></div>
+
+                        <a href="mailto:lorenzokraja99@gmail.com" class="mac-dropdown-item" role="menuitem">
+                            <span class="mac-item-icon">
+                                <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+                                    <path d="M1 3h14v10H1V3zm1 1v1.2l6 4.3 6-4.3V4H2zm12 8V6.4L8 10.7 2 6.4V12h12z"/>
+                                </svg>
+                            </span>
+                            <span class="mac-item-text">Email: lorenzokraja99@gmail.com</span>
+                        </a>
+
+                        <a href="https://www.instagram.com/lorenzo.kraja?vrfl=emV0cDFlbW51NWFm" target="_blank" rel="noopener noreferrer" class="mac-dropdown-item" role="menuitem">
+                            <span class="mac-item-icon">
+                                <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+                                    <path d="M5 2l-1 2H1v10h14V4h-3L11 2H5zm3 3.5a3.5 3.5 0 110 7 3.5 3.5 0 010-7zm0 1a2.5 2.5 0 100 5 2.5 2.5 0 000-5zm4-1.5a.75.75 0 110 1.5.75.75 0 010-1.5z"/>
+                                </svg>
+                            </span>
+                            <span class="mac-item-text">Instagram: @lorenzo.kraja</span>
+                            <span class="mac-item-arrow">&nearr;</span>
+                        </a>
+
+                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="mac-dropdown-item" role="menuitem">
+                            <span class="mac-item-icon">
+                                <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+                                    <path d="M5 2h6v2h4v10H1V4h4V2zm1 1v1h4V3H6zm-4 2v2h12V5H2zm0 3v5h12V8H2z"/>
+                                </svg>
+                            </span>
+                            <span class="mac-item-text">LinkedIn: Lorenzo Kraja</span>
+                            <span class="mac-item-arrow">&nearr;</span>
+                        </a>
+
+                        <a href="https://behance.net/SpiritWorks" target="_blank" rel="noopener noreferrer" class="mac-dropdown-item" role="menuitem">
+                            <span class="mac-item-icon">
+                                <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+                                    <path d="M8 1a7 7 0 100 14c1.1 0 2-.9 2-2 0-.5-.2-1-.2-1.5 0-.8.7-1.5 1.5-1.5H13c1.7 0 3-1.3 3-3 0-3.3-3.6-6-8-6zm-4 6a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm3-2a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm4 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm2 4a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"/>
+                                </svg>
+                            </span>
+                            <span class="mac-item-text">Behance: SpiritWorks</span>
+                            <span class="mac-item-arrow">&nearr;</span>
+                        </a>
+
+                        <a href="tel:3429787242" class="mac-dropdown-item" role="menuitem">
+                            <span class="mac-item-icon">
+                                <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+                                    <path d="M3.6 1.2c-.4-.4-1.1-.4-1.5 0L1 2.3c-.6.6-.8 1.5-.4 2.3 1.4 2.8 3.5 5.3 6.3 7.1.8.5 1.7.4 2.3-.2l1.2-1.2c.4-.4.4-1.1 0-1.5l-2.1-2.1c-.4-.4-1.1-.4-1.5 0l-.8.8C5.2 7 4.5 5.8 4.3 4.9l.8-.8c.4-.4.4-1.1 0-1.5L3.6 1.2z"/>
+                                </svg>
+                            </span>
+                            <span class="mac-item-text">Phone: +39 342 978 7242</span>
+                        </a>
+
+                        <div class="mac-dropdown-divider" role="separator"></div>
+
+                        <a href="assets/cv_lorenzo_kraja.pdf" target="_blank" rel="noopener noreferrer" class="mac-dropdown-item" role="menuitem">
+                            <span class="mac-item-icon">
+                                <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+                                    <path d="M3 1h8l3 3v11H3V1zm1 1v12h9V4.5L10.5 2H4zm2 2h3v2H6V4zm-1 6h6v3H5v-3z"/>
+                                </svg>
+                            </span>
+                            <span class="mac-item-text">Curriculum Vitae (PDF)</span>
+                            <span class="mac-item-arrow">&nearr;</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="kali-topbar-center">
-            <div class="kali-topbar-active-pill" id="kali-topbar-active">
-                <span class="kali-active-dot"></span>
-                <span id="kali-active-title">curriculum.pdf — Document Viewer</span>
-            </div>
-        </div>
-
-        <div class="kali-topbar-right">
-            <!-- Audio / Network Status indicators -->
-            <div class="kali-sys-indicators" aria-hidden="true">
-                <span class="kali-sys-pill" title="Network Connected">ETH0 &bull; OK</span>
-                <span class="kali-sys-pill" title="Audio Device">VOL 100%</span>
-            </div>
-
+        <!-- Right: Language Switcher, Geolocation Live Clock, Balloon Help, App Switcher, Theme Toggle -->
+        <div class="mac-nav-right">
             <!-- Mac OS Language Switcher (IT / EN) a sinistra dell'orario -->
             <div class="mac-lang-switch" id="lang-switch-about" role="group" aria-label="Language Switcher">
                 <button type="button" class="mac-lang-btn" data-lang="it" aria-pressed="false">IT</button>
@@ -64,15 +165,26 @@
                 <button type="button" class="mac-lang-btn active" data-lang="en" aria-pressed="true">EN</button>
             </div>
 
-            <!-- Live Clock (Rome Time) -->
-            <span id="live-clock" class="kali-topbar-clock">00:00:00 RM</span>
+            <!-- Geolocation Synced Clock -->
+            <span id="live-clock" class="mac-clock kali-topbar-clock"></span>
+
+            <div class="mac-help-icon" title="Mac OS Balloon Help" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor">
+                    <path d="M8 1C4.1 1 1 3.7 1 7c0 1.8.9 3.4 2.4 4.5-.1.8-.4 1.8-1.2 2.7 1.4 0 2.8-.5 3.8-1.4.6.1 1.3.2 2 .2 3.9 0 7-2.7 7-6s-3.1-6-7-6zm0 10.5c-.7 0-1.3-.1-1.9-.3l-.4-.1-.3.3c-.7.6-1.5.9-2.3 1 .4-.6.7-1.3.8-1.9l.1-.5-.4-.3C2.5 8.9 2 7.9 2 7c0-2.8 2.7-5 6-5s6 2.2 6 5-2.7 5-6 5zm.1-7.2c-.7 0-1.2.5-1.2 1.2h1c0-.2.1-.3.2-.3.2 0 .4.1.4.3 0 .2-.1.3-.3.5-.3.2-.5.5-.5.9v.3h1v-.2c0-.2.1-.3.3-.5.3-.2.5-.5.5-.9.1-.7-.5-1.3-1.4-1.3zm-.1 3.5c-.3 0-.5.2-.5.5s.2.5.5.5.5-.2.5-.5-.2-.5-.5-.5z"/>
+                </svg>
+            </div>
+
+            <div class="mac-app-icon" title="Finder Application Switcher" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor">
+                    <path d="M1 2h14v12H1V2zm1 1v2h12V3H2zm0 3v7h12V6H2zm1 1h4v5H3V7z"/>
+                </svg>
+            </div>
 
             <!-- Theme Toggle (Animated Sun / Moon Icons) -->
-            <button id="theme-toggle" class="nb-theme-toggle" aria-label="Cambia tema chiaro / scuro"
+            <button id="theme-toggle" class="mac-theme-toggle nb-theme-toggle" aria-label="Cambia tema chiaro / scuro"
                 title="Tema chiaro / scuro">
                 <span class="nb-theme-icon-wrap">
-                    <svg viewBox="0 0 512 512" width="20" height="20" fill="currentColor"
-                        class="nb-theme-icon nb-theme-icon-sun" aria-hidden="true">
+                    <svg viewBox="0 0 512 512" width="13" height="13" fill="currentColor" class="nb-theme-icon nb-theme-icon-sun" aria-hidden="true">
                         <circle cx="256" cy="256" r="128" />
                         <g>
                             <rect x="230" y="0" width="52" height="91" rx="26" />
@@ -85,15 +197,14 @@
                             <rect x="230" y="0" width="52" height="91" rx="26" transform="rotate(315 256 256)" />
                         </g>
                     </svg>
-                    <svg viewBox="0 0 512 512" width="20" height="20" fill="currentColor"
-                        class="nb-theme-icon nb-theme-icon-moon" aria-hidden="true">
+                    <svg viewBox="0 0 512 512" width="13" height="13" fill="currentColor" class="nb-theme-icon nb-theme-icon-moon" aria-hidden="true">
                         <path
                             d="M 129 3 L 125 5 L 123 7 L 113 13 L 109 16 L 104 20 L 99 24 L 93 29 L 69 53 L 63 60 L 59 65 L 55 70 L 52 74 L 40 92 L 37 97 L 32 106 L 25 120 L 21 129 L 19 134 L 16 142 L 14 148 L 11 157 L 9 164 L 8 168 L 7 172 L 4 187 L 3 193 L 2 199 L 1 208 L 0 220 L 0 252 L 1 264 L 2 272 L 3 279 L 4 285 L 5 290 L 6 295 L 10 311 L 12 318 L 15 327 L 18 335 L 20 340 L 22 345 L 27 356 L 30 362 L 36 373 L 39 378 L 44 386 L 46 389 L 48 392 L 53 399 L 56 403 L 60 408 L 64 413 L 71 421 L 90 440 L 97 446 L 103 451 L 108 455 L 112 458 L 119 463 L 122 465 L 125 467 L 133 472 L 140 476 L 153 483 L 166 489 L 171 491 L 176 493 L 184 496 L 187 497 L 190 498 L 200 501 L 216 505 L 221 506 L 226 507 L 232 508 L 239 509 L 247 510 L 259 511 L 291 511 L 303 510 L 312 509 L 318 508 L 324 507 L 339 504 L 343 503 L 354 500 L 360 498 L 369 495 L 377 492 L 382 490 L 391 486 L 405 479 L 414 474 L 419 471 L 425 467 L 434 461 L 441 456 L 446 452 L 451 448 L 458 442 L 481 419 L 487 412 L 491 407 L 495 402 L 498 398 L 508 382 L 510 379 L 508 380 L 506 381 L 504 383 L 496 387 L 482 394 L 475 397 L 470 399 L 462 402 L 450 406 L 443 408 L 431 411 L 416 414 L 409 415 L 402 416 L 392 417 L 347 417 L 337 416 L 330 415 L 324 414 L 318 413 L 313 412 L 304 410 L 300 409 L 293 407 L 283 404 L 280 403 L 272 400 L 267 398 L 262 396 L 255 393 L 249 390 L 239 385 L 230 380 L 222 375 L 210 367 L 206 364 L 202 361 L 197 357 L 192 353 L 184 346 L 165 327 L 158 319 L 154 314 L 150 309 L 147 305 L 144 301 L 136 289 L 131 281 L 126 272 L 123 266 L 118 256 L 115 249 L 113 244 L 111 239 L 108 231 L 107 228 L 104 218 L 102 211 L 101 207 L 99 198 L 98 193 L 97 187 L 96 181 L 95 174 L 94 164 L 94 119 L 95 109 L 96 102 L 97 95 L 100 80 L 103 68 L 105 61 L 109 49 L 112 41 L 114 36 L 117 29 L 121 21 L 128 7 L 130 5 L 132 1 Z" />
                     </svg>
                 </span>
             </button>
         </div>
-    </header>
+    </nav>
 
     <!-- DESKTOP WORKSPACE CANVAS -->
     <main class="kali-os-desktop" id="kali-os-desktop" role="main">
@@ -104,7 +215,7 @@
 
             <!-- Icon 1: PERSONAL STUFF (macOS / public---domain Cyan Folder) -->
             <div class="kali-desktop-icon kali-icon-dir" id="icon-projects" tabindex="0" role="button"
-                aria-label="Apri Personal Stuff" title="Doppio clic o Invio per aprire Personal Stuff"
+                aria-label="Open Personal Stuff" title="Double-click or Enter to open Personal Stuff"
                 style="top: 24px; left: 24px;">
                 <div class="kali-icon-thumb kali-thumb-cyan-folder">
                     <svg viewBox="0 0 54 44" width="48" height="40" fill="none">
@@ -117,12 +228,12 @@
                     </svg>
                     <span class="kali-icon-badge kali-badge-cyan">STUFF</span>
                 </div>
-                <span class="kali-icon-label">Personal Stuff</span>
+                <span class="kali-icon-label" data-i18n="finder.title">Personal Stuff</span>
             </div>
 
             <!-- Icon 2: contacts.txt (Text File) -->
             <div class="kali-desktop-icon kali-icon-txt" id="icon-contact" tabindex="0" role="button"
-                aria-label="Apri contacts.txt" title="Doppio clic o Invio per aprire contacts.txt"
+                aria-label="Open contacts.txt" title="Double-click or Enter to open contacts.txt"
                 style="top: 116px; left: 24px;">
                 <div class="kali-icon-thumb kali-thumb-txt">
                     <svg class="kali-svg-doc" viewBox="0 0 42 50" width="44" height="48" fill="none">
@@ -141,7 +252,7 @@
 
             <!-- Icon 3: curriculum.pdf (Media Preview) -->
             <div class="kali-desktop-icon kali-icon-pdf" id="icon-cv" tabindex="0" role="button"
-                aria-label="Apri curriculum.pdf" title="Doppio clic o Invio per aprire curriculum.pdf"
+                aria-label="Open curriculum.pdf" title="Double-click or Enter to open curriculum.pdf"
                 style="top: 24px; left: 122px;">
                 <div class="kali-icon-thumb kali-thumb-doc">
                     <img src="assets/cv-preview.jpg" alt="curriculum.pdf" class="kali-preview-doc-img"
@@ -153,11 +264,11 @@
 
             <!-- Icon 4: trash (In alto a destra all'angolo) -->
             <div class="kali-desktop-icon kali-icon-trash" id="icon-trash" tabindex="0" role="button"
-                aria-label="Cestino" title="Cestino di sistema" style="top: 24px; right: 28px; left: auto;">
+                aria-label="System Trash" title="System Trash" data-i18n-title="desktop.trashTitle" data-i18n-aria="desktop.trashTitle" style="top: 24px; right: 28px; left: auto;">
                 <div class="kali-icon-thumb kali-thumb-trash">
                     <img src="assets/trash.png" alt="trash" class="kali-trash-img" draggable="false">
                 </div>
-                <span class="kali-icon-label">trash</span>
+                <span class="kali-icon-label" data-i18n="desktop.trashLabel">trash</span>
             </div>
 
         </div>
@@ -170,14 +281,12 @@
             <!-- Titlebar (macOS / Virgil Abloh Style with Gray Gradient) -->
             <div class="kali-titlebar" id="kali-tb-cv">
                 <div class="kali-controls">
-                    <button class="kali-btn kali-btn-close" data-win="cv" aria-label="Chiudi" title="Chiudi"></button>
-                    <button class="kali-btn kali-btn-min" data-win="cv" aria-label="Riduci a icona"
-                        title="Riduci a icona"></button>
-                    <button class="kali-btn kali-btn-max" data-win="cv" aria-label="Ingrandisci"
-                        title="Ingrandisci"></button>
+                    <button class="kali-btn kali-btn-close" data-win="cv" aria-label="Close" title="Close" data-i18n-title="btn.close" data-i18n-aria="btn.close"></button>
+                    <button class="kali-btn kali-btn-min" data-win="cv" aria-label="Minimize" title="Minimize" data-i18n-title="btn.min" data-i18n-aria="btn.min"></button>
+                    <button class="kali-btn kali-btn-max" data-win="cv" aria-label="Maximize" title="Maximize" data-i18n-title="btn.max" data-i18n-aria="btn.max"></button>
                 </div>
                 <div class="kali-title-info">
-                    <span class="kali-title-text">curriculum.pdf — Document Viewer</span>
+                    <span class="kali-title-text" data-i18n="cv.title">curriculum.pdf — Document Viewer</span>
                 </div>
                 <div class="kali-titlebar-spacer" aria-hidden="true"></div>
             </div>
@@ -186,33 +295,33 @@
             <div class="kali-nav-toolbar">
                 <div class="kali-tool-group">
                     <a href="assets/cv_lorenzo_kraja.pdf" download="CV_Lorenzo_Kraja.pdf" class="kali-tb-btn"
-                        title="Scarica PDF" aria-label="Scarica PDF">
+                        title="Download PDF" aria-label="Download PDF" data-i18n-title="btn.downloadPdf" data-i18n-aria="btn.downloadPdf">
                         <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor"
                             stroke-width="1.5">
                             <path d="M8 2v8m0 0l3-3m-3 3L5 7M3 13h10" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        <span class="kali-tb-label">Download PDF</span>
+                        <span class="kali-tb-label" data-i18n="btn.downloadPdf">Download PDF</span>
                     </a>
                     <a href="assets/cv_lorenzo_kraja.pdf" target="_blank" rel="noopener" class="kali-tb-btn"
-                        title="Apri in nuova scheda" aria-label="Apri in nuova scheda">
+                        title="New Tab" aria-label="New Tab" data-i18n-title="btn.newTab" data-i18n-aria="btn.newTab">
                         <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor"
                             stroke-width="1.5">
                             <path d="M12 9v4H3V4h4M9 3h4v4M13 3L7 9" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        <span class="kali-tb-label">Nuova scheda</span>
+                        <span class="kali-tb-label" data-i18n="btn.newTab">New Tab</span>
                     </a>
                 </div>
 
                 <div class="kali-tb-sep"></div>
 
                 <div class="kali-tool-group">
-                    <button class="kali-tb-btn" id="cv-zoom-out" title="Rimpicciolisci">
+                    <button class="kali-tb-btn" id="cv-zoom-out" title="Zoom Out" aria-label="Zoom Out" data-i18n-title="btn.zoomOut" data-i18n-aria="btn.zoomOut">
                         <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
                             <path d="M3 7.25h10v1.5H3z" />
                         </svg>
                     </button>
                     <span class="kali-tb-info" id="cv-zoom-val">100%</span>
-                    <button class="kali-tb-btn" id="cv-zoom-in" title="Ingrandisci">
+                    <button class="kali-tb-btn" id="cv-zoom-in" title="Zoom In" aria-label="Zoom In" data-i18n-title="btn.zoomIn" data-i18n-aria="btn.zoomIn">
                         <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
                             <path d="M7.25 3v4.25H3v1.5h4.25V13h1.5V8.75H13v-1.5H8.75V3z" />
                         </svg>
@@ -222,7 +331,7 @@
                 <div class="kali-tb-sep"></div>
 
                 <div class="kali-tool-group kali-tb-right">
-                    <span class="kali-tb-info">Pagina 1 / 1</span>
+                    <span class="kali-tb-info" data-i18n="cv.pageIndicator">Page 1 / 1</span>
                 </div>
             </div>
 
@@ -254,12 +363,12 @@
                         </p>
 
                         <div class="cv-section">
-                            <h2 class="cv-section-title">Experience:</h2>
+                            <h2 class="cv-section-title" data-i18n="cv.secExperience">Experience:</h2>
 
                             <div class="cv-entry">
                                 <div class="cv-entry-head">
                                     <strong>Graphic Designer / Video Editor</strong>
-                                    <span class="cv-date">Nov 2025 - Present</span>
+                                    <span class="cv-date" data-i18n="cv.dateStar">Nov 2025 - Present</span>
                                 </div>
                                 <div class="cv-company">Star Entertainment GmbH - (Berlin, Germany)</div>
                             </div>
@@ -267,7 +376,7 @@
                             <div class="cv-entry">
                                 <div class="cv-entry-head">
                                     <strong>Jewelry Designer</strong>
-                                    <span class="cv-date">Giu 2024 - Giu 2025</span>
+                                    <span class="cv-date" data-i18n="cv.dateLupo">Jun 2024 - Jun 2025</span>
                                 </div>
                                 <div class="cv-company">Lupo Gioielli - DESAURUM s.a.s.</div>
                                 <div class="cv-desc">2D and 3D design, resin/wax prototyping, detailed finishing.</div>
@@ -277,7 +386,7 @@
                                 <div class="cv-entry-head">
                                     <strong>Contract Teaching Assistant / University Tutor - ISIA Pescara
                                         Design</strong>
-                                    <span class="cv-date">Mar 2024 - Oct 2025</span>
+                                    <span class="cv-date" data-i18n="cv.dateIsia">Mar 2024 - Oct 2025</span>
                                 </div>
                                 <div class="cv-desc">Provided tutoring, support exercises, and assistance to students
                                     during exam sessions.</div>
@@ -294,7 +403,7 @@
                             <div class="cv-entry">
                                 <div class="cv-entry-head">
                                     <strong>Graphic Designer & Video Editor</strong>
-                                    <span class="cv-date">Mar 2024 - Giu 2025</span>
+                                    <span class="cv-date" data-i18n="cv.dateHubC">Mar 2024 - Jun 2025</span>
                                 </div>
                                 <div class="cv-company">Hub-C - Forum Fra</div>
                                 <div class="cv-desc">Video shooting and editing, cinematics, color grading, graphics.
@@ -304,7 +413,7 @@
                             <div class="cv-entry">
                                 <div class="cv-entry-head">
                                     <strong>Graphic Designer</strong>
-                                    <span class="cv-date">Mar 2021 - Ott 2023</span>
+                                    <span class="cv-date" data-i18n="cv.dateSmile">Mar 2021 - Oct 2023</span>
                                 </div>
                                 <div class="cv-company">Simply Smile</div>
                                 <div class="cv-desc">Brand identity, packaging, social media management.</div>
@@ -313,7 +422,7 @@
                             <div class="cv-entry">
                                 <div class="cv-entry-head">
                                     <strong>IT Technician</strong>
-                                    <span class="cv-date">Gen 2019 - Nov 2019</span>
+                                    <span class="cv-date" data-i18n="cv.dateVezz">Jan 2019 - Nov 2019</span>
                                 </div>
                                 <div class="cv-company">Vezzapp di Giuseppe Testini</div>
                                 <div class="cv-desc">Custom PC configurations and assembly, hardware and software
@@ -322,24 +431,24 @@
                         </div>
 
                         <div class="cv-section">
-                            <h2 class="cv-section-title">Education:</h2>
+                            <h2 class="cv-section-title" data-i18n="cv.secEducation">Education:</h2>
                             <div class="cv-entry">
                                 <div class="cv-entry-head">
                                     <strong>Master’s Degree - Product Design</strong>
-                                    <span class="cv-date">Nov 2022 - Mar 2025</span>
+                                    <span class="cv-date" data-i18n="cv.dateMaster">Nov 2022 - Mar 2025</span>
                                 </div>
                             </div>
                             <div class="cv-entry">
                                 <div class="cv-entry-head">
                                     <strong>Bachelor’s Degree - Product and Communication Design</strong>
-                                    <span class="cv-date">Nov 2019 - Mar 2023</span>
+                                    <span class="cv-date" data-i18n="cv.dateBachelor">Nov 2019 - Mar 2023</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="cv-footer-grid">
                             <div class="cv-col">
-                                <h2 class="cv-section-title">Skills:</h2>
+                                <h2 class="cv-section-title" data-i18n="cv.secSkills">Skills:</h2>
                                 <div class="cv-skills-grid">
                                     <div>
                                         <div class="cv-sub">Soft</div>
@@ -358,10 +467,10 @@
                                 </div>
                             </div>
                             <div class="cv-col">
-                                <h2 class="cv-section-title">Languages:</h2>
-                                <div class="cv-lang-item"><strong>Italian:</strong> /////</div>
-                                <div class="cv-lang-item"><strong>English:</strong> ///</div>
-                                <div class="cv-lang-item"><strong>Albanian:</strong> ///</div>
+                                <h2 class="cv-section-title" data-i18n="cv.secLanguages">Languages:</h2>
+                                <div class="cv-lang-item"><strong data-i18n="cv.langItalian">Italian:</strong> /////</div>
+                                <div class="cv-lang-item"><strong data-i18n="cv.langEnglish">English:</strong> ///</div>
+                                <div class="cv-lang-item"><strong data-i18n="cv.langAlbanian">Albanian:</strong> ///</div>
                             </div>
                         </div>
                     </div>
@@ -373,10 +482,10 @@
                 <div class="kali-status-left">
                     <span>curriculum.pdf</span>
                     <span class="kali-status-sep">&bull;</span>
-                    <span>1 Pagina &bull; 27.4 KB &bull; PDF 1.7</span>
+                    <span data-i18n="cv.status">1 Page &bull; 27.4 KB &bull; PDF 1.7</span>
                 </div>
                 <div class="kali-status-right">
-                    <span>Debian XFCE &bull; Press <kbd>Esc</kbd> to close</span>
+                    <span data-i18n="cv.escClose">Debian XFCE &bull; Press <kbd>Esc</kbd> to close</span>
                 </div>
             </div>
         </div>
@@ -389,15 +498,15 @@
             <!-- Titlebar (macOS / Virgil Abloh Style with Gray Gradient) -->
             <div class="kali-titlebar" id="kali-tb-projects">
                 <div class="kali-controls">
-                    <button class="kali-btn kali-btn-close" data-win="projects" aria-label="Chiudi"
-                        title="Chiudi"></button>
-                    <button class="kali-btn kali-btn-min" data-win="projects" aria-label="Riduci a icona"
-                        title="Riduci a icona"></button>
-                    <button class="kali-btn kali-btn-max" data-win="projects" aria-label="Ingrandisci"
-                        title="Ingrandisci"></button>
+                    <button class="kali-btn kali-btn-close" data-win="projects" aria-label="Close"
+                        title="Close" data-i18n-title="btn.close" data-i18n-aria="btn.close"></button>
+                    <button class="kali-btn kali-btn-min" data-win="projects" aria-label="Minimize"
+                        title="Minimize" data-i18n-title="btn.min" data-i18n-aria="btn.min"></button>
+                    <button class="kali-btn kali-btn-max" data-win="projects" aria-label="Maximize"
+                        title="Maximize" data-i18n-title="btn.max" data-i18n-aria="btn.max"></button>
                 </div>
                 <div class="kali-title-info">
-                    <span class="kali-title-text">Personal Stuff</span>
+                    <span class="kali-title-text" data-i18n="finder.title">Personal Stuff</span>
                 </div>
                 <div class="kali-titlebar-spacer" aria-hidden="true"></div>
             </div>
@@ -405,83 +514,83 @@
             <!-- macOS Finder Toolbar (<, >, View Switcher, Breadcrumbs, Count) -->
             <div class="pd-fm-toolbar">
                 <div class="pd-toolbar-left">
-                    <button class="pd-nav-btn" id="pd-btn-back" title="Indietro"
-                        aria-label="Indietro">&#8249;</button>
-                    <button class="pd-nav-btn" id="pd-btn-forward" title="Avanti"
-                        aria-label="Avanti">&#8250;</button>
+                    <button class="pd-nav-btn" id="pd-btn-back" title="Back"
+                        aria-label="Back">&#8249;</button>
+                    <button class="pd-nav-btn" id="pd-btn-forward" title="Forward"
+                        aria-label="Forward">&#8250;</button>
 
                     <!-- macOS Finder View Switcher (Segmented Control: Icone / Colonne) -->
                     <div class="pd-view-switcher" role="group" aria-label="Modalità di visualizzazione">
-                        <button class="pd-view-btn active" id="pd-view-icons" title="Modalità Cartella / Griglia Icone">
+                        <button class="pd-view-btn active" id="pd-view-icons" title="Icons Grid View">
                             <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor">
                                 <rect x="2" y="2" width="4.5" height="4.5" rx="1"/>
                                 <rect x="9.5" y="2" width="4.5" height="4.5" rx="1"/>
                                 <rect x="2" y="9.5" width="4.5" height="4.5" rx="1"/>
                                 <rect x="9.5" y="9.5" width="4.5" height="4.5" rx="1"/>
                             </svg>
-                            <span class="pd-view-btn-label">Icone</span>
+                            <span class="pd-view-btn-label" data-i18n="finder.viewIcons">Icons</span>
                         </button>
-                        <button class="pd-view-btn" id="pd-view-columns" title="Modalità Elenco Colonne">
+                        <button class="pd-view-btn" id="pd-view-columns" title="Columns List View">
                             <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor">
                                 <rect x="2" y="2" width="3" height="12" rx="0.5"/>
                                 <rect x="6.5" y="2" width="3" height="12" rx="0.5"/>
                                 <rect x="11" y="2" width="3" height="12" rx="0.5"/>
                             </svg>
-                            <span class="pd-view-btn-label">Colonne</span>
+                            <span class="pd-view-btn-label" data-i18n="finder.viewColumns">Columns</span>
                         </button>
                     </div>
 
                     <div class="pd-breadcrumbs" id="pd-breadcrumbs-wrap">
-                        <span class="pd-breadcrumb-item active" id="pd-crumb-root">Personal Stuff</span>
+                        <span class="pd-breadcrumb-item active" id="pd-crumb-root" data-i18n="finder.title">Personal Stuff</span>
                         <span class="pd-breadcrumb-sep" id="pd-crumb-sep" style="display:none;">&rsaquo;</span>
                         <span class="pd-breadcrumb-item" id="pd-crumb-sub" style="display:none;"></span>
                     </div>
                 </div>
                 <div class="pd-toolbar-right">
-                    <span id="pd-item-count">1 cartella</span>
+                    <span id="pd-item-count">1 folder</span>
                 </div>
             </div>
 
             <!-- VIEW 1: macOS Finder Folder & Icon Grid View (Matching Reference Image) -->
             <div class="pd-icon-grid-body" id="pd-icons-view">
                 <!-- macOS Finder Sidebar (Favorites & Tags) -->
-                <aside class="pd-finder-sidebar" aria-label="Preferiti Finder">
+                <aside class="pd-finder-sidebar" aria-label="Finder Favorites">
                     <div class="pd-sidebar-section">
-                        <span class="pd-sidebar-title">Preferiti</span>
+                        <span class="pd-sidebar-title" data-i18n="finder.favorites">Favorites</span>
                         <ul class="pd-sidebar-list" id="pd-sidebar-folders">
                             <!-- Injected dynamically by desktop.js -->
                         </ul>
                     </div>
                     <div class="pd-sidebar-section">
-                        <span class="pd-sidebar-title">Tag</span>
+                        <span class="pd-sidebar-title" data-i18n="finder.tags">Tags</span>
                         <ul class="pd-sidebar-tags">
                             <li><span class="pd-tag-dot tag-purple"></span> Jewelry</li>
                             <li><span class="pd-tag-dot tag-blue"></span> Inspiration</li>
                             <li><span class="pd-tag-dot tag-orange"></span> Hardware</li>
-                            <li><span class="pd-tag-dot tag-green"></span> Archivio</li>
+                            <li><span class="pd-tag-dot tag-green"></span> <span data-i18n="finder.archive">Archive</span></li>
                         </ul>
                     </div>
                 </aside>
 
                 <!-- macOS Finder Main Icon Canvas -->
-                <section class="pd-finder-main" id="pd-finder-main" tabindex="0" aria-label="Contenuto cartella">
+                <section class="pd-finder-main" id="pd-finder-main" tabindex="0" aria-label="Folder contents">
                     <div class="pd-finder-grid" id="pd-finder-grid">
                         <!-- Injected dynamically by desktop.js: Folder cards or File cards with large icons & thumbnails -->
                     </div>
                 </section>
 
                 <!-- macOS Finder Right Inspector / Preview Pane (Icon Mode - Hidden by default until image click) -->
-                <aside class="pd-col-inspector pd-icon-inspector" id="pd-inspector-icons" aria-label="Ispettore file" style="display: none;">
+                <aside class="pd-col-inspector pd-icon-inspector" id="pd-inspector-icons" aria-label="File inspector" style="display: none;">
                     <div class="pd-inspector-inner">
                         <!-- Visual Preview Box -->
                         <div class="pd-preview-box">
-                            <img src="images/jewelry-inspiration/01.png" alt="Anteprima file"
+                            <img src="images/jewelry-inspiration/01.png" alt="Preview file"
                                 class="pd-preview-image pd-preview-img-target">
                         </div>
 
                         <!-- Title & Type with Close button -->
                         <div class="pd-preview-header">
-                            <button type="button" class="pd-inspector-close-btn" id="pd-close-inspector-icons" aria-label="Chiudi anteprima" title="Chiudi anteprima">&times;</button>
+                            <button type="button" class="pd-inspector-close-btn" id="pd-close-inspector-icons" aria-label="Close preview" title="Close preview" data-i18n-title="finder.closePreview" data-i18n-aria="finder.closePreview">&times;</button>
                             <h2 class="pd-preview-title pd-preview-title-target">01.png</h2>
                             <div class="pd-preview-subtitle pd-preview-sub-target">PNG image - 484 KB</div>
                         </div>
@@ -489,27 +598,27 @@
                         <!-- Key-Value Metadata Table -->
                         <div class="pd-metadata-table">
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Created</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaCreated">Created</span>
                                 <span class="pd-meta-val pd-meta-created-target">08/14/2025, 02:41:18 AM</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Modified</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaModified">Modified</span>
                                 <span class="pd-meta-val pd-meta-modified-target">08/14/2025, 02:41:18 AM</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Size</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaSize">Size</span>
                                 <span class="pd-meta-val pd-meta-size-target">484041</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Content-Type</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaType">Content-Type</span>
                                 <span class="pd-meta-val pd-meta-type-target">image/png</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Dimensions</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaDims">Dimensions</span>
                                 <span class="pd-meta-val pd-meta-dims-target">486 &times; 500</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Project</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaProject">Project</span>
                                 <span class="pd-meta-val pd-meta-project-target">Jewelry Inspiration (Inspiration &amp; Research)</span>
                             </div>
                         </div>
@@ -525,24 +634,24 @@
                 </nav>
 
                 <!-- Column 2: Files in Active Folder with blue selection & ▶ arrow -->
-                <section class="pd-col-files" id="pd-files-container" aria-label="File della cartella">
+                <section class="pd-col-files" id="pd-files-container" aria-label="Folder files">
                     <div class="pd-files-list" id="pd-files-list">
                         <!-- Injected dynamically by desktop.js -->
                     </div>
                 </section>
 
                 <!-- Column 3: Inspector / Preview Pane with Image, Title, Subtitle & Key-Value Metadata (Hidden by default until image click) -->
-                <aside class="pd-col-inspector" id="pd-inspector" aria-label="Ispettore file" style="display: none;">
+                <aside class="pd-col-inspector" id="pd-inspector" aria-label="File inspector" style="display: none;">
                     <div class="pd-inspector-inner">
                         <!-- Visual Preview Box -->
                         <div class="pd-preview-box">
-                            <img id="pd-preview-img" src="images/jewelry-inspiration/01.png" alt="Anteprima file"
+                            <img id="pd-preview-img" src="images/jewelry-inspiration/01.png" alt="Preview file"
                                 class="pd-preview-image pd-preview-img-target">
                         </div>
 
                         <!-- Title & Type with Close button -->
                         <div class="pd-preview-header">
-                            <button type="button" class="pd-inspector-close-btn" id="pd-close-inspector-cols" aria-label="Chiudi anteprima" title="Chiudi anteprima">&times;</button>
+                            <button type="button" class="pd-inspector-close-btn" id="pd-close-inspector-cols" aria-label="Close preview" title="Close preview" data-i18n-title="finder.closePreview" data-i18n-aria="finder.closePreview">&times;</button>
                             <h2 class="pd-preview-title pd-preview-title-target" id="pd-preview-title">01.png</h2>
                             <div class="pd-preview-subtitle pd-preview-sub-target" id="pd-preview-sub">PNG image - 484 KB</div>
                         </div>
@@ -550,27 +659,27 @@
                         <!-- Key-Value Metadata Table (Exact match to reference) -->
                         <div class="pd-metadata-table" id="pd-meta-table">
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Created</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaCreated">Created</span>
                                 <span class="pd-meta-val pd-meta-created-target" id="pd-meta-created">08/14/2025, 02:41:18 AM</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Modified</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaModified">Modified</span>
                                 <span class="pd-meta-val pd-meta-modified-target" id="pd-meta-modified">08/14/2025, 02:41:18 AM</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Size</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaSize">Size</span>
                                 <span class="pd-meta-val pd-meta-size-target" id="pd-meta-size">484041</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Content-Type</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaType">Content-Type</span>
                                 <span class="pd-meta-val pd-meta-type-target" id="pd-meta-type">image/png</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Dimensions</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaDims">Dimensions</span>
                                 <span class="pd-meta-val pd-meta-dims-target" id="pd-meta-dims">486 &times; 500</span>
                             </div>
                             <div class="pd-meta-row">
-                                <span class="pd-meta-key">Project</span>
+                                <span class="pd-meta-key" data-i18n="finder.metaProject">Project</span>
                                 <span class="pd-meta-val pd-meta-project-target" id="pd-meta-project">Jewelry Inspiration (Inspiration &amp; Research)</span>
                             </div>
                         </div>
@@ -581,12 +690,12 @@
             <!-- Statusbar -->
             <div class="kali-statusbar">
                 <div class="kali-status-left" id="pd-status-left">
-                    <span>1 cartella</span>
+                    <span>1 folder</span>
                     <span class="kali-status-sep">&bull;</span>
-                    <span id="pd-status-summary">19 file &bull; Jewelry Inspiration</span>
+                    <span id="pd-status-summary">19 files &bull; Jewelry Inspiration</span>
                 </div>
                 <div class="kali-status-right">
-                    <span>Personal Stuff &bull; Fai doppio clic su una cartella per aprirla</span>
+                    <span id="pd-status-hint" data-i18n="finder.dblClickFolderHint">Personal Stuff &bull; Double-click a folder to open</span>
                 </div>
             </div>
         </div>
@@ -599,12 +708,12 @@
             <!-- Titlebar -->
             <div class="kali-titlebar" id="kali-tb-contact">
                 <div class="kali-controls">
-                    <button class="kali-btn kali-btn-close" data-win="contact" aria-label="Chiudi" title="Chiudi"></button>
-                    <button class="kali-btn kali-btn-min" data-win="contact" aria-label="Riduci a icona" title="Riduci a icona"></button>
-                    <button class="kali-btn kali-btn-max" data-win="contact" aria-label="Ingrandisci" title="Ingrandisci"></button>
+                    <button class="kali-btn kali-btn-close" data-win="contact" aria-label="Close" title="Close" data-i18n-title="btn.close" data-i18n-aria="btn.close"></button>
+                    <button class="kali-btn kali-btn-min" data-win="contact" aria-label="Minimize" title="Minimize" data-i18n-title="btn.min" data-i18n-aria="btn.min"></button>
+                    <button class="kali-btn kali-btn-max" data-win="contact" aria-label="Maximize" title="Maximize" data-i18n-title="btn.max" data-i18n-aria="btn.max"></button>
                 </div>
                 <div class="kali-title-info">
-                    <span class="kali-title-text">contacts.txt — Text Editor</span>
+                    <span class="kali-title-text" data-i18n="contactWin.title">contacts.txt — Text Editor</span>
                 </div>
                 <div class="kali-titlebar-spacer" aria-hidden="true"></div>
             </div>
@@ -612,7 +721,7 @@
             <!-- Content Area -->
             <div class="kali-window-content kali-contact-content">
                 <div class="kali-contact-header">
-                    <div class="kali-contact-stamp">// CONTACT &amp; DIRECTORY</div>
+                    <div class="kali-contact-stamp" data-i18n="contactWin.header">// CONTACT &amp; DIRECTORY</div>
                     <h3 class="kali-contact-title">LORENZO KRAJA</h3>
                     <p class="kali-contact-subtitle">Product &amp; Jewelry Designer &bull; Rome [RM], Italy</p>
                 </div>
@@ -620,7 +729,7 @@
                     <div class="kali-contact-row">
                         <span class="kali-contact-label">EMAIL:</span>
                         <a href="mailto:lorenzokraja99@gmail.com" class="kali-contact-val">lorenzokraja99@gmail.com</a>
-                        <button type="button" class="kali-contact-copy-btn" id="copy-email-btn" title="Copia email">COPIA</button>
+                        <button type="button" class="kali-contact-copy-btn" id="copy-email-btn" title="Copy email" data-i18n-title="btn.copyEmailTitle" data-i18n="btn.copy">COPY</button>
                     </div>
                     <div class="kali-contact-row">
                         <span class="kali-contact-label">INSTAGRAM:</span>
@@ -640,14 +749,14 @@
                     </div>
                 </div>
                 <div class="kali-contact-footer">
-                    <span>&copy; 2026 Lorenzo Kraja. All rights reserved.</span>
+                    <span data-i18n="footer.rights">&copy; 2026 Lorenzo Kraja. All rights reserved.</span>
                 </div>
             </div>
 
             <!-- Statusbar -->
             <div class="kali-statusbar">
                 <div class="kali-status-left">
-                    <span>Plain Text Document</span>
+                    <span data-i18n="contactWin.statusDoc">Plain Text Document</span>
                     <span class="kali-status-sep">&bull;</span>
                     <span>UTF-8</span>
                 </div>
@@ -663,13 +772,13 @@
              WINDOW 5: IMAGE VIEWER / PREVIEW
              ======================================================== -->
         <div class="kali-window kali-window-preview is-closed" id="kali-win-preview" role="region"
-            aria-label="Anteprima immagine — Image Viewer">
+            aria-label="Image Viewer">
             <!-- Titlebar -->
             <div class="kali-titlebar" id="kali-tb-preview">
                 <div class="kali-controls">
-                    <button class="kali-btn kali-btn-close" data-win="preview" aria-label="Chiudi" title="Chiudi"></button>
-                    <button class="kali-btn kali-btn-min" data-win="preview" aria-label="Riduci a icona" title="Riduci a icona"></button>
-                    <button class="kali-btn kali-btn-max" data-win="preview" aria-label="Ingrandisci" title="Ingrandisci"></button>
+                    <button class="kali-btn kali-btn-close" data-win="preview" aria-label="Close" title="Close" data-i18n-title="btn.close" data-i18n-aria="btn.close"></button>
+                    <button class="kali-btn kali-btn-min" data-win="preview" aria-label="Minimize" title="Minimize" data-i18n-title="btn.min" data-i18n-aria="btn.min"></button>
+                    <button class="kali-btn kali-btn-max" data-win="preview" aria-label="Maximize" title="Maximize" data-i18n-title="btn.max" data-i18n-aria="btn.max"></button>
                 </div>
                 <div class="kali-title-info">
                     <span class="kali-title-text" id="preview-win-title">01.png — Image Viewer</span>
@@ -677,10 +786,28 @@
                 <div class="kali-titlebar-spacer" aria-hidden="true"></div>
             </div>
 
-            <!-- Content Area: Image Viewer Body -->
+            <!-- Content Area: Image Viewer Body with Arrows, Stage, and Thumbnails -->
             <div class="kali-preview-body" id="preview-win-body">
-                <div class="kali-preview-img-wrap">
-                    <img id="preview-win-img" src="" alt="Anteprima file" draggable="false">
+                <div class="kali-preview-stage" id="preview-win-stage">
+                    <button class="kali-preview-nav-btn kali-preview-prev" id="preview-btn-prev" aria-label="Previous image" title="Previous image (←)" data-i18n-title="previewWin.prevAria" data-i18n-aria="previewWin.prevAria">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <div class="kali-preview-img-wrap" id="preview-img-container">
+                        <img id="preview-win-img" src="" alt="Preview file" draggable="false">
+                    </div>
+                    <button class="kali-preview-nav-btn kali-preview-next" id="preview-btn-next" aria-label="Next image" title="Next image (→)" data-i18n-title="previewWin.nextAria" data-i18n-aria="previewWin.nextAria">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Thumbnail Carousel Bar directly under the image -->
+                <div class="kali-preview-thumbs-bar" id="preview-thumbs-bar">
+                    <div class="kali-preview-thumbs-strip" id="preview-thumbs-strip" role="tablist" aria-label="Image thumbnails" data-i18n-aria="previewWin.thumbsAria">
+                    </div>
                 </div>
             </div>
 
@@ -700,26 +827,26 @@
     <!-- Applications Popup Menu -->
     <div class="kali-app-menu" id="kali-app-menu" style="display:none;" role="menu">
         <div class="kali-app-menu-header">
-            <span class="kali-app-menu-title">LORENZO KRAJA // OS</span>
-            <span class="kali-app-menu-sub">XFCE Application Menu</span>
+            <span class="kali-app-menu-title" data-i18n="desktop.appMenuTitle">LORENZO KRAJA // OS</span>
+            <span class="kali-app-menu-sub" data-i18n="desktop.appMenuSub">XFCE Application Menu</span>
         </div>
         <div class="kali-app-menu-list">
             <button class="kali-app-menu-item" data-action="win" data-target="cv">
                 <span class="kali-app-icon">&#128196;</span>
-                <span class="kali-app-name">Document Viewer (curriculum.pdf)</span>
+                <span class="kali-app-name" data-i18n="desktop.appDocViewer">Document Viewer (curriculum.pdf)</span>
             </button>
             <button class="kali-app-menu-item" data-action="win" data-target="projects">
                 <span class="kali-app-icon">&#128193;</span>
-                <span class="kali-app-name">Personal Stuff — File Manager</span>
+                <span class="kali-app-name" data-i18n="desktop.appFileManager">Personal Stuff — File Manager</span>
             </button>
             <button class="kali-app-menu-item" data-action="win" data-target="contact">
                 <span class="kali-app-icon">&#128221;</span>
-                <span class="kali-app-name">Text Editor (contacts.txt)</span>
+                <span class="kali-app-name" data-i18n="desktop.appTextEditor">Text Editor (contacts.txt)</span>
             </button>
             <div class="kali-app-menu-sep"></div>
             <a href="index.html" class="kali-app-menu-item">
                 <span class="kali-app-icon">&#8592;</span>
-                <span class="kali-app-name">Return to Home</span>
+                <span class="kali-app-name" data-i18n="desktop.returnHome">Return to Home</span>
             </a>
         </div>
     </div>
@@ -728,7 +855,7 @@
     <footer class="kali-os-taskbar" role="contentinfo">
         <div class="kali-taskbar-left">
             <!-- Applications Launcher button -->
-            <button class="kali-taskbar-launcher" id="kali-launcher-btn" title="Menu Applicazioni">
+            <button class="kali-taskbar-launcher" id="kali-launcher-btn" title="Applications Menu" data-i18n-title="btn.appsMenu">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                     <circle cx="5" cy="5" r="2.5"></circle>
                     <circle cx="12" cy="5" r="2.5"></circle>
@@ -740,20 +867,20 @@
                     <circle cx="12" cy="19" r="2.5"></circle>
                     <circle cx="19" cy="19" r="2.5"></circle>
                 </svg>
-                <span>Applications</span>
+                <span data-i18n="btn.appsMenu">Applications</span>
             </button>
             <div class="kali-taskbar-sep"></div>
         </div>
 
         <!-- Running Window Tabs (Taskbar Pills) -->
         <div class="kali-taskbar-windows" id="kali-taskbar-windows">
-            <button class="kali-task-tab" data-win="cv" id="tab-cv">
+            <button class="kali-task-tab" data-win="cv" id="tab-cv" style="display:none;">
                 <span class="kali-tab-dot"></span>
                 <span>curriculum.pdf</span>
             </button>
-            <button class="kali-task-tab active" data-win="projects" id="tab-projects">
+            <button class="kali-task-tab" data-win="projects" id="tab-projects" style="display:none;">
                 <span class="kali-tab-dot"></span>
-                <span>Personal Stuff</span>
+                <span data-i18n="finder.title">Personal Stuff</span>
             </button>
             <button class="kali-task-tab" data-win="contact" id="tab-contact" style="display:none;">
                 <span class="kali-tab-dot"></span>
@@ -771,15 +898,30 @@
                 <span class="kali-ws-btn active">1</span>
                 <span class="kali-ws-btn">2</span>
             </div>
-            <button class="kali-show-desktop-btn" id="kali-show-desktop" title="Mostra Desktop">
+            <button class="kali-show-desktop-btn" id="kali-show-desktop" title="Show Desktop" data-i18n-title="btn.showDesktop">
                 <span></span>
             </button>
         </div>
     </footer>
 
-    <!-- Floating Side HOME Button (Left Edge, Mid-Height, Adv Scam Style with Left Arrow) -->
+    <!-- Global Brand Footer with Working Interactive Links -->
+    <footer class="nb-footer nb-about-page-footer" id="contact">
+        <div class="nb-footer-links">
+            <a href="mailto:lorenzokraja99@gmail.com" class="nb-footer-link" id="footer-contact-link" data-i18n="nav.contact">Contacts</a>
+            <span class="nb-footer-sep">&bull;</span>
+            <a href="https://www.instagram.com/lorenzo.kraja?vrfl=emV0cDFlbW51NWFm" target="_blank" rel="noopener noreferrer" class="nb-footer-link">Instagram</a>
+            <span class="nb-footer-sep">&bull;</span>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="nb-footer-link">LinkedIn</a>
+            <span class="nb-footer-sep">&bull;</span>
+            <a href="mailto:lorenzokraja99@gmail.com" class="nb-footer-link">Email</a>
+        </div>
+        <div class="nb-footer-center">&copy; 2026 Lorenzo Kraja</div>
+        <div class="nb-footer-end" data-i18n="footer.rights">All rights reserved</div>
+    </footer>
+
+    <!-- Floating Side HOME Button (Left Edge, Mid-Height on Desktop / Scroll Flow on Mobile) -->
     <div class="fg-side-about fg-side-about-back" id="about-side-back">
-        <a href="index.html" class="sd-scam-about-link sd-scam-home-link" aria-label="Torna alla Home">
+        <a href="index.html" class="sd-scam-about-link sd-scam-home-link" aria-label="Return to Home" data-i18n-aria="desktop.sideHomeAria">
             <span class="sd-scam-arrow-wrap sd-scam-arrow-left-wrap" aria-hidden="true">
                 <svg class="sd-scam-arrow-svg sd-scam-arrow-left-svg" viewBox="0 0 16 16" width="18" height="18" fill="currentColor">
                     <rect x="1" y="7" width="1" height="2"/>
@@ -789,7 +931,7 @@
                     <rect x="8" y="6" width="7" height="4"/>
                 </svg>
             </span>
-            <span class="sd-scam-about-text">HOME</span>
+            <span class="sd-scam-about-text" data-i18n="desktop.sideHome">HOME</span>
         </a>
     </div>
 

@@ -6,12 +6,13 @@
 (function () {
     const USER_KEY = 'portfolio_user_selected_lang';
     const STORAGE_KEY = 'portfolio_lang';
-    let currentLang = localStorage.getItem(USER_KEY) || 'en';
+    let currentLang = localStorage.getItem(USER_KEY) || localStorage.getItem(STORAGE_KEY) || 'en';
 
     const DICTIONARY = {
         it: {
             // Navigation
             'nav.home': 'Lorenzo Kraja',
+            'nav.projects': 'Progetti',
             'nav.contact': 'Contatti',
             'nav.motionReel': 'Motion Reel',
             'nav.harpChair': 'Harp Chair',
@@ -23,12 +24,24 @@
             'nav.fullProject': 'Progetto Completo ↗',
             'nav.nextProject': 'Prossimo Progetto:',
 
-            // Window Chrome
+            // Window Chrome & Controls
             'win.menu.file': 'File',
             'win.menu.edit': 'Modifica',
             'win.menu.view': 'Vista',
             'win.menu.go': 'Vai',
             'win.menu.help': 'Aiuto',
+            'btn.close': 'Chiudi',
+            'btn.min': 'Riduci a icona',
+            'btn.max': 'Ingrandisci',
+            'btn.copy': 'COPIA',
+            'btn.copied': 'COPIATO!',
+            'btn.copyEmailTitle': 'Copia email',
+            'btn.downloadPdf': 'Scarica PDF',
+            'btn.newTab': 'Nuova scheda',
+            'btn.zoomOut': 'Rimpicciolisci',
+            'btn.zoomIn': 'Ingrandisci',
+            'btn.showDesktop': 'Mostra Desktop',
+            'btn.appsMenu': 'Menu Applicazioni',
 
             // Popovers & Meta
             'popover.harp.tag': 'Sedia Monoscocca & Corde Windsor',
@@ -48,6 +61,82 @@
             // Footer
             'footer.rights': 'Tutti i diritti riservati',
             'footer.contactLine': 'Contatti • Instagram, LinkedIn, Email',
+
+            // VLC Player Controls
+            'vlc.title': '3D printed shoe project.mp4 — VLC Media Player',
+            'vlc.playPause': 'Riproduci / Pausa',
+            'vlc.playPauseHint': 'Click per Riprodurre / Pausa',
+            'vlc.volumeMute': 'Volume / Muto',
+            'vlc.fullscreen': 'Schermo intero',
+
+            // Finder & File Manager (about.html)
+            'finder.title': 'Personal Stuff',
+            'finder.favorites': 'Preferiti',
+            'finder.tags': 'Tag',
+            'finder.archive': 'Archivio',
+            'finder.viewIcons': 'Icone',
+            'finder.viewColumns': 'Colonne',
+            'finder.folderSingle': 'cartella',
+            'finder.folderPlural': 'cartelle',
+            'finder.fileSingle': 'file',
+            'finder.filePlural': 'file',
+            'finder.itemsCount': 'elementi',
+            'finder.dblClickFolderHint': 'Personal Stuff • Fai doppio clic su una cartella per aprirla',
+            'finder.dblClickOpen': 'Doppio clic o Invio per aprire',
+            'finder.dblClickWindow': 'Fai doppio clic per aprire la finestra',
+            'finder.closePreview': 'Chiudi anteprima',
+            'finder.metaCreated': 'Creato',
+            'finder.metaModified': 'Modificato',
+            'finder.metaSize': 'Dimensioni',
+            'finder.metaType': 'Tipo',
+            'finder.metaDims': 'Risoluzione',
+            'finder.metaProject': 'Progetto',
+            'finder.imageTypePng': 'Immagine PNG',
+
+            // CV Document Viewer (about.html)
+            'cv.title': 'curriculum.pdf — Document Viewer',
+            'cv.pageIndicator': 'Pagina 1 / 1',
+            'cv.status': '1 Pagina • 27.4 KB • PDF 1.7',
+            'cv.escClose': 'Debian XFCE • Premi Esc per chiudere',
+            'cv.secExperience': 'Esperienza:',
+            'cv.secEducation': 'Formazione:',
+            'cv.secSkills': 'Competenze:',
+            'cv.secLanguages': 'Lingue:',
+            'cv.langItalian': 'Italiano:',
+            'cv.langEnglish': 'Inglese:',
+            'cv.langAlbanian': 'Albanese:',
+            'cv.present': 'Presente',
+            'cv.dateStar': 'Nov 2025 - Presente',
+            'cv.dateLupo': 'Giu 2024 - Giu 2025',
+            'cv.dateIsia': 'Mar 2024 - Ott 2025',
+            'cv.dateHubC': 'Mar 2024 - Giu 2025',
+            'cv.dateSmile': 'Mar 2021 - Ott 2023',
+            'cv.dateVezz': 'Gen 2019 - Nov 2019',
+            'cv.dateMaster': 'Nov 2022 - Mar 2025',
+            'cv.dateBachelor': 'Nov 2019 - Mar 2023',
+
+            // Contacts Text Editor (about.html)
+            'contactWin.title': 'contacts.txt — Text Editor',
+            'contactWin.header': '// CONTATTI & DIRECTORY',
+            'contactWin.statusDoc': 'Documento di testo',
+
+            // Image Viewer (about.html)
+            'previewWin.titleSuffix': '— Visualizzatore Immagini',
+            'previewWin.prevAria': 'Immagine precedente',
+            'previewWin.nextAria': 'Immagine successiva',
+            'previewWin.thumbsAria': 'Miniature immagini',
+
+            // Desktop Icons & App Menu (about.html)
+            'desktop.trashLabel': 'trash',
+            'desktop.trashTitle': 'Cestino di sistema',
+            'desktop.appMenuTitle': 'LORENZO KRAJA // OS',
+            'desktop.appMenuSub': 'Menu Applicazioni XFCE',
+            'desktop.appDocViewer': 'Document Viewer (curriculum.pdf)',
+            'desktop.appFileManager': 'Personal Stuff — File Manager',
+            'desktop.appTextEditor': 'Text Editor (contacts.txt)',
+            'desktop.returnHome': 'Torna alla Home',
+            'desktop.sideHome': 'HOME',
+            'desktop.sideHomeAria': 'Torna alla Home',
 
             // Harp Chair Page
             'harp.discipline': '• DESIGN DEL PRODOTTO & ARREDO',
@@ -99,6 +188,7 @@
         en: {
             // Navigation
             'nav.home': 'Lorenzo Kraja',
+            'nav.projects': 'Projects',
             'nav.contact': 'Contact',
             'nav.motionReel': 'Motion Reel',
             'nav.harpChair': 'Harp Chair',
@@ -110,12 +200,24 @@
             'nav.fullProject': 'Full Project ↗',
             'nav.nextProject': 'Next Project:',
 
-            // Window Chrome
+            // Window Chrome & Controls
             'win.menu.file': 'File',
             'win.menu.edit': 'Edit',
             'win.menu.view': 'View',
             'win.menu.go': 'Go',
             'win.menu.help': 'Help',
+            'btn.close': 'Close',
+            'btn.min': 'Minimize',
+            'btn.max': 'Maximize',
+            'btn.copy': 'COPY',
+            'btn.copied': 'COPIED!',
+            'btn.copyEmailTitle': 'Copy email',
+            'btn.downloadPdf': 'Download PDF',
+            'btn.newTab': 'New Tab',
+            'btn.zoomOut': 'Zoom Out',
+            'btn.zoomIn': 'Zoom In',
+            'btn.showDesktop': 'Show Desktop',
+            'btn.appsMenu': 'Applications Menu',
 
             // Popovers & Meta
             'popover.harp.tag': 'Monocoque Chair & Windsor Shell',
@@ -135,6 +237,82 @@
             // Footer
             'footer.rights': 'All rights reserved',
             'footer.contactLine': 'Contact • Instagram, LinkedIn, Email',
+
+            // VLC Player Controls
+            'vlc.title': '3D printed shoe project.mp4 — VLC Media Player',
+            'vlc.playPause': 'Play / Pause',
+            'vlc.playPauseHint': 'Click to Play / Pause',
+            'vlc.volumeMute': 'Volume / Mute',
+            'vlc.fullscreen': 'Fullscreen',
+
+            // Finder & File Manager (about.html)
+            'finder.title': 'Personal Stuff',
+            'finder.favorites': 'Favorites',
+            'finder.tags': 'Tags',
+            'finder.archive': 'Archive',
+            'finder.viewIcons': 'Icons',
+            'finder.viewColumns': 'Columns',
+            'finder.folderSingle': 'folder',
+            'finder.folderPlural': 'folders',
+            'finder.fileSingle': 'file',
+            'finder.filePlural': 'files',
+            'finder.itemsCount': 'items',
+            'finder.dblClickFolderHint': 'Personal Stuff • Double-click a folder to open',
+            'finder.dblClickOpen': 'Double-click or Enter to open',
+            'finder.dblClickWindow': 'Double-click to open window',
+            'finder.closePreview': 'Close preview',
+            'finder.metaCreated': 'Created',
+            'finder.metaModified': 'Modified',
+            'finder.metaSize': 'Size',
+            'finder.metaType': 'Content-Type',
+            'finder.metaDims': 'Dimensions',
+            'finder.metaProject': 'Project',
+            'finder.imageTypePng': 'PNG image',
+
+            // CV Document Viewer (about.html)
+            'cv.title': 'curriculum.pdf — Document Viewer',
+            'cv.pageIndicator': 'Page 1 / 1',
+            'cv.status': '1 Page • 27.4 KB • PDF 1.7',
+            'cv.escClose': 'Debian XFCE • Press Esc to close',
+            'cv.secExperience': 'Experience:',
+            'cv.secEducation': 'Education:',
+            'cv.secSkills': 'Skills:',
+            'cv.secLanguages': 'Languages:',
+            'cv.langItalian': 'Italian:',
+            'cv.langEnglish': 'English:',
+            'cv.langAlbanian': 'Albanian:',
+            'cv.present': 'Present',
+            'cv.dateStar': 'Nov 2025 - Present',
+            'cv.dateLupo': 'Jun 2024 - Jun 2025',
+            'cv.dateIsia': 'Mar 2024 - Oct 2025',
+            'cv.dateHubC': 'Mar 2024 - Jun 2025',
+            'cv.dateSmile': 'Mar 2021 - Oct 2023',
+            'cv.dateVezz': 'Jan 2019 - Nov 2019',
+            'cv.dateMaster': 'Nov 2022 - Mar 2025',
+            'cv.dateBachelor': 'Nov 2019 - Mar 2023',
+
+            // Contacts Text Editor (about.html)
+            'contactWin.title': 'contacts.txt — Text Editor',
+            'contactWin.header': '// CONTACT & DIRECTORY',
+            'contactWin.statusDoc': 'Plain Text Document',
+
+            // Image Viewer (about.html)
+            'previewWin.titleSuffix': '— Image Viewer',
+            'previewWin.prevAria': 'Previous image',
+            'previewWin.nextAria': 'Next image',
+            'previewWin.thumbsAria': 'Image thumbnails',
+
+            // Desktop Icons & App Menu (about.html)
+            'desktop.trashLabel': 'trash',
+            'desktop.trashTitle': 'System Trash',
+            'desktop.appMenuTitle': 'LORENZO KRAJA // OS',
+            'desktop.appMenuSub': 'XFCE Application Menu',
+            'desktop.appDocViewer': 'Document Viewer (curriculum.pdf)',
+            'desktop.appFileManager': 'Personal Stuff — File Manager',
+            'desktop.appTextEditor': 'Text Editor (contacts.txt)',
+            'desktop.returnHome': 'Return to Home',
+            'desktop.sideHome': 'HOME',
+            'desktop.sideHomeAria': 'Return to Home',
 
             // Harp Chair Page
             'harp.discipline': '• PRODUCT & FURNITURE DESIGN',
@@ -189,6 +367,59 @@
         return DICTIONARY[lang][key] || key;
     }
 
+    function getUserTimezoneInfo() {
+        try {
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Rome";
+            const parts = tz.split('/');
+            const rawCity = parts[parts.length - 1].replace(/_/g, ' ');
+            const labelMap = {
+                "Rome": "RM",
+                "Vatican": "RM",
+                "San Marino": "RM",
+                "Milan": "MI",
+                "New York": "NYC",
+                "London": "LON",
+                "Paris": "PAR",
+                "Berlin": "BER",
+                "Tokyo": "TYO",
+                "Los Angeles": "LA",
+                "Chicago": "CHI",
+                "Toronto": "TOR",
+                "Sydney": "SYD"
+            };
+            const label = labelMap[rawCity] || (rawCity.length <= 4 ? rawCity.toUpperCase() : rawCity.substring(0, 3).toUpperCase());
+            return { timeZone: tz, label: label, city: rawCity };
+        } catch {
+            return { timeZone: undefined, label: "LOC", city: "Local" };
+        }
+    }
+
+    function initLiveClock(targetElId = "live-clock") {
+        const el = document.getElementById(targetElId);
+        if (!el) return;
+        const tzInfo = getUserTimezoneInfo();
+        const tick = () => {
+            try {
+                const now = new Date();
+                const timeStr = new Intl.DateTimeFormat("en-US", {
+                    timeZone: tzInfo.timeZone,
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false,
+                }).format(now);
+                el.textContent = `${timeStr} ${tzInfo.label}`;
+                el.title = `${tzInfo.city} (${tzInfo.timeZone || 'Local'})`;
+            } catch {
+                const now = new Date();
+                const pad = n => String(n).padStart(2, '0');
+                el.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${tzInfo.label}`;
+            }
+        };
+        tick();
+        return setInterval(tick, 1000);
+    }
+
     function applyTranslations(lang, isUserAction = false) {
         currentLang = lang;
         if (isUserAction) {
@@ -209,12 +440,30 @@
             }
         });
 
-        // Translate elements with data-i18n
+        // Translate elements with data-i18n (innerHTML)
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             const val = t(key);
             if (val) {
                 el.innerHTML = val;
+            }
+        });
+
+        // Translate titles with data-i18n-title
+        document.querySelectorAll('[data-i18n-title]').forEach(el => {
+            const key = el.getAttribute('data-i18n-title');
+            const val = t(key);
+            if (val) {
+                el.setAttribute('title', val);
+            }
+        });
+
+        // Translate aria-label with data-i18n-aria
+        document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+            const key = el.getAttribute('data-i18n-aria');
+            const val = t(key);
+            if (val) {
+                el.setAttribute('aria-label', val);
             }
         });
 
@@ -226,7 +475,7 @@
             }
         });
 
-        // Dispatch event for dynamic apps like main.js desktop
+        // Dispatch event for dynamic apps like main.js and desktop.js
         window.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
     }
 
@@ -250,7 +499,9 @@
         getLang: () => currentLang,
         setLang: applyTranslations,
         t: t,
-        dictionary: DICTIONARY
+        dictionary: DICTIONARY,
+        getUserTimezoneInfo: getUserTimezoneInfo,
+        initLiveClock: initLiveClock
     };
 
     if (document.readyState === 'loading') {

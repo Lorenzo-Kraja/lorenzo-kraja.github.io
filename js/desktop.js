@@ -17,7 +17,8 @@
     const windows = {};
     const winKeys = ['cv', 'projects', 'contact', 'preview'];
     let activePreviewFile = null;
-    let activeWinKey = 'projects';
+    let activeWinKey = null;
+    let prevWindowBeforePreview = null;
     let allMinimized = false;
     let prevStatesBeforeShowDesktop = {};
 
@@ -39,8 +40,15 @@
         }
     }
 
+    const t = (k) => (window.I18N && window.I18N.t ? window.I18N.t(k) : k);
+
     // --------------- Live Clock -------------------------
     function initClock() {
+        if (window.I18N && typeof window.I18N.initLiveClock === 'function') {
+            window.I18N.initLiveClock('live-clock');
+            return;
+        }
+
         const el = document.getElementById("live-clock");
         if (!el) return;
 
@@ -62,6 +70,123 @@
 
         tick();
         setInterval(tick, 1000);
+    }
+
+    // --------------- Classic Mac OS System Menu Bar (Dropdowns) -----
+    function initMacMenuBar() {
+        function setupDropdown(itemId, btnId, dropdownId) {
+            const item = document.getElementById(itemId);
+            const btn = document.getElementById(btnId);
+            const dropdown = document.getElementById(dropdownId);
+            if (!item || !btn || !dropdown) return null;
+
+            let closeTimer = null;
+
+            const openDropdown = () => {
+                if (closeTimer) {
+                    clearTimeout(closeTimer);
+                    closeTimer = null;
+                }
+                document.querySelectorAll(".mac-dropdown-menu.is-open").forEach(d => {
+                    if (d !== dropdown) d.classList.remove("is-open");
+                });
+                document.querySelectorAll(".mac-menu-title.is-active").forEach(b => {
+                    if (b !== btn) {
+                        b.classList.remove("is-active");
+                        b.setAttribute("aria-expanded", "false");
+                    }
+                });
+                document.querySelectorAll(".mac-menu-item.is-open").forEach(it => {
+                    if (it !== item) it.classList.remove("is-open");
+                });
+
+                dropdown.classList.add("is-open");
+                btn.classList.add("is-active");
+                item.classList.add("is-open");
+                btn.setAttribute("aria-expanded", "true");
+            };
+
+            const closeDropdown = (immediate = false) => {
+                if (closeTimer) {
+                    clearTimeout(closeTimer);
+                    closeTimer = null;
+                }
+                if (immediate) {
+                    dropdown.classList.remove("is-open");
+                    btn.classList.remove("is-active");
+                    item.classList.remove("is-open");
+                    btn.setAttribute("aria-expanded", "false");
+                } else {
+                    closeTimer = setTimeout(() => {
+                        dropdown.classList.remove("is-open");
+                        btn.classList.remove("is-active");
+                        item.classList.remove("is-open");
+                        btn.setAttribute("aria-expanded", "false");
+                    }, 180);
+                }
+            };
+
+            // Hover for desktop
+            item.addEventListener("mouseenter", openDropdown);
+            item.addEventListener("mouseleave", () => closeDropdown(false));
+
+            // Click / touch toggle
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                if (dropdown.classList.contains("is-open")) {
+                    closeDropdown(true);
+                } else {
+                    openDropdown();
+                }
+            });
+
+            // Close on clicking outside
+            document.addEventListener("click", (e) => {
+                if (dropdown.classList.contains("is-open")) {
+                    if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                        closeDropdown(true);
+                    }
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && dropdown.classList.contains("is-open")) {
+                    closeDropdown(true);
+                }
+            });
+
+            return { open: openDropdown, close: closeDropdown };
+        }
+
+        const projectsMenu = setupDropdown("mac-menu-projects", "mac-projects-btn", "mac-projects-dropdown");
+        const contactMenu = setupDropdown("mac-menu-contact", "mac-contact-btn", "mac-contact-dropdown");
+
+        // Project dropdown items click handling: opens directly the project page on click!
+        const projectItems = document.querySelectorAll(".mac-project-dropdown-item");
+        projectItems.forEach((item) => {
+            item.addEventListener("click", (e) => {
+                const href = item.getAttribute("href");
+                if (projectsMenu) projectsMenu.close(true);
+                if (href) {
+                    window.location.href = href;
+                }
+            });
+        });
+
+        // Contact dropdown items click handling: "Chi Sono..." focuses the CV/About window
+        const aboutDropdownItems = document.querySelectorAll("#mac-contact-dropdown a");
+        aboutDropdownItems.forEach(link => {
+            const href = link.getAttribute("href");
+            if (href === "about.html" || href === "#kali-win-contact" || link.querySelector("[data-i18n='nav.about']")) {
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    if (contactMenu) contactMenu.close(true);
+                    openWindow("cv");
+                    bringToFront("cv");
+                });
+            }
+        });
     }
 
     // --------------- Window Manager ---------------------
@@ -212,6 +337,22 @@
         highestZIndex += 2;
         win.el.style.zIndex = highestZIndex;
 
+        // On mobile, enforce single-window view so windows don't overlap or clutter
+        if (window.innerWidth <= 768) {
+            winKeys.forEach(otherKey => {
+                if (otherKey !== key && windows[otherKey]) {
+                    const otherWin = windows[otherKey];
+                    otherWin.el.classList.add('is-closed');
+                    otherWin.el.classList.remove('is-focused');
+                    otherWin.el.classList.remove('is-minimized');
+                    if (otherWin.tab) {
+                        otherWin.tab.style.display = 'none';
+                        otherWin.tab.classList.remove('active');
+                    }
+                }
+            });
+        }
+
         // Visual classes
         winKeys.forEach(k => {
             if (windows[k]) {
@@ -256,6 +397,22 @@
         const win = windows[key];
         if (!win) return;
 
+        // On mobile, close all other windows so only a single window is open at a time
+        if (window.innerWidth <= 768) {
+            winKeys.forEach(otherKey => {
+                if (otherKey !== key && windows[otherKey]) {
+                    const otherWin = windows[otherKey];
+                    otherWin.el.classList.add('is-closed');
+                    otherWin.el.classList.remove('is-focused');
+                    otherWin.el.classList.remove('is-minimized');
+                    if (otherWin.tab) {
+                        otherWin.tab.style.display = 'none';
+                        otherWin.tab.classList.remove('active');
+                    }
+                }
+            });
+        }
+
         win.el.classList.remove('is-closed');
         win.el.classList.remove('is-minimized');
         if (win.tab) win.tab.style.display = 'inline-flex';
@@ -269,7 +426,22 @@
 
         win.el.classList.add('is-closed');
         win.el.classList.remove('is-focused');
-        if (win.tab) win.tab.style.display = 'none';
+        if (win.tab) {
+            win.tab.style.display = 'none';
+            win.tab.classList.remove('active');
+        }
+
+        // On mobile, if preview was closed and opened from projects, return smoothly to Personal Stuff
+        if (window.innerWidth <= 768) {
+            if (key === 'preview' && prevWindowBeforePreview === 'projects' && windows['projects']) {
+                prevWindowBeforePreview = null;
+                openWindow('projects');
+                return;
+            }
+            activeWinKey = null;
+            updateTopBarTitle("Desktop");
+            return;
+        }
 
         // Find next open window to focus
         let next = winKeys.find(k => windows[k] && !windows[k].el.classList.contains('is-closed') && !windows[k].el.classList.contains('is-minimized'));
@@ -370,6 +542,7 @@
         };
 
         handleEl.addEventListener('pointerdown', (e) => {
+            if (window.innerWidth <= 768) return;
             // Ignore if maximized or clicking control buttons
             if (windows[key].isMaximized || e.target.closest('.kali-controls') || e.target.closest('button')) {
                 return;
@@ -525,6 +698,7 @@
         };
 
         handleEl.addEventListener('pointerdown', (e) => {
+            if (window.innerWidth <= 768) return;
             if (windows[key].isMaximized || winEl.classList.contains('is-closed') || winEl.classList.contains('is-minimized')) {
                 return;
             }
@@ -1039,11 +1213,20 @@
         let history = [{ view: 'icons', inRoot: true, folderIdx: 0 }];
         let historyIdx = 0;
 
-        function openImageWindow(file, folder) {
+        let currentPreviewFolder = null;
+        let currentPreviewFiles = [];
+        let currentPreviewIdx = 0;
+
+        function renderPreviewIndex(newIdx) {
+            if (!currentPreviewFiles || currentPreviewFiles.length === 0) return;
+
+            // Wrap around modulo so navigation is infinite
+            currentPreviewIdx = ((newIdx % currentPreviewFiles.length) + currentPreviewFiles.length) % currentPreviewFiles.length;
+            const file = currentPreviewFiles[currentPreviewIdx];
             if (!file) return;
+
             activePreviewFile = file;
 
-            const winEl = document.getElementById('kali-win-preview');
             const imgEl = document.getElementById('preview-win-img');
             const titleEl = document.getElementById('preview-win-title');
             const tabLabel = document.getElementById('tab-preview-label');
@@ -1051,28 +1234,114 @@
             const statusRight = document.getElementById('preview-win-status-right');
 
             if (imgEl) {
+                imgEl.style.opacity = '0.6';
                 imgEl.src = file.src;
                 imgEl.alt = file.name;
+                imgEl.onload = () => { imgEl.style.opacity = '1'; };
             }
 
-            const titleText = `${file.name} — Image Viewer`;
+            const titleText = `${file.name} ${t('previewWin.titleSuffix')}`;
             if (titleEl) titleEl.textContent = titleText;
             if (tabLabel) tabLabel.textContent = file.name;
             if (statusLeft) {
-                statusLeft.textContent = `${file.name} • ${file.subType || 'PNG image'} • ${file.size}`;
+                statusLeft.textContent = `${file.name} • ${file.subType || t('finder.imageTypePng')} • ${file.size}`;
             }
             if (statusRight) {
-                statusRight.textContent = `${folder ? folder.name : 'Personal Stuff'} • 100%`;
+                const folderName = currentPreviewFolder ? currentPreviewFolder.name : 'Personal Stuff';
+                statusRight.textContent = `${folderName} • ${currentPreviewIdx + 1} / ${currentPreviewFiles.length}`;
             }
 
+            // Highlight active thumbnail and scroll it smoothly into view
+            const thumbsStrip = document.getElementById('preview-thumbs-strip');
+            if (thumbsStrip) {
+                const thumbItems = thumbsStrip.querySelectorAll('.kali-preview-thumb-item');
+                thumbItems.forEach((btn, idx) => {
+                    if (idx === currentPreviewIdx) {
+                        btn.classList.add('is-active');
+                        btn.setAttribute('aria-selected', 'true');
+                        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    } else {
+                        btn.classList.remove('is-active');
+                        btn.setAttribute('aria-selected', 'false');
+                    }
+                });
+            }
+
+            // Keep Finder selection in sync if folder matches
+            if (currentPreviewFolder && currentPreviewFolder.files) {
+                const fIdx = currentPreviewFolder.files.indexOf(file);
+                if (fIdx >= 0) {
+                    selectFile(fIdx);
+                }
+            }
+        }
+
+        function previewNext() {
+            renderPreviewIndex(currentPreviewIdx + 1);
+        }
+
+        function previewPrev() {
+            renderPreviewIndex(currentPreviewIdx - 1);
+        }
+
+        function openImageWindow(file, folder, fileIdx) {
+            if (!file) return;
+
+            currentPreviewFolder = folder || PROJECT_FOLDERS[activeFolderIdx] || PROJECT_FOLDERS[0];
+            currentPreviewFiles = (currentPreviewFolder && currentPreviewFolder.files)
+                ? currentPreviewFolder.files.filter(f => f.type === 'image')
+                : [];
+
+            let idx = -1;
+            if (typeof fileIdx === 'number' && fileIdx >= 0 && currentPreviewFiles[fileIdx] === file) {
+                idx = fileIdx;
+            }
+            if (idx < 0) {
+                idx = currentPreviewFiles.findIndex(f => f.src === file.src || f.name === file.name);
+            }
+            if (idx < 0) idx = 0;
+            currentPreviewIdx = idx;
+
+            activePreviewFile = currentPreviewFiles[currentPreviewIdx] || file;
+            if (window.innerWidth <= 768) {
+                prevWindowBeforePreview = 'projects';
+            }
+
+            // Populate thumbnails strip in the image viewer
+            const thumbsStrip = document.getElementById('preview-thumbs-strip');
+            if (thumbsStrip) {
+                thumbsStrip.innerHTML = currentPreviewFiles.map((f, i) => `
+                    <button class="kali-preview-thumb-item ${i === currentPreviewIdx ? 'is-active' : ''}" 
+                            data-thumb-idx="${i}" 
+                            role="tab" 
+                            aria-selected="${i === currentPreviewIdx ? 'true' : 'false'}" 
+                            title="${escapeHTML(f.name)} (${i + 1}/${currentPreviewFiles.length})">
+                        <img src="${f.src}" alt="${escapeHTML(f.name)}" loading="lazy">
+                    </button>
+                `).join('');
+
+                thumbsStrip.querySelectorAll('.kali-preview-thumb-item').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const tIdx = parseInt(btn.dataset.thumbIdx, 10);
+                        if (!isNaN(tIdx)) {
+                            renderPreviewIndex(tIdx);
+                        }
+                    });
+                });
+            }
+
+            renderPreviewIndex(currentPreviewIdx);
+
+            const winEl = document.getElementById('kali-win-preview');
             if (winEl && windows['preview'] && !windows['preview'].hasBeenDragged && !windows['preview'].isMaximized) {
                 const desktop = document.getElementById('kali-os-desktop') || document.body;
                 const dw = desktop.clientWidth || window.innerWidth;
                 const dh = desktop.clientHeight || window.innerHeight;
-                const winW = Math.min(700, Math.round(dw * 0.72));
-                const winH = Math.min(540, Math.round(dh * 0.72));
-                const left = Math.max(30, Math.round((dw - winW) / 2));
-                const top = Math.max(40, Math.round((dh - winH) / 2));
+                const winW = Math.min(760, Math.round(dw * 0.78));
+                const winH = Math.min(580, Math.round(dh * 0.78));
+                const left = Math.max(20, Math.round((dw - winW) / 2));
+                const top = Math.max(30, Math.round((dh - winH) / 2));
 
                 winEl.style.width = `${winW}px`;
                 winEl.style.height = `${winH}px`;
@@ -1208,7 +1477,7 @@
                 crumbSep.style.display = 'none';
                 crumbSub.style.display = 'none';
                 crumbSub.textContent = '';
-                if (countLabel) countLabel.textContent = `${PROJECT_FOLDERS.length} ${PROJECT_FOLDERS.length === 1 ? 'cartella' : 'cartelle'}`;
+                if (countLabel) countLabel.textContent = `${PROJECT_FOLDERS.length} ${PROJECT_FOLDERS.length === 1 ? t('finder.folderSingle') : t('finder.folderPlural')}`;
             } else {
                 const folder = PROJECT_FOLDERS[activeFolderIdx] || PROJECT_FOLDERS[0];
                 crumbRoot.classList.remove('active');
@@ -1216,7 +1485,7 @@
                 crumbSub.style.display = 'inline-block';
                 crumbSub.textContent = folder.name;
                 crumbSub.classList.add('active');
-                if (countLabel) countLabel.textContent = `${folder.files.length} elementi`;
+                if (countLabel) countLabel.textContent = `${folder.files.length} ${t('finder.itemsCount')}`;
             }
         }
 
@@ -1281,7 +1550,7 @@
                 closePreview();
                 // Render root: folders grid
                 finderGrid.innerHTML = PROJECT_FOLDERS.map((folder, idx) => `
-                    <div class="pd-finder-item pd-folder-card" data-folder-idx="${idx}" tabindex="0" role="button" title="Doppio clic o Invio per aprire ${escapeHTML(folder.name)}">
+                    <div class="pd-finder-item pd-folder-card" data-folder-idx="${idx}" tabindex="0" role="button" title="${t('finder.dblClickOpen')} ${escapeHTML(folder.name)}">
                         <div class="pd-folder-graphic">
                             <svg viewBox="0 0 74 60" width="70" height="58" fill="none">
                                 <path d="M4 10a4 4 0 0 1 4-4h20l6 6h36a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V10z" fill="#007aff"/>
@@ -1293,7 +1562,7 @@
                         <span class="pd-finder-label">${escapeHTML(folder.name)}</span>
                         <div class="pd-finder-tag-row">
                             <span class="pd-tag-dot tag-${folder.tagColor || 'blue'}"></span>
-                            <span class="pd-finder-sub">${folder.files.length} file</span>
+                            <span class="pd-finder-sub">${folder.files.length} ${folder.files.length === 1 ? t('finder.fileSingle') : t('finder.filePlural')}</span>
                         </div>
                     </div>
                 `).join('');
@@ -1313,6 +1582,10 @@
                         finderGrid.querySelectorAll('.pd-finder-item').forEach(c => c.classList.remove('is-selected'));
                         card.classList.add('is-selected');
                         closePreview();
+                        // On touch / mobile screens (<= 768px), single tap immediately opens the folder
+                        if (window.innerWidth <= 768) {
+                            enterFolder();
+                        }
                     });
 
                     card.addEventListener('dblclick', enterFolder);
@@ -1326,7 +1599,7 @@
 
                 if (statusSummary) {
                     const totalFiles = PROJECT_FOLDERS.reduce((acc, f) => acc + f.files.length, 0);
-                    statusSummary.textContent = `${totalFiles} file • Jewelry Inspiration`;
+                    statusSummary.textContent = `${totalFiles} ${t('finder.filePlural')} • Jewelry Inspiration`;
                 }
             } else {
                 // Render files inside active folder
@@ -1359,6 +1632,13 @@
                     const pick = (e) => {
                         e.stopPropagation();
                         openPreview(fIdx);
+                        // On mobile, also directly open the full image window for convenient viewing
+                        if (window.innerWidth <= 768) {
+                            const file = folder.files[fIdx];
+                            if (file) {
+                                openImageWindow(file, folder, fIdx);
+                            }
+                        }
                     };
 
                     const openDirect = (e) => {
@@ -1366,7 +1646,7 @@
                         openPreview(fIdx);
                         const file = folder.files[fIdx];
                         if (file) {
-                            openImageWindow(file, folder);
+                            openImageWindow(file, folder, fIdx);
                         }
                     };
 
@@ -1388,7 +1668,7 @@
                 }
 
                 if (statusSummary) {
-                    statusSummary.textContent = `${folder.files.length} file • ${folder.name}`;
+                    statusSummary.textContent = `${folder.files.length} ${folder.files.length === 1 ? t('finder.fileSingle') : t('finder.filePlural')} • ${folder.name}`;
                 }
             }
         }
@@ -1465,17 +1745,23 @@
                 img.src = file.src;
                 img.alt = file.name;
                 img.style.cursor = 'pointer';
-                img.title = 'Fai doppio clic per aprire la finestra';
+                img.title = t('finder.dblClickWindow');
                 img.ondblclick = (e) => {
                     e.stopPropagation();
-                    openImageWindow(file, folder);
+                    openImageWindow(file, folder, activeFileIdx);
+                };
+                img.onclick = (e) => {
+                    if (window.innerWidth <= 768) {
+                        e.stopPropagation();
+                        openImageWindow(file, folder, activeFileIdx);
+                    }
                 };
             });
             document.querySelectorAll('.pd-preview-title-target').forEach(el => {
                 el.textContent = file.name;
             });
             document.querySelectorAll('.pd-preview-sub-target').forEach(el => {
-                el.textContent = `${file.subType || 'PNG image'} - ${file.size}`;
+                el.textContent = `${file.subType || t('finder.imageTypePng')} - ${file.size}`;
             });
             document.querySelectorAll('.pd-meta-created-target').forEach(el => {
                 el.textContent = file.created || "08/14/2025, 02:41:18 AM";
@@ -1520,7 +1806,11 @@
 
                 const handleSelect = (e) => {
                     e.stopPropagation();
-                    openPreview(fIdx);
+                    if (window.innerWidth <= 768) {
+                        handleOpen(e);
+                    } else {
+                        openPreview(fIdx);
+                    }
                 };
 
                 const handleOpen = (e) => {
@@ -1528,7 +1818,7 @@
                     openPreview(fIdx);
                     const file = folder.files[fIdx];
                     if (file) {
-                        openImageWindow(file, folder);
+                        openImageWindow(file, folder, fIdx);
                     }
                 };
 
@@ -1597,6 +1887,98 @@
         renderFinderView();
         updateBreadcrumbs();
         updateHistoryButtons();
+
+        // Reactive Language Switch Listener for File Manager
+        window.addEventListener('langchange', () => {
+            renderFolderList();
+            renderFinderView();
+            updateBreadcrumbs();
+            if (activeFileIdx >= 0) {
+                selectFile(activeFileIdx);
+            }
+            const statusHint = document.getElementById('pd-status-hint');
+            if (statusHint) {
+                statusHint.textContent = t('finder.dblClickFolderHint');
+            }
+            if (activePreviewFile) {
+                const titleEl = document.getElementById('preview-win-title');
+                const statusLeft = document.getElementById('preview-win-status-left');
+                const statusRight = document.getElementById('preview-win-status-right');
+                if (titleEl) titleEl.textContent = `${activePreviewFile.name} ${t('previewWin.titleSuffix')}`;
+                if (statusLeft) statusLeft.textContent = `${activePreviewFile.name} • ${activePreviewFile.subType || t('finder.imageTypePng')} • ${activePreviewFile.size}`;
+                if (statusRight && currentPreviewFolder && currentPreviewFiles.length > 0) {
+                    statusRight.textContent = `${currentPreviewFolder.name} • ${currentPreviewIdx + 1} / ${currentPreviewFiles.length}`;
+                }
+            }
+        });
+
+        // ========================================================
+        // 7. IMAGE VIEWER CONTROLS (ARROWS, SWIPE & KEYBOARD)
+        // ========================================================
+        const btnPrev = document.getElementById('preview-btn-prev');
+        const btnNext = document.getElementById('preview-btn-next');
+        if (btnPrev) {
+            btnPrev.addEventListener('click', (e) => {
+                e.stopPropagation();
+                previewPrev();
+            });
+        }
+        if (btnNext) {
+            btnNext.addEventListener('click', (e) => {
+                e.stopPropagation();
+                previewNext();
+            });
+        }
+
+        const previewStage = document.getElementById('preview-win-stage') || document.getElementById('preview-win-body');
+        if (previewStage) {
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchEndX = 0;
+            let touchEndY = 0;
+
+            previewStage.addEventListener('touchstart', (e) => {
+                if (e.touches && e.touches.length === 1) {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                    touchEndX = touchStartX;
+                    touchEndY = touchStartY;
+                }
+            }, { passive: true });
+
+            previewStage.addEventListener('touchmove', (e) => {
+                if (e.touches && e.touches.length === 1) {
+                    touchEndX = e.touches[0].clientX;
+                    touchEndY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            previewStage.addEventListener('touchend', () => {
+                const deltaX = touchEndX - touchStartX;
+                const deltaY = touchEndY - touchStartY;
+                // Horizontal swipe: threshold 35px, primarily horizontal movement
+                if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+                    if (deltaX < 0) {
+                        previewNext(); // Swipe finger left -> next image
+                    } else {
+                        previewPrev(); // Swipe finger right -> previous image
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('keydown', (e) => {
+            const previewWin = document.getElementById('kali-win-preview');
+            if (previewWin && !previewWin.classList.contains('is-closed') && activeWinKey === 'preview') {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    previewPrev();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    previewNext();
+                }
+            }
+        });
     }
 
     function escapeHTML(str) {
@@ -1731,6 +2113,25 @@
     }
 
     function openScatteredWorkspace() {
+        if (window.innerWidth <= 768) {
+            // On mobile, start with ALL windows closed so the user sees the clean desktop with icons
+            winKeys.forEach(k => {
+                const w = windows[k];
+                if (w) {
+                    w.el.classList.add('is-closed');
+                    w.el.classList.remove('is-focused');
+                    w.el.classList.remove('is-minimized');
+                    if (w.tab) {
+                        w.tab.style.display = 'none';
+                        w.tab.classList.remove('active');
+                    }
+                }
+            });
+            activeWinKey = null;
+            updateTopBarTitle("Desktop");
+            return;
+        }
+
         arrangeScatteredWindows();
 
         // Staggered animated opening sequence: CV -> Contact -> Archive (Projects in front)
@@ -1870,16 +2271,16 @@
             copyBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 navigator.clipboard.writeText('lorenzokraja99@gmail.com').then(() => {
-                    copyBtn.textContent = 'COPIATO!';
+                    copyBtn.textContent = t('btn.copied');
                     copyBtn.classList.add('copied');
                     setTimeout(() => {
-                        copyBtn.textContent = 'COPIA';
+                        copyBtn.textContent = t('btn.copy');
                         copyBtn.classList.remove('copied');
                     }, 2000);
                 }).catch(() => {
-                    copyBtn.textContent = 'COPIATO!';
+                    copyBtn.textContent = t('btn.copied');
                     setTimeout(() => {
-                        copyBtn.textContent = 'COPIA';
+                        copyBtn.textContent = t('btn.copy');
                     }, 2000);
                 });
             });
@@ -1893,10 +2294,36 @@
         }
     }
 
+    // --------------- Reactive Language Change Listener -----
+    window.addEventListener('langchange', () => {
+        // Re-render breadcrumbs & current Finder view
+        if (typeof updateBreadcrumbs === 'function') updateBreadcrumbs();
+        if (typeof renderFinderView === 'function') renderFinderView();
+
+        // Re-update active file inspector text if open
+        if (typeof activeFileIdx === 'number' && activeFileIdx >= 0 && typeof selectFile === 'function') {
+            selectFile(activeFileIdx);
+        }
+
+        // Re-update image viewer window title & statusbar if open
+        if (activePreviewFile) {
+            const titleEl = document.getElementById('preview-win-title');
+            const statusLeft = document.getElementById('preview-win-status-left');
+            if (titleEl) titleEl.textContent = `${activePreviewFile.name} ${t('previewWin.titleSuffix')}`;
+            if (statusLeft) statusLeft.textContent = `${activePreviewFile.name} • ${activePreviewFile.subType || t('finder.imageTypePng')} • ${activePreviewFile.size}`;
+        }
+
+        const copyBtn = document.getElementById('copy-email-btn');
+        if (copyBtn && !copyBtn.classList.contains('copied')) {
+            copyBtn.textContent = t('btn.copy');
+        }
+    });
+
     // --------------- Document Ready ---------------------
     document.addEventListener('DOMContentLoaded', () => {
         initTheme();
         initClock();
+        initMacMenuBar();
         initWindows();
         initDesktopIcons();
         initCvControls();

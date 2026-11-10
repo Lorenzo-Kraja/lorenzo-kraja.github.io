@@ -384,8 +384,9 @@ body.dark-theme .mac-top-nav {
 }
 
 .mac-nav-brand {
-    font-size: 13px;
-    font-weight: 700;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14.5px;
+    font-weight: 500;
     color: #000000;
     text-decoration: none;
     padding: 0 14px 0 0;
@@ -862,14 +863,37 @@ body.dark-theme .mac-dropdown-menu {
     display: block !important;
 }
 
-.mac-menu-has-dropdown:hover > .mac-menu-title {
+.mac-menu-has-dropdown:hover > .mac-menu-title,
+.mac-menu-title.is-active {
     background: #000000 !important;
     color: #ffffff !important;
 }
 
-body.dark-theme .mac-menu-has-dropdown:hover > .mac-menu-title {
+body.dark-theme .mac-menu-has-dropdown:hover > .mac-menu-title,
+body.dark-theme .mac-menu-title.is-active {
     background: #ffffff !important;
     color: #000000 !important;
+}
+
+.mac-dropdown-arrow {
+    font-size: 8px;
+    margin-left: 3px;
+    display: inline-block;
+    transition: transform 0.15s ease;
+    opacity: 0.8;
+}
+
+.mac-menu-item.is-open .mac-dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.mac-item-badge {
+    font-family: 'Space Mono', SFMono-Regular, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    opacity: 0.65;
+    letter-spacing: -0.02em;
+    margin-right: 4px;
 }
 
 .mac-dropdown-item {
@@ -937,20 +961,34 @@ body.dark-theme .mac-dropdown-divider {
 
 /* ============================================================
    RESPONSIVE ADAPTATIONS (<= 900px)
+   Navbar has Projects & Contacts dropdown buttons; Hamburger hidden
    ============================================================ */
 @media (max-width: 900px) {
     .mac-top-nav {
         padding: 0 8px;
     }
 
-    .mac-menu-bar-items,
-    .mac-help-icon,
-    .mac-app-icon {
-        display: none !important;
+    .mac-menu-bar-items {
+        display: flex !important;
+        align-items: center !important;
+        gap: 3px !important;
     }
 
-    .mac-menu-toggle {
-        display: inline-flex !important;
+    .mac-menu-title {
+        padding: 2px 7px !important;
+        font-size: 11.5px !important;
+        gap: 2px !important;
+    }
+
+    .mac-dropdown-menu {
+        min-width: 220px !important;
+    }
+
+    .mac-help-icon,
+    .mac-app-icon,
+    .mac-menu-toggle,
+    .nb-menu-toggle {
+        display: none !important;
     }
 }
 
@@ -2210,11 +2248,10 @@ body.dark-theme .sd-toc-item {
         width: 100% !important;
         height: clamp(20px, 2.8vh, 26px) !important;
         min-height: 20px !important;
-        display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 8px !important;
-        padding: 0 14px 2px 14px !important;
+        display: flex !important;
+        justify-content: space-between !important;
         align-items: center !important;
+        padding: 0 14px 2px 14px !important;
         background: transparent !important;
         border-top: none !important;
         box-sizing: border-box !important;
@@ -2222,16 +2259,32 @@ body.dark-theme .sd-toc-item {
         color: var(--text-muted) !important;
         z-index: 20 !important;
         margin: 0 !important;
+        pointer-events: auto !important;
+    }
+
+    .nb-footer-links {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    .nb-footer-sep {
+        opacity: 0.45;
+        font-size: 8px;
     }
 
     .nb-footer a {
         color: var(--text-muted);
         text-decoration: none;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        transition: color 0.15s ease;
     }
 
     .nb-footer a:hover {
         color: var(--text-color);
         opacity: 1;
+        text-decoration: underline;
     }
 
     .nb-footer-end {
@@ -4381,15 +4434,30 @@ body.kali-os-page::before {
     width: 100%;
     background: #0d0d0f;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
     overflow: hidden;
-    padding: 16px;
+    padding: 8px 12px 6px 12px;
     box-sizing: border-box;
+    position: relative;
+    user-select: none;
 }
 
 body.dark-theme .kali-preview-body {
     background: #08080a;
+}
+
+.kali-preview-stage {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    touch-action: pan-y pinch-zoom;
 }
 
 .kali-preview-img-wrap {
@@ -4398,6 +4466,7 @@ body.dark-theme .kali-preview-body {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .kali-preview-img-wrap img {
@@ -4410,7 +4479,125 @@ body.dark-theme .kali-preview-body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     user-select: none;
     -webkit-user-drag: none;
-    transition: transform 0.2s ease;
+    transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kali-preview-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(24, 24, 28, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 15;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    outline: none;
+    padding: 0;
+}
+
+.kali-preview-nav-btn:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    transform: translateY(-50%) scale(1.08);
+}
+
+.kali-preview-nav-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.kali-preview-prev {
+    left: 10px;
+}
+
+.kali-preview-next {
+    right: 10px;
+}
+
+/* Thumbnail Carousel Strip */
+.kali-preview-thumbs-bar {
+    flex: 0 0 auto;
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 2px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kali-preview-thumbs-strip {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 12px;
+    max-width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+}
+
+.kali-preview-thumbs-strip::-webkit-scrollbar {
+    height: 4px;
+}
+
+.kali-preview-thumbs-strip::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 4px;
+}
+
+.kali-preview-thumb-item {
+    flex: 0 0 50px;
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #141416;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    position: relative;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.kali-preview-thumb-item:hover {
+    opacity: 0.85;
+    border-color: rgba(255, 255, 255, 0.45);
+    transform: translateY(-2px);
+}
+
+.kali-preview-thumb-item.is-active {
+    opacity: 1;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4), 0 4px 12px rgba(0, 0, 0, 0.6);
+    transform: scale(1.06);
+}
+
+.kali-preview-thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 /* public---domain Header Toolbar (<, >, PATH) */
@@ -5423,10 +5610,9 @@ body.dark-theme .pd-inspector-close-btn {
         gap: 10px !important;
     }
 
-    .nb-menu-toggle {
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+    .nb-menu-toggle,
+    .mac-menu-toggle {
+        display: none !important;
     }
 
     /* Mobile Hamburger Menu Dropdown Overlay */
@@ -5754,7 +5940,9 @@ body.dark-theme .pd-inspector-close-btn {
     #project-win-1.fg-win-mikk,
     #project-win-0.fg-win-harp,
     #project-win-2.fg-win-luca,
-    #project-win-2.fg-win-jewelry {
+    #project-win-2.fg-win-jewelry,
+    .fg-hero-window,
+    .fg-project-window {
         position: relative !important;
         top: auto !important;
         left: auto !important;
@@ -5762,37 +5950,156 @@ body.dark-theme .pd-inspector-close-btn {
         bottom: auto !important;
         width: 100% !important;
         max-width: 100% !important;
-        margin: 0 auto !important;
+        margin: 0 auto 20px auto !important;
         transform: none !important;
         height: auto !important;
-        min-height: 0 !important;
+        min-height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.16) !important;
+    }
+
+    /* Home Page Project Cards: Prioritize Large, Crisp Images (Fix 0-height collapsed windows) */
+    .fg-hero-window-content,
+    .fg-project-window .fg-hero-window-content,
+    .fg-project-slideshow {
+        width: 100% !important;
+        aspect-ratio: 16 / 10 !important;
+        height: auto !important;
+        min-height: 220px !important;
+        flex: none !important;
+        display: block !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    .fg-hero-window-content .fg-slides-track,
+    .fg-project-slideshow .fg-slides-track {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .fg-hero-window-content .fg-slide,
+    .fg-project-slideshow .fg-slide {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .fg-hero-window-content .fg-slide img,
+    .fg-hero-window-content .fg-slide video,
+    .fg-project-slideshow .fg-slide img,
+    .fg-project-slideshow .fg-slide video {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    /* Disable resize handles on mobile to prevent touch drag collisions */
+    .kali-resize-handle {
+        display: none !important;
+        pointer-events: none !important;
     }
 
     #hero-win-vlc .vlc-video-container {
         width: 100% !important;
         aspect-ratio: 16 / 9 !important;
         height: auto !important;
-        min-height: 0 !important;
+        min-height: 200px !important;
         flex: none !important;
+        position: relative !important;
+        overflow: hidden !important;
+        display: block !important;
     }
 
     #hero-win-vlc .vlc-video-element {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
+        display: block !important;
+    }
+
+    #app {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .mac-top-nav {
+        order: -10 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 9999 !important;
+    }
+
+    /* Red Statement Marquee placed directly under Top Navbar on mobile with margins */
+    .mschf-marquee-wrap {
+        order: 2 !important;
+        margin: 10px 0 16px 0 !important;
+        border-top: 1px solid var(--border-color) !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        height: 36px !important;
+        flex: 0 0 auto !important;
+    }
+
+    .mschf-marquee-item span {
+        font-size: 14.5px !important;
+    }
+
+    .sd-hero-section {
+        order: 3 !important;
+        grid-template-columns: 1fr !important;
+        padding: 8px 14px 44px 14px !important;
+        min-height: auto !important;
+        gap: 28px !important;
+    }
+
+    .nb-footer {
+        order: 4 !important;
+    }
+
+    /* Mobile VLC Window Titlebar: Ensure full file name is completely readable without ellipsis truncation */
+    .vlc-titlebar {
+        padding: 0 6px !important;
+    }
+
+    .vlc-titlebar .kali-titlebar-spacer {
+        display: none !important;
+    }
+
+    .vlc-titlebar .kali-controls {
+        width: auto !important;
+        gap: 4px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .vlc-title-info {
+        justify-content: flex-start !important;
+        padding-left: 6px !important;
+        gap: 5px !important;
+        overflow: visible !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+
+    .vlc-title-text {
+        font-size: clamp(8px, 2.5vw, 10px) !important;
+        letter-spacing: -0.015em !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        max-width: none !important;
     }
 
     #hero-win-vlc { order: 1 !important; }
     #project-win-0 { order: 2 !important; }
     #project-win-1 { order: 3 !important; }
     #project-win-2 { order: 4 !important; }
-
-    .sd-hero-section {
-        grid-template-columns: 1fr !important;
-        padding: 24px 14px 44px 14px !important;
-        min-height: auto !important;
-        gap: 28px !important;
-    }
 
     .sd-hero-center {
         order: 1 !important;
@@ -5939,14 +6246,38 @@ body.dark-theme .pd-inspector-close-btn {
         display: flex !important;
         flex-direction: column !important;
         gap: 12px !important;
-        padding-top: 36px !important;
+        padding-top: 28px !important;
         padding-bottom: 24px !important;
-        font-size: 14px !important;
+        font-size: 13.5px !important;
         grid-template-columns: none !important;
+        align-items: center !important;
+        text-align: center !important;
+        pointer-events: auto !important;
+    }
+
+    .nb-footer-links {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px 12px !important;
+    }
+
+    .nb-footer-link {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        color: var(--text-muted) !important;
+        text-decoration: none !important;
+        font-weight: 500 !important;
+    }
+
+    .nb-footer-link:hover {
+        color: var(--text-color) !important;
+        text-decoration: underline !important;
     }
 
     .nb-footer-end {
-        justify-content: flex-start !important;
+        justify-content: center !important;
     }
 
     /* ============================================================
@@ -5954,6 +6285,8 @@ body.dark-theme .pd-inspector-close-btn {
        (Identico alle reference: canvas scrollabile, finestre stacked)
        ============================================================ */
     body.kali-os-page {
+        display: flex !important;
+        flex-direction: column !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
         height: auto !important;
@@ -5962,17 +6295,63 @@ body.dark-theme .pd-inspector-close-btn {
         position: relative !important;
     }
 
-    /* Topbar on Mobile */
-    body.kali-os-page .kali-topbar {
+    /* Topbar on Mobile - Identical to Desktop Mac OS Menu Bar, pinned at top */
+    body.kali-os-page .mac-top-nav {
+        order: -10 !important;
         position: sticky !important;
         top: 0 !important;
-        height: 38px !important;
-        padding: 0 10px !important;
-        z-index: 1000 !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: 28px !important;
+        flex: 0 0 28px !important;
+        z-index: 9999 !important;
+        background: #ffffff !important;
+        border-bottom: 1px solid #000000 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 8px !important;
+        box-sizing: border-box !important;
+        font-family: 'Chicago', 'Geneva', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     }
 
+    body.dark-theme.kali-os-page .mac-top-nav {
+        background: #1c1c1e !important;
+        border-bottom: 1px solid #38383a !important;
+        color: #ffffff !important;
+    }
+
+    body.kali-os-page .mac-nav-brand {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        letter-spacing: -0.01em !important;
+        color: #000000 !important;
+        text-decoration: none !important;
+        padding: 0 8px 0 0 !important;
+        height: 100% !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        border-right: 1px solid #d4d4d4 !important;
+        margin-right: 3px !important;
+    }
+
+    body.dark-theme.kali-os-page .mac-nav-brand {
+        color: #ffffff !important;
+        border-right-color: #38383a !important;
+    }
+
+    body.kali-os-page .mac-nav-left {
+        display: flex !important;
+        align-items: center !important;
+        height: 100% !important;
+    }
+
+    body.kali-os-page .kali-topbar-back,
+    body.kali-os-page .kali-brand-text,
+    body.kali-os-page .kali-topbar-brand,
     body.kali-os-page .kali-topbar-brand .kali-brand-tag,
     body.kali-os-page .kali-sys-indicators,
     body.kali-os-page .kali-topbar-center,
@@ -6006,12 +6385,12 @@ body.dark-theme .pd-inspector-close-btn {
     /* Desktop Icons Grid: Clean Top Row */
     body.kali-os-page .kali-desktop-icons-layer {
         display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 8px 4px !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px 6px !important;
         position: static !important;
-        padding: 6px 2px 14px 2px !important;
+        padding: 12px 6px 18px 6px !important;
         width: 100% !important;
-        max-width: 560px !important;
+        max-width: 440px !important;
         margin: 0 auto !important;
         order: 1 !important;
     }
@@ -6107,15 +6486,24 @@ body.dark-theme .pd-inspector-close-btn {
     }
 
     /* In screenshot 1: Folders & Files side-by-side (Row 1), Inspector below (Row 2)! */
-    body.kali-os-page .pd-3col-body,
-    .kali-window-projects .pd-3col-body,
-    .fg-win-projects .pd-3col-body {
+    body.kali-os-page .pd-3col-body:not([style*="display: none"]):not([style*="display:none"]),
+    .kali-window-projects .pd-3col-body:not([style*="display: none"]):not([style*="display:none"]),
+    .fg-win-projects .pd-3col-body:not([style*="display: none"]):not([style*="display:none"]) {
         display: grid !important;
         grid-template-columns: 44% 56% !important;
         grid-template-rows: 195px 1fr !important;
         flex: 1 1 auto !important;
         min-height: 0 !important;
         overflow: hidden !important;
+    }
+
+    body.kali-os-page .pd-3col-body[style*="display: none"],
+    body.kali-os-page .pd-3col-body[style*="display:none"],
+    .kali-window-projects .pd-3col-body[style*="display: none"],
+    .kali-window-projects .pd-3col-body[style*="display:none"],
+    .fg-win-projects .pd-3col-body[style*="display: none"],
+    .fg-win-projects .pd-3col-body[style*="display:none"] {
+        display: none !important;
     }
 
     body.kali-os-page .pd-col-folders,
@@ -6248,26 +6636,108 @@ body.dark-theme .pd-inspector-close-btn {
         font-size: 10px !important;
     }
 
-    /* Bottom Taskbar on Mobile */
+    /* Bottom Taskbar on Mobile: Hidden to allow single unified scrolling page */
     body.kali-os-page .kali-os-taskbar {
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        height: 38px !important;
-        z-index: 2000 !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-    }
-
-    body.kali-os-page .kali-taskbar-launcher span,
-    body.kali-os-page .kali-workspace-switch {
         display: none !important;
     }
 
-    body.kali-os-page .kali-task-tab {
-        padding: 3px 8px !important;
-        font-size: 11px !important;
+    /* Mobile Back Button: HOME in flow above footer, exact Adv Scam style as About button */
+    body.kali-os-page #about-side-back,
+    .fg-side-about.fg-side-about-back {
+        order: 8 !important;
+        display: flex !important;
+        position: relative !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 36px 0 20px 0 !important;
+        z-index: 100 !important;
+        pointer-events: auto !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    body.kali-os-page #about-side-back .sd-scam-home-link {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+        font-size: clamp(17px, 4.8vw, 22px) !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.03em !important;
+        color: var(--retro-blue) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        animation: scamAdvBlink 0.65s steps(1, start) infinite !important;
+        text-decoration: none !important;
+        line-height: 1 !important;
+        white-space: nowrap !important;
+        cursor: pointer !important;
+    }
+
+    body.kali-os-page #about-side-back .sd-scam-home-link:hover {
+        animation-play-state: paused !important;
+        opacity: 1 !important;
+        transform: scale(1.06) !important;
+    }
+
+    body.kali-os-page #about-side-back .sd-scam-about-text {
+        text-decoration: underline !important;
+        text-underline-offset: 3px !important;
+        text-decoration-thickness: 1.5px !important;
+    }
+
+    body.kali-os-page #about-side-back .sd-scam-arrow-left-wrap {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        animation: scamArrowNudgeLeft 0.35s steps(1) infinite !important;
+    }
+
+    body.kali-os-page #about-side-back .sd-scam-arrow-left-wrap svg {
+        width: clamp(16px, 4vw, 20px) !important;
+        height: clamp(16px, 4vw, 20px) !important;
+        fill: currentColor !important;
+    }
+
+    body.dark-theme.kali-os-page #about-side-back .sd-scam-home-link {
+        color: var(--retro-blue) !important;
+    }
+
+    /* Mobile Brand Footer on About page - completely transparent */
+    .nb-about-page-footer {
+        order: 9 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        gap: 10px !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 20px 16px 36px 16px !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        border-top: none !important;
+        box-shadow: none !important;
+        font-size: 12px !important;
+        width: 100% !important;
+        margin-top: 12px !important;
+        position: relative !important;
+        z-index: 10 !important;
+        box-sizing: border-box !important;
+    }
+
+    .nb-about-page-footer .nb-footer-links {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px 12px !important;
     }
 }
 
@@ -7317,48 +7787,16 @@ body.dark-theme .digital-mini-badge {
     transform: scale(1.07);
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments — High-Fidelity Image Priority on Mobile */
 @media (max-width: 860px) {
     .digital-monograph-container {
-        padding: 8px 16px 60px 16px;
-    }
-    .digital-tree-body {
-        padding-left: 60px;
-    }
-    .digital-rails-gutter {
-        width: 50px;
-    }
-    .digital-rail-line {
-        width: 9px;
-    }
-    .digital-section-node .digital-node-header::before {
-        width: 32px;
-    }
-    .digital-plate-node .digital-node-header::before {
-        width: 20px;
-    }
-    .digital-project-title {
-        font-size: clamp(40px, 11vw, 64px);
-    }
-    .digital-editorial-pair,
-    .digital-editorial-joined-row,
-    .digital-editorial-trio {
-        grid-template-columns: 1fr;
-        gap: 32px;
-    }
-    .digital-editorial-pair .digital-item-2,
-    .digital-editorial-pair .digital-item-4,
-    .digital-editorial-pair .digital-item-7 {
-        margin-top: 0;
-    }
-}
-
-@media (max-width: 540px) {
-    .digital-monograph-container {
-        padding: 6px 12px 50px 12px !important;
+        padding: 8px 12px 60px 12px !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
     .digital-tree-body {
         padding-left: 36px !important;
+        padding-right: 0 !important;
     }
     .digital-rails-gutter {
         width: 26px !important;
@@ -7366,22 +7804,99 @@ body.dark-theme .digital-mini-badge {
     .digital-rail-line {
         width: 5px !important;
     }
-    .digital-project-title {
-        font-size: clamp(32px, 9.5vw, 46px) !important;
-        letter-spacing: -0.02em !important;
-    }
-    .digital-quote {
-        font-size: 15px !important;
-        line-height: 1.5 !important;
+    .digital-node-content,
+    .digital-sub-branch {
+        padding-left: 12px !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
     }
     .digital-section-node .digital-node-header::before {
-        width: 20px !important;
+        width: 22px !important;
     }
     .digital-plate-node .digital-node-header::before {
         width: 14px !important;
     }
-    .digital-image-box {
-        margin-top: 8px !important;
+    .digital-project-title {
+        font-size: clamp(38px, 10vw, 58px) !important;
+    }
+    .digital-editorial-pair,
+    .digital-editorial-joined-row,
+    .digital-editorial-trio {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 24px !important;
+        width: 100% !important;
+    }
+    .digital-editorial-pair .digital-item-2,
+    .digital-editorial-pair .digital-item-4,
+    .digital-editorial-pair .digital-item-7 {
+        margin-top: 0 !important;
+    }
+    .digital-sub-branch > .digital-image-box,
+    .digital-editorial-item .digital-image-box,
+    .digital-editorial-hero .digital-image-box {
+        padding: 4px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .digital-image-box img {
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        object-fit: contain !important;
+        display: block !important;
+    }
+}
+
+@media (max-width: 540px) {
+    .digital-monograph-container {
+        padding: 6px 8px 50px 8px !important;
+    }
+    .digital-tree-body {
+        padding-left: 18px !important;
+        padding-right: 0 !important;
+    }
+    .digital-rails-gutter {
+        width: 12px !important;
+    }
+    .digital-rail-line {
+        width: 3px !important;
+    }
+    .digital-node-content,
+    .digital-sub-branch {
+        padding-left: 6px !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        gap: 12px !important;
+    }
+    .digital-sub-row::before {
+        width: 6px !important;
+    }
+    .digital-project-title {
+        font-size: clamp(32px, 9.5vw, 44px) !important;
+        letter-spacing: -0.025em !important;
+        word-break: break-word !important;
+    }
+    .digital-quote {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+    }
+    .digital-section-node .digital-node-header::before {
+        width: 12px !important;
+    }
+    .digital-plate-node .digital-node-header::before {
+        width: 8px !important;
+    }
+    .digital-sub-branch > .digital-image-box,
+    .digital-editorial-item .digital-image-box,
+    .digital-editorial-hero .digital-image-box {
+        padding: 3px !important;
+        border-width: 1px !important;
+        margin-top: 6px !important;
+        border-radius: 4px !important;
+    }
+    .digital-image-box img {
+        border-radius: 2px !important;
     }
 }
 
@@ -7971,5 +8486,89 @@ body.lightbox-open {
         padding: 5px 12px;
         gap: 8px;
         margin-top: 10px;
+    }
+}
+
+/* ============================================================
+   PROJECT PAGES FOOTER (Harp Chair, Mikk, Jewelry)
+   Consistent footer with clickable interactive links
+   ============================================================ */
+.nb-project-page-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 24px 14px 28px 14px !important;
+    border-top: 1px solid var(--border-color) !important;
+    font-size: 12.5px !important;
+    color: var(--text-muted) !important;
+    margin-top: 48px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+@media (max-width: 768px) {
+    .nb-project-page-footer {
+        flex-direction: column !important;
+        gap: 12px !important;
+        text-align: center !important;
+        padding: 24px 12px 32px 12px !important;
+    }
+}
+
+/* ============================================================
+   ABOUT PAGE BRAND FOOTER & BLINKING SIDE HOME BUTTON (DESKTOP)
+   ============================================================ */
+.nb-about-page-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    width: 100% !important;
+    padding: 0 16px !important;
+    box-sizing: border-box !important;
+    font-family: 'Space Mono', monospace !important;
+    font-size: 11px !important;
+    color: var(--text-muted) !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border-top: none !important;
+    box-shadow: none !important;
+    z-index: 1000 !important;
+    flex-shrink: 0 !important;
+}
+
+.nb-about-page-footer .nb-footer-links {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.nb-about-page-footer a {
+    color: var(--text-muted) !important;
+    text-decoration: none !important;
+    transition: color 0.15s ease !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+.nb-about-page-footer a:hover {
+    color: var(--text-color) !important;
+    text-decoration: underline !important;
+}
+
+@media (min-width: 901px) {
+    #about-side-back,
+    .fg-side-about.fg-side-about-back {
+        display: flex !important;
+        position: fixed !important;
+        left: 18px !important;
+        right: auto !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        z-index: 9995 !important;
+        pointer-events: auto !important;
+        background: transparent !important;
+        border: none !important;
     }
 }

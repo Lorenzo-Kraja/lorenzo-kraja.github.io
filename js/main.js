@@ -179,26 +179,55 @@ function getProjectDescription(idx) {
     return lang === 'en' ? (proj.description_en || proj.description) : (proj.description_it || proj.description);
 }
 
-// --------------- Live Clock --------------------------------
+function getUserTimezoneInfo() {
+    try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Rome";
+        const parts = tz.split('/');
+        const rawCity = parts[parts.length - 1].replace(/_/g, ' ');
+        const labelMap = {
+            "Rome": "RM",
+            "Vatican": "RM",
+            "San Marino": "RM",
+            "Milan": "MI",
+            "New York": "NYC",
+            "London": "LON",
+            "Paris": "PAR",
+            "Berlin": "BER",
+            "Tokyo": "TYO",
+            "Los Angeles": "LA",
+            "Chicago": "CHI",
+            "Toronto": "TOR",
+            "Sydney": "SYD"
+        };
+        const label = labelMap[rawCity] || (rawCity.length <= 4 ? rawCity.toUpperCase() : rawCity.substring(0, 3).toUpperCase());
+        return { timeZone: tz, label: label, city: rawCity };
+    } catch {
+        return { timeZone: undefined, label: "LOC", city: "Local" };
+    }
+}
+
+// --------------- Live Clock (Geolocation / User Timezone Synced) -----
 function startClock() {
     const el = document.getElementById("live-clock");
     if (!el) return;
 
+    const tzInfo = getUserTimezoneInfo();
     const tick = () => {
         try {
             const now = new Date();
-            el.textContent =
-                new Intl.DateTimeFormat("en-US", {
-                    timeZone: CONFIG.timezoneIANA,
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: false,
-                }).format(now) +
-                " " +
-                CONFIG.timezoneLabel;
+            const timeStr = new Intl.DateTimeFormat("en-US", {
+                timeZone: tzInfo.timeZone,
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
+            }).format(now);
+            el.textContent = `${timeStr} ${tzInfo.label}`;
+            el.title = `${tzInfo.city} (${tzInfo.timeZone})`;
         } catch {
-            el.textContent = "08:22:30 " + CONFIG.timezoneLabel;
+            const now = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            el.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${tzInfo.label}`;
         }
     };
 
@@ -317,9 +346,9 @@ function renderVlcWindow() {
             <!-- 1. VLC Titlebar (macOS Style with authentic VLC cone icon) -->
             <div class="kali-titlebar vlc-titlebar">
                 <div class="kali-controls">
-                    <button class="kali-btn kali-btn-close" type="button" aria-label="Chiudi finestra" title="Chiudi"></button>
-                    <button class="kali-btn kali-btn-min" type="button" aria-label="Riduci finestra" title="Riduci a icona"></button>
-                    <button class="kali-btn kali-btn-max" type="button" aria-label="Ingrandisci finestra" title="Ingrandisci"></button>
+                    <button class="kali-btn kali-btn-close" type="button" aria-label="Close" title="Close" data-i18n-title="btn.close" data-i18n-aria="btn.close"></button>
+                    <button class="kali-btn kali-btn-min" type="button" aria-label="Minimize" title="Minimize" data-i18n-title="btn.min" data-i18n-aria="btn.min"></button>
+                    <button class="kali-btn kali-btn-max" type="button" aria-label="Maximize" title="Maximize" data-i18n-title="btn.max" data-i18n-aria="btn.max"></button>
                 </div>
                 <div class="vlc-title-info">
                     <svg class="vlc-cone-icon" viewBox="0 0 32 32" width="16" height="16" aria-hidden="true">
@@ -337,7 +366,7 @@ function renderVlcWindow() {
             </div>
 
             <!-- 2. VLC Video Player Body (Landscape 16:9) -->
-            <div class="vlc-video-container" title="Click per Riprodurre / Pausa">
+            <div class="vlc-video-container" title="Click to Play / Pause" data-i18n-title="vlc.playPauseHint">
                 <video class="vlc-video-element"
                        id="sd-reel-video"
                        src="${videoSrc}"
@@ -364,7 +393,7 @@ function renderVlcWindow() {
             <!-- 3. VLC Bottom Control Toolbar (macOS VLC Style) -->
             <div class="vlc-toolbar">
                 <div class="vlc-transport-btns">
-                    <button type="button" class="vlc-ctrl-btn vlc-btn-play" title="Riproduci / Pausa" aria-label="Riproduci o Pausa">
+                    <button type="button" class="vlc-ctrl-btn vlc-btn-play" title="Play / Pause" aria-label="Play / Pause" data-i18n-title="vlc.playPause" data-i18n-aria="vlc.playPause">
                         <svg class="vlc-icon-pause" viewBox="0 0 16 16" width="11" height="11" fill="currentColor">
                             <rect x="3" y="2" width="3.5" height="12" rx="0.8"/>
                             <rect x="9.5" y="2" width="3.5" height="12" rx="0.8"/>
@@ -373,19 +402,19 @@ function renderVlcWindow() {
                             <polygon points="3,2 14,8 3,14"/>
                         </svg>
                     </button>
-                    <button type="button" class="vlc-ctrl-btn vlc-btn-prev" title="Indietro (5s)" aria-label="Indietro">
+                    <button type="button" class="vlc-ctrl-btn vlc-btn-prev" title="Rewind (5s)" aria-label="Rewind">
                         <svg viewBox="0 0 16 16" width="10" height="10" fill="currentColor">
                             <rect x="1" y="3" width="2" height="10"/>
                             <polygon points="8,8 14,3 14,13"/>
                             <polygon points="3,8 9,3 9,13"/>
                         </svg>
                     </button>
-                    <button type="button" class="vlc-ctrl-btn vlc-btn-stop" title="Ferma riproduzione" aria-label="Ferma">
+                    <button type="button" class="vlc-ctrl-btn vlc-btn-stop" title="Stop" aria-label="Stop">
                         <svg viewBox="0 0 16 16" width="9" height="9" fill="currentColor">
                             <rect x="2" y="2" width="12" height="12" rx="1"/>
                         </svg>
                     </button>
-                    <button type="button" class="vlc-ctrl-btn vlc-btn-next" title="Avanti (5s)" aria-label="Avanti">
+                    <button type="button" class="vlc-ctrl-btn vlc-btn-next" title="Forward (5s)" aria-label="Forward">
                         <svg viewBox="0 0 16 16" width="10" height="10" fill="currentColor">
                             <polygon points="1,3 7,8 1,13"/>
                             <polygon points="7,3 13,8 7,13"/>
@@ -396,7 +425,7 @@ function renderVlcWindow() {
 
                 <!-- Timeline Scrubber -->
                 <div class="vlc-scrubber-wrap">
-                    <input type="range" class="vlc-scrubber" min="0" max="100" value="0" step="0.1" title="Posizione di riproduzione">
+                    <input type="range" class="vlc-scrubber" min="0" max="100" value="0" step="0.1" title="Playback position">
                 </div>
 
                 <!-- Time readout -->
@@ -406,7 +435,7 @@ function renderVlcWindow() {
 
                 <!-- Volume speaker + slider -->
                 <div class="vlc-volume-wrap">
-                    <button type="button" class="vlc-ctrl-btn vlc-btn-volume" title="Volume / Muto" aria-label="Volume">
+                    <button type="button" class="vlc-ctrl-btn vlc-btn-volume" title="Volume / Mute" aria-label="Volume" data-i18n-title="vlc.volumeMute" data-i18n-aria="vlc.volumeMute">
                         <svg viewBox="0 0 16 16" width="11" height="11" fill="currentColor">
                             <path d="M2 5v6h3l4 4V1L5 5H2zM12 4a5 5 0 0 1 0 8v-1.5a3.5 3.5 0 0 0 0-5V4z"/>
                         </svg>
@@ -415,7 +444,7 @@ function renderVlcWindow() {
                 </div>
 
                 <!-- Fullscreen button -->
-                <button type="button" class="vlc-ctrl-btn vlc-btn-fullscreen" title="Schermo intero" aria-label="Schermo intero">
+                <button type="button" class="vlc-ctrl-btn vlc-btn-fullscreen" title="Fullscreen" aria-label="Fullscreen" data-i18n-title="vlc.fullscreen" data-i18n-aria="vlc.fullscreen">
                     <svg viewBox="0 0 16 16" width="10" height="10" fill="currentColor">
                         <path d="M1 1h4v1.5H2.5v2.5H1V1zm10 0h4v4h-1.5V2.5H11V1zM1 11h1.5v2.5H5V15H1v-4zm13.5 0H15v4h-4v-1.5h2.5V11z"/>
                     </svg>
@@ -494,9 +523,9 @@ function renderProjectWindow(project, idx, customClass = "") {
             <!-- 1. Titlebar (macOS Style Draggable Handle) -->
             <div class="kali-titlebar">
                 <div class="kali-controls">
-                    <button class="kali-btn kali-btn-close" type="button" aria-label="Chiudi finestra" title="Chiudi"></button>
-                    <button class="kali-btn kali-btn-min" type="button" aria-label="Riduci finestra" title="Riduci a icona"></button>
-                    <button class="kali-btn kali-btn-max" type="button" aria-label="Ingrandisci finestra" title="Ingrandisci"></button>
+                    <button class="kali-btn kali-btn-close" type="button" aria-label="Close" title="Close" data-i18n-title="btn.close" data-i18n-aria="btn.close"></button>
+                    <button class="kali-btn kali-btn-min" type="button" aria-label="Minimize" title="Minimize" data-i18n-title="btn.min" data-i18n-aria="btn.min"></button>
+                    <button class="kali-btn kali-btn-max" type="button" aria-label="Maximize" title="Maximize" data-i18n-title="btn.max" data-i18n-aria="btn.max"></button>
                 </div>
                 <div class="kali-title-info">
                     <span class="kali-title-text">${escapeHTML(project.title)} — Project Viewer</span>
@@ -747,12 +776,46 @@ function renderMacTopNav() {
                     <span class="nb-nav-home-text">${escapeHTML(CONFIG.designerName)}</span>
                 </a>
 
-                <!-- Mac OS System Menus (Replacing File, Edit with TOC items) -->
+                <!-- Mac OS System Menus (Projects Dropdown & Contacts Dropdown) -->
                 <div class="mac-menu-bar-items" role="menubar">
-                    <!-- 1. CONTACT (Opens dropdown directly on hover or click) -->
+                    <!-- 1. PROJECTS (Opens dropdown directly on hover or click) -->
+                    <div class="mac-menu-item mac-menu-has-dropdown" id="mac-menu-projects" data-menu="projects">
+                        <button type="button" class="mac-menu-title" id="mac-projects-btn" aria-haspopup="true" aria-expanded="false">
+                            <span class="mac-menu-label" data-i18n="nav.projects">Projects</span>
+                            <span class="mac-dropdown-arrow" aria-hidden="true">&#9662;</span>
+                        </button>
+
+                        <!-- Dropdown Menu ("Tendina Progetti") -->
+                        <div class="mac-dropdown-menu" id="mac-projects-dropdown" role="menu" aria-label="Projects">
+                            <a href="#hero-win-vlc" class="mac-dropdown-item mac-project-dropdown-item" data-target="#hero-win-vlc" role="menuitem">
+                                <span class="mac-item-badge">[ 02 ]</span>
+                                <span class="mac-item-text">Motion Reel</span>
+                                <span class="mac-item-arrow">&#9654;</span>
+                            </a>
+                            <div class="mac-dropdown-divider" role="separator"></div>
+                            <a href="harp-chair.html" class="mac-dropdown-item mac-project-dropdown-item" role="menuitem">
+                                <span class="mac-item-badge">[ 03 ]</span>
+                                <span class="mac-item-text">Harp Chair</span>
+                                <span class="mac-item-arrow">&rarr;</span>
+                            </a>
+                            <a href="mikk.html" class="mac-dropdown-item mac-project-dropdown-item" role="menuitem">
+                                <span class="mac-item-badge">[ 04 ]</span>
+                                <span class="mac-item-text">Mikk</span>
+                                <span class="mac-item-arrow">&rarr;</span>
+                            </a>
+                            <a href="jewelry.html" class="mac-dropdown-item mac-project-dropdown-item" role="menuitem">
+                                <span class="mac-item-badge">[ 05 ]</span>
+                                <span class="mac-item-text">Jewelry</span>
+                                <span class="mac-item-arrow">&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 2. CONTACT (Opens dropdown directly on hover or click) -->
                     <div class="mac-menu-item mac-menu-has-dropdown" id="mac-menu-contact" data-menu="contact">
-                        <button type="button" class="mac-menu-title" id="mac-contact-btn" aria-haspopup="true" aria-expanded="false" data-i18n="nav.contact">
-                            Contatti
+                        <button type="button" class="mac-menu-title" id="mac-contact-btn" aria-haspopup="true" aria-expanded="false">
+                            <span class="mac-menu-label" data-i18n="nav.contact">Contatti</span>
+                            <span class="mac-dropdown-arrow" aria-hidden="true">&#9662;</span>
                         </button>
 
                         <!-- Dropdown Menu ("Tendina") -->
@@ -827,98 +890,6 @@ function renderMacTopNav() {
                                 <span class="mac-item-text">Curriculum Vitae (PDF)</span>
                                 <span class="mac-item-arrow">&nearr;</span>
                             </a>
-                        </div>
-                    </div>
-
-                    <!-- 2. MOTION REEL -->
-                    <div class="mac-menu-item" id="mac-menu-reel" data-target="#hero-win-vlc">
-                        <button type="button" class="mac-menu-title">Motion Reel</button>
-                        <div class="mac-preview-popover" role="tooltip">
-                            <div class="mac-popover-titlebar">
-                                <span class="mac-popover-close"></span>
-                                <span class="mac-popover-title">Motion Reel</span>
-                                <span class="mac-popover-zoom"></span>
-                            </div>
-                            <div class="mac-popover-body">
-                                <div class="mac-popover-thumb">
-                                    <img src="images/reel/shoe_poster.jpg" alt="Motion Reel Preview" onerror="this.src='images/reel/shoe_poster.jpg'">
-                                </div>
-                                <div class="mac-popover-meta">
-                                    <strong>3D Printed Shoe Project</strong>
-                                    <span>Industrial &amp; Footwear Concept</span>
-                                    <span class="mac-popover-tag">2025</span>
-                                    <span class="mac-popover-action">Clicca per visualizzare &amp; play &#9654;</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3. HARP CHAIR -->
-                    <div class="mac-menu-item" id="mac-menu-harp" data-target="#project-win-0" data-url="harp-chair.html">
-                        <button type="button" class="mac-menu-title">Harp Chair</button>
-                        <div class="mac-preview-popover" role="tooltip">
-                            <div class="mac-popover-titlebar">
-                                <span class="mac-popover-close"></span>
-                                <span class="mac-popover-title">Harp Chair</span>
-                                <span class="mac-popover-zoom"></span>
-                            </div>
-                            <div class="mac-popover-body">
-                                <div class="mac-popover-thumb">
-                                    <img src="images/harp-chair/01.gif" alt="Harp Chair Preview">
-                                </div>
-                                <div class="mac-popover-meta">
-                                    <strong>Harp Chair</strong>
-                                    <span data-i18n="popover.harp.tag">Sedia Monoscocca &amp; Corde Windsor</span>
-                                    <span class="mac-popover-tag">2025</span>
-                                    <a href="harp-chair.html" class="mac-popover-link" data-i18n="nav.openProject">Apri Progetto &rarr;</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4. MIKK -->
-                    <div class="mac-menu-item" id="mac-menu-nomod" data-target="#project-win-1" data-url="mikk.html">
-                        <button type="button" class="mac-menu-title">Mikk</button>
-                        <div class="mac-preview-popover" role="tooltip">
-                            <div class="mac-popover-titlebar">
-                                <span class="mac-popover-close"></span>
-                                <span class="mac-popover-title">Mikk</span>
-                                <span class="mac-popover-zoom"></span>
-                            </div>
-                            <div class="mac-popover-body">
-                                <div class="mac-popover-thumb">
-                                    <img src="images/nomod/Presentazione%20Tesi_Page_01.png" alt="Mikk Preview">
-                                </div>
-                                <div class="mac-popover-meta">
-                                    <strong>Mikk</strong>
-                                    <span data-i18n="popover.mikk.tag">Auto Elettrica Urbana Sostenibile</span>
-                                    <span class="mac-popover-tag">2023</span>
-                                    <a href="mikk.html" class="mac-popover-link" data-i18n="nav.openProject">Apri Progetto &rarr;</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 5. JEWELRY -->
-                    <div class="mac-menu-item" id="mac-menu-jewelry" data-target="#project-win-2" data-url="jewelry.html">
-                        <button type="button" class="mac-menu-title">Jewelry</button>
-                        <div class="mac-preview-popover" role="tooltip">
-                            <div class="mac-popover-titlebar">
-                                <span class="mac-popover-close"></span>
-                                <span class="mac-popover-title">Jewelry</span>
-                                <span class="mac-popover-zoom"></span>
-                            </div>
-                            <div class="mac-popover-body">
-                                <div class="mac-popover-thumb">
-                                    <img src="images/Jewelry/1.jpg" alt="Jewelry Preview">
-                                </div>
-                                <div class="mac-popover-meta">
-                                    <strong>Jewelry</strong>
-                                    <span data-i18n="popover.jewelry.tag">Argento 925 Scultoreo &amp; Hardware</span>
-                                    <span class="mac-popover-tag">2025</span>
-                                    <a href="jewelry.html" class="mac-popover-link" data-i18n="nav.openProject">Apri Progetto &rarr;</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1038,12 +1009,16 @@ function buildPage() {
         <!-- FOOTER -->
         <footer class="nb-footer" id="contact">
             <div class="nb-footer-links">
-                <a href="#contact">Contact</a>
+                <a href="mailto:lorenzokraja99@gmail.com" class="nb-footer-link" id="footer-contact-link" data-i18n="nav.contact">Contacts</a>
                 <span class="nb-footer-sep">&bull;</span>
-                <span>${escapeHTML(CONFIG.footerLeft)}</span>
+                <a href="https://www.instagram.com/lorenzo.kraja?vrfl=emV0cDFlbW51NWFm" target="_blank" rel="noopener noreferrer" class="nb-footer-link">Instagram</a>
+                <span class="nb-footer-sep">&bull;</span>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="nb-footer-link">LinkedIn</a>
+                <span class="nb-footer-sep">&bull;</span>
+                <a href="mailto:lorenzokraja99@gmail.com" class="nb-footer-link">Email</a>
             </div>
-            <div>${escapeHTML(CONFIG.footerCenter)}</div>
-            <div>${escapeHTML(CONFIG.footerRight)}</div>
+            <div class="nb-footer-center">&copy; 2026 Lorenzo Kraja</div>
+            <div class="nb-footer-end" data-i18n="footer.rights">All rights reserved</div>
         </footer>
     `;
 
@@ -1062,11 +1037,12 @@ function buildPage() {
 
 // --------------- Classic Mac OS Menu Bar Interactions --------
 function initMacMenuBar() {
-    const contactItem = document.getElementById("mac-menu-contact");
-    const contactBtn = document.getElementById("mac-contact-btn");
-    const contactDropdown = document.getElementById("mac-contact-dropdown");
+    function setupDropdown(itemId, btnId, dropdownId) {
+        const item = document.getElementById(itemId);
+        const btn = document.getElementById(btnId);
+        const dropdown = document.getElementById(dropdownId);
+        if (!item || !btn || !dropdown) return null;
 
-    if (contactBtn && contactDropdown && contactItem) {
         let closeTimer = null;
 
         const openDropdown = () => {
@@ -1074,10 +1050,24 @@ function initMacMenuBar() {
                 clearTimeout(closeTimer);
                 closeTimer = null;
             }
-            contactDropdown.classList.add("is-open");
-            contactBtn.classList.add("is-active");
-            contactItem.classList.add("is-open");
-            contactBtn.setAttribute("aria-expanded", "true");
+            // Close other open dropdowns first
+            document.querySelectorAll(".mac-dropdown-menu.is-open").forEach(d => {
+                if (d !== dropdown) d.classList.remove("is-open");
+            });
+            document.querySelectorAll(".mac-menu-title.is-active").forEach(b => {
+                if (b !== btn) {
+                    b.classList.remove("is-active");
+                    b.setAttribute("aria-expanded", "false");
+                }
+            });
+            document.querySelectorAll(".mac-menu-item.is-open").forEach(it => {
+                if (it !== item) it.classList.remove("is-open");
+            });
+
+            dropdown.classList.add("is-open");
+            btn.classList.add("is-active");
+            item.classList.add("is-open");
+            btn.setAttribute("aria-expanded", "true");
         };
 
         const closeDropdown = (immediate = false) => {
@@ -1086,28 +1076,28 @@ function initMacMenuBar() {
                 closeTimer = null;
             }
             if (immediate) {
-                contactDropdown.classList.remove("is-open");
-                contactBtn.classList.remove("is-active");
-                contactItem.classList.remove("is-open");
-                contactBtn.setAttribute("aria-expanded", "false");
+                dropdown.classList.remove("is-open");
+                btn.classList.remove("is-active");
+                item.classList.remove("is-open");
+                btn.setAttribute("aria-expanded", "false");
             } else {
                 closeTimer = setTimeout(() => {
-                    contactDropdown.classList.remove("is-open");
-                    contactBtn.classList.remove("is-active");
-                    contactItem.classList.remove("is-open");
-                    contactBtn.setAttribute("aria-expanded", "false");
+                    dropdown.classList.remove("is-open");
+                    btn.classList.remove("is-active");
+                    item.classList.remove("is-open");
+                    btn.setAttribute("aria-expanded", "false");
                 }, 180);
             }
         };
 
-        // Open directly when hovering with the mouse pointer
-        contactItem.addEventListener("mouseenter", openDropdown);
-        contactItem.addEventListener("mouseleave", () => closeDropdown(false));
+        // Hover for desktop
+        item.addEventListener("mouseenter", openDropdown);
+        item.addEventListener("mouseleave", () => closeDropdown(false));
 
-        // Click to toggle
-        contactBtn.addEventListener("click", (e) => {
+        // Click / touch toggle
+        btn.addEventListener("click", (e) => {
             e.stopPropagation();
-            if (contactDropdown.classList.contains("is-open")) {
+            if (dropdown.classList.contains("is-open")) {
                 closeDropdown(true);
             } else {
                 openDropdown();
@@ -1116,8 +1106,8 @@ function initMacMenuBar() {
 
         // Close on clicking outside
         document.addEventListener("click", (e) => {
-            if (contactDropdown.classList.contains("is-open")) {
-                if (!contactDropdown.contains(e.target) && !contactBtn.contains(e.target)) {
+            if (dropdown.classList.contains("is-open")) {
+                if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
                     closeDropdown(true);
                 }
             }
@@ -1125,44 +1115,50 @@ function initMacMenuBar() {
 
         // Close on Escape key
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && contactDropdown.classList.contains("is-open")) {
+            if (e.key === "Escape" && dropdown.classList.contains("is-open")) {
                 closeDropdown(true);
             }
         });
+
+        return { open: openDropdown, close: closeDropdown };
     }
 
-    // Project menu items click handling
-    const menuItems = document.querySelectorAll(".mac-menu-item[data-target]");
-    menuItems.forEach((item) => {
-        const titleBtn = item.querySelector(".mac-menu-title");
-        const targetSel = item.getAttribute("data-target");
-        if (!titleBtn || !targetSel) return;
+    const projectsMenu = setupDropdown("mac-menu-projects", "mac-projects-btn", "mac-projects-dropdown");
+    const contactMenu = setupDropdown("mac-menu-contact", "mac-contact-btn", "mac-contact-dropdown");
 
-        titleBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            const target = document.querySelector(targetSel);
-            if (!target) return;
+    // Project dropdown items click handling: opens directly the project page on click!
+    const projectItems = document.querySelectorAll(".mac-project-dropdown-item");
+    projectItems.forEach((item) => {
+        item.addEventListener("click", (e) => {
+            const href = item.getAttribute("href");
+            const targetSel = item.getAttribute("data-target");
 
-            if (window.innerWidth <= 900) {
-                target.scrollIntoView({ behavior: "smooth", block: "center" });
-            }
+            if (projectsMenu) projectsMenu.close(true);
 
-            const win = (target.classList.contains("kali-window") || target.classList.contains("fg-hero-window"))
-                ? target
-                : target.querySelector(".kali-window, .fg-hero-window");
-
-            if (win && typeof win._bringToFront === "function") {
-                win._bringToFront();
-            } else if (win) {
-                document.querySelectorAll(".kali-window, .fg-hero-window").forEach(w => w.classList.remove("is-focused"));
-                win.classList.add("is-focused");
-            }
-
+            // Motion Reel: if VLC player exists on current page, scroll and play; otherwise navigate
             if (targetSel === "#hero-win-vlc") {
-                const video = target.querySelector(".vlc-video-element");
-                if (video && video.paused) {
-                    video.play().catch(() => {});
+                const target = document.querySelector("#hero-win-vlc");
+                if (target) {
+                    e.preventDefault();
+                    if (window.innerWidth <= 900) {
+                        target.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                    const win = target.classList.contains("kali-window") ? target : target.querySelector(".kali-window");
+                    if (win && typeof win._bringToFront === "function") {
+                        win._bringToFront();
+                    }
+                    const video = target.querySelector(".vlc-video-element");
+                    if (video && video.paused) {
+                        video.play().catch(() => {});
+                    }
+                    return;
                 }
+            }
+
+            // For all projects (Harp Chair, Mikk, Jewelry), open project page directly!
+            if (href && !href.startsWith("#")) {
+                e.preventDefault();
+                window.location.href = href;
             }
         });
     });
@@ -1423,6 +1419,7 @@ function initHeroWindows() {
             };
 
             titlebar.addEventListener('pointerdown', (e) => {
+                if (window.innerWidth <= 900) return;
                 if (e.target.closest('.kali-controls') || e.target.closest('button') || e.target.closest('a')) {
                     return;
                 }
@@ -1618,6 +1615,7 @@ function initHeroWindows() {
             };
 
             handle.addEventListener('pointerdown', (e) => {
+                if (window.innerWidth <= 900) return;
                 bringToFront();
                 isResizing = true;
                 startX = e.clientX;
