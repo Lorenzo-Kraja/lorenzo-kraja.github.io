@@ -1520,8 +1520,8 @@ body.dark-theme .fg-hero-window.is-focused {
 
 .fg-project-window {
     width: 100%;
-    height: auto !important;
-    position: relative !important;
+    height: auto;
+    position: relative;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -2090,7 +2090,7 @@ body.dark-theme .sd-toc-item {
 
 /* --- Window 1: VLC Media Player (Top Center/Left) --- */
 #hero-win-vlc.kali-window-vlc {
-    position: absolute;
+    position: absolute !important;
     top: 1.2vh;
     left: 21vw;
     width: 37.1vw;
@@ -2107,15 +2107,15 @@ body.dark-theme .sd-toc-item {
     flex-direction: column;
     user-select: none;
     z-index: 10;
-    overflow: visible;
-    margin: 0;
+    overflow: visible !important;
+    margin: 0 !important;
     transition: box-shadow 0.25s ease, opacity 0.22s ease;
 }
 
 /* --- Window 2: NOMOD / MIKK (Top Right) --- */
 #project-win-1.fg-win-nomod,
 #project-win-1.fg-win-mikk {
-    position: absolute;
+    position: absolute !important;
     top: 7.5vh;
     left: 67vw;
     width: 26.1vw;
@@ -2125,13 +2125,14 @@ body.dark-theme .sd-toc-item {
     max-width: 95vw;
     max-height: 90vh;
     z-index: 11;
+    overflow: visible !important;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.16);
-    margin: 0;
+    margin: 0 !important;
 }
 
 /* --- Window 3: HARP CHAIR (Bottom Left) --- */
 #project-win-0.fg-win-harp {
-    position: absolute;
+    position: absolute !important;
     top: 50.5vh;
     left: 12.5vw;
     width: 27.8vw;
@@ -2141,14 +2142,15 @@ body.dark-theme .sd-toc-item {
     max-width: 95vw;
     max-height: 90vh;
     z-index: 12;
+    overflow: visible !important;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.16);
-    margin: 0;
+    margin: 0 !important;
 }
 
 /* --- Window 4: LUCA / JEWELRY (Bottom Center/Right) --- */
 #project-win-2.fg-win-luca,
 #project-win-2.fg-win-jewelry {
-    position: absolute;
+    position: absolute !important;
     top: 49.5vh;
     left: 51.5vw;
     width: 28.8vw;
@@ -2158,8 +2160,9 @@ body.dark-theme .sd-toc-item {
     max-width: 95vw;
     max-height: 90vh;
     z-index: 13;
+    overflow: visible !important;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.16);
-    margin: 0;
+    margin: 0 !important;
 }
 
 /* --- Desktop 100% Single Viewport (Strictly No Vertical Scroll, Zero Gap, Transparent Ticker + Footer) --- */

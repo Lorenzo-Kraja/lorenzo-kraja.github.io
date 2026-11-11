@@ -1458,10 +1458,10 @@ function initHeroWindows() {
                     }
                 }
 
-                winEl.style.width = `${Math.round(newW)}px`;
-                winEl.style.height = `${Math.round(newH)}px`;
-                winEl.style.maxWidth = 'none';
-                winEl.style.maxHeight = 'none';
+                winEl.style.setProperty('width', `${Math.round(newW)}px`, 'important');
+                winEl.style.setProperty('height', `${Math.round(newH)}px`, 'important');
+                winEl.style.setProperty('max-width', 'none', 'important');
+                winEl.style.setProperty('max-height', 'none', 'important');
                 winEl.style.flexShrink = '0';
 
                 if (contentEl) {

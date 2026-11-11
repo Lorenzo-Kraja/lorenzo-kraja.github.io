@@ -483,11 +483,19 @@
                     second: "2-digit",
                     hour12: false,
                 }).format(now);
-                el.textContent = `${timeStr} ${geoInfo.label}`;
-                el.title = `${geoInfo.city}${geoInfo.country ? ', ' + geoInfo.country : ''} (${geoInfo.timeZone || 'Europe/Rome'})`;
+                const cityUpper = (geoInfo.city || "Pescara").toUpperCase();
+                const countryCode = geoInfo.country ? `, ${geoInfo.country.toUpperCase()}` : (cityUpper === "PESCARA" ? ", IT" : "");
+
+                if (window.innerWidth < 600) {
+                    el.textContent = `${cityUpper} ${timeStr}`;
+                } else {
+                    el.textContent = `${cityUpper}${countryCode} — ${timeStr}`;
+                }
+                el.title = `${geoInfo.city}${countryCode} (${geoInfo.timeZone || 'Europe/Rome'})`;
             } catch {
                 const pad = n => String(n).padStart(2, '0');
-                el.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${geoInfo.label}`;
+                const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+                el.textContent = `PESCARA, IT — ${timeStr}`;
             }
         });
     }
