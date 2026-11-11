@@ -180,59 +180,17 @@ function getProjectDescription(idx) {
 }
 
 function getUserTimezoneInfo() {
-    try {
-        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Rome";
-        const parts = tz.split('/');
-        const rawCity = parts[parts.length - 1].replace(/_/g, ' ');
-        const labelMap = {
-            "Rome": "RM",
-            "Vatican": "RM",
-            "San Marino": "RM",
-            "Milan": "MI",
-            "New York": "NYC",
-            "London": "LON",
-            "Paris": "PAR",
-            "Berlin": "BER",
-            "Tokyo": "TYO",
-            "Los Angeles": "LA",
-            "Chicago": "CHI",
-            "Toronto": "TOR",
-            "Sydney": "SYD"
-        };
-        const label = labelMap[rawCity] || (rawCity.length <= 4 ? rawCity.toUpperCase() : rawCity.substring(0, 3).toUpperCase());
-        return { timeZone: tz, label: label, city: rawCity };
-    } catch {
-        return { timeZone: undefined, label: "LOC", city: "Local" };
+    if (window.I18N && typeof window.I18N.getUserTimezoneInfo === 'function') {
+        return window.I18N.getUserTimezoneInfo();
     }
+    return { timeZone: "Europe/Rome", label: "PSR", city: "Pescara", country: "IT" };
 }
 
 // --------------- Live Clock (Geolocation / User Timezone Synced) -----
 function startClock() {
-    const el = document.getElementById("live-clock");
-    if (!el) return;
-
-    const tzInfo = getUserTimezoneInfo();
-    const tick = () => {
-        try {
-            const now = new Date();
-            const timeStr = new Intl.DateTimeFormat("en-US", {
-                timeZone: tzInfo.timeZone,
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-            }).format(now);
-            el.textContent = `${timeStr} ${tzInfo.label}`;
-            el.title = `${tzInfo.city} (${tzInfo.timeZone})`;
-        } catch {
-            const now = new Date();
-            const pad = n => String(n).padStart(2, '0');
-            el.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${tzInfo.label}`;
-        }
-    };
-
-    tick();
-    setInterval(tick, 1000);
+    if (window.I18N && typeof window.I18N.initLiveClock === 'function') {
+        window.I18N.initLiveClock("live-clock");
+    }
 }
 
 // --------------- Render helpers ----------------------------
@@ -1407,7 +1365,7 @@ function initHeroWindows() {
             };
 
             titlebar.addEventListener('pointerdown', (e) => {
-                if (window.innerWidth <= 900) return;
+                if (window.innerWidth <= 768) return;
                 if (e.target.closest('.kali-controls') || e.target.closest('button') || e.target.closest('a')) {
                     return;
                 }
@@ -1431,7 +1389,7 @@ function initHeroWindows() {
             });
         }
 
-        // 2. 8-Direction Resizing (Corners & Edges) with Flex-Centering Compensation
+        // 2. 8-Direction Resizing (Corners & Edges) - High-Precision & Smooth Anchoring
         handles.forEach(handle => {
             const dir = handle.dataset.dir;
             if (!dir) return;
@@ -1442,148 +1400,75 @@ function initHeroWindows() {
 
             const onResizeMove = (e) => {
                 if (!isResizing) return;
+                pointerMoved = true;
                 const dx = e.clientX - startX;
                 const dy = e.clientY - startY;
 
-                const minW = 260;
-                const maxW = Math.max(minW, window.innerWidth - 40);
+                const minW = 240;
+                const minH = 150;
+                const maxW = Math.max(minW, window.innerWidth - 30);
+                const maxH = Math.max(minH, window.innerHeight - 50);
 
                 let newW = startW;
                 let newH = startH;
                 let newTx = startTx;
                 let newTy = startTy;
 
-                const isCorner = dir === 'nw' || dir === 'ne' || dir === 'sw' || dir === 'se';
+                // If user holds Shift, lock proportional aspect ratio for corners
+                if (e.shiftKey && (dir === 'nw' || dir === 'ne' || dir === 'sw' || dir === 'se')) {
+                    const aspect = startW / startH;
+                    let targetW = (dir === 'se' || dir === 'ne') ? (startW + dx) : (startW - dx);
+                    targetW = Math.max(minW, Math.min(maxW, targetW));
+                    let targetH = Math.round(targetW / aspect);
+                    targetH = Math.max(minH, Math.min(maxH, targetH));
+                    targetW = Math.round(targetH * aspect);
 
-                // Check if this window's parent is flex-centered (like VLC in sd-hero-center)
-                const isParentFlexCentered = (() => {
-                    const parent = winEl.parentElement;
-                    if (!parent) return false;
-                    const style = window.getComputedStyle(parent);
-                    return style.display === 'flex' && style.justifyContent === 'center';
-                })();
-
-                if (isParentFlexCentered) {
-                    if (isCorner) {
-                        let deltaW = 0;
-                        if (dir === 'se') deltaW = dx;
-                        else if (dir === 'sw') deltaW = -dx;
-                        else if (dir === 'ne') deltaW = dx;
-                        else if (dir === 'nw') deltaW = -dx;
-
-                        let targetW = Math.max(minW, Math.min(maxW, startW + deltaW));
-                        let targetH = Math.round(targetW * (9 / 16));
-
-                        newW = targetW;
-                        newH = targetH;
-
-                        // Flex-centering anchor compensation
-                        if (dir.indexOf('e') !== -1) {
-                            newTx = startTx + (newW - startW) / 2;
-                        } else {
-                            newTx = startTx - (newW - startW) / 2;
-                        }
-
-                        if (dir.indexOf('s') !== -1) {
-                            newTy = startTy + (newH - startH) / 2;
-                        } else {
-                            newTy = startTy - (newH - startH) / 2;
-                        }
-                    } else {
-                        if (dir === 'e') {
-                            newW = Math.max(minW, Math.min(maxW, startW + dx));
-                            newH = Math.round(newW * (9 / 16));
-                            newTx = startTx + (newW - startW) / 2;
-                            newTy = startTy + (newH - startH) / 2;
-                        } else if (dir === 'w') {
-                            newW = Math.max(minW, Math.min(maxW, startW - dx));
-                            newH = Math.round(newW * (9 / 16));
-                            newTx = startTx - (newW - startW) / 2;
-                            newTy = startTy + (newH - startH) / 2;
-                        } else if (dir === 's') {
-                            newH = Math.max(Math.round(minW * 9 / 16), startH + dy);
-                            newW = Math.max(minW, Math.min(maxW, Math.round(newH * (16 / 9))));
-                            newH = Math.round(newW * (9 / 16));
-                            newTx = startTx + (newW - startW) / 2;
-                            newTy = startTy + (newH - startH) / 2;
-                        } else if (dir === 'n') {
-                            newH = Math.max(Math.round(minW * 9 / 16), startH - dy);
-                            newW = Math.max(minW, Math.min(maxW, Math.round(newH * (16 / 9))));
-                            newH = Math.round(newW * (9 / 16));
-                            newTx = startTx + (newW - startW) / 2;
-                            newTy = startTy - (newH - startH) / 2;
-                        }
+                    newW = targetW;
+                    newH = targetH;
+                    if (dir === 'se') {
+                        newTx = startTx;
+                        newTy = startTy;
+                    } else if (dir === 'sw') {
+                        newTx = startTx - (newW - startW);
+                        newTy = startTy;
+                    } else if (dir === 'ne') {
+                        newTx = startTx;
+                        newTy = startTy - (newH - startH);
+                    } else if (dir === 'nw') {
+                        newTx = startTx - (newW - startW);
+                        newTy = startTy - (newH - startH);
                     }
                 } else {
-                    // Standard flow / left-aligned window anchor compensation (zero opposite-edge jitter)
-                    if (isCorner) {
-                        let deltaW = 0;
-                        if (dir === 'se') deltaW = dx;
-                        else if (dir === 'sw') deltaW = -dx;
-                        else if (dir === 'ne') deltaW = dx;
-                        else if (dir === 'nw') deltaW = -dx;
+                    // 1. Horizontal Sizing (East / West)
+                    if (dir.indexOf('e') !== -1) {
+                        newW = Math.max(minW, Math.min(maxW, startW + dx));
+                        newTx = startTx;
+                    } else if (dir.indexOf('w') !== -1) {
+                        newW = Math.max(minW, Math.min(maxW, startW - dx));
+                        newTx = startTx - (newW - startW);
+                    }
 
-                        let targetW = Math.max(minW, Math.min(maxW, startW + deltaW));
-                        let targetH = Math.round(targetW * (9 / 16));
-
-                        newW = targetW;
-                        newH = targetH;
-
-                        const dw = newW - startW;
-                        const dh = newH - startH;
-
-                        if (dir === 'se') {
-                            newTx = startTx;
-                            newTy = startTy;
-                        } else if (dir === 'sw') {
-                            newTx = startTx - dw;
-                            newTy = startTy;
-                        } else if (dir === 'ne') {
-                            newTx = startTx;
-                            newTy = startTy - dh;
-                        } else if (dir === 'nw') {
-                            newTx = startTx - dw;
-                            newTy = startTy - dh;
-                        }
-                    } else {
-                        if (dir === 'e') {
-                            newW = Math.max(minW, Math.min(maxW, startW + dx));
-                            newH = Math.round(newW * (9 / 16));
-                            newTx = startTx;
-                            newTy = startTy;
-                        } else if (dir === 'w') {
-                            newW = Math.max(minW, Math.min(maxW, startW - dx));
-                            newH = Math.round(newW * (9 / 16));
-                            newTx = startTx - (newW - startW);
-                            newTy = startTy;
-                        } else if (dir === 's') {
-                            newH = Math.max(Math.round(minW * 9 / 16), startH + dy);
-                            newW = Math.max(minW, Math.min(maxW, Math.round(newH * (16 / 9))));
-                            newH = Math.round(newW * (9 / 16));
-                            newTx = startTx;
-                            newTy = startTy;
-                        } else if (dir === 'n') {
-                            newH = Math.max(Math.round(minW * 9 / 16), startH - dy);
-                            newW = Math.max(minW, Math.min(maxW, Math.round(newH * (16 / 9))));
-                            newH = Math.round(newW * (9 / 16));
-                            newTx = startTx;
-                            newTy = startTy - (newH - startH);
-                        }
+                    // 2. Vertical Sizing (South / North)
+                    if (dir.indexOf('s') !== -1) {
+                        newH = Math.max(minH, Math.min(maxH, startH + dy));
+                        newTy = startTy;
+                    } else if (dir.indexOf('n') !== -1) {
+                        newH = Math.max(minH, Math.min(maxH, startH - dy));
+                        newTy = startTy - (newH - startH);
                     }
                 }
 
                 winEl.style.width = `${Math.round(newW)}px`;
+                winEl.style.height = `${Math.round(newH)}px`;
                 winEl.style.maxWidth = 'none';
+                winEl.style.maxHeight = 'none';
                 winEl.style.flexShrink = '0';
-                if (winEl.parentElement && winEl.parentElement.classList.contains('fg-project-window-shell')) {
-                    winEl.parentElement.style.maxWidth = 'none';
-                    winEl.parentElement.style.width = `${Math.round(newW)}px`;
-                }
+
                 if (contentEl) {
-                    contentEl.style.height = `${Math.round(newH)}px`;
+                    contentEl.style.height = '';
                     contentEl.style.maxHeight = 'none';
-                    contentEl.style.aspectRatio = '16 / 9';
                 }
+
                 tx = newTx;
                 ty = newTy;
                 winEl.style.transform = `translate3d(${Math.round(tx)}px, ${Math.round(ty)}px, 0)`;
@@ -1603,13 +1488,14 @@ function initHeroWindows() {
             };
 
             handle.addEventListener('pointerdown', (e) => {
-                if (window.innerWidth <= 900) return;
+                if (window.innerWidth <= 768) return;
                 bringToFront();
                 isResizing = true;
+                pointerMoved = false;
                 startX = e.clientX;
                 startY = e.clientY;
                 startW = winEl.offsetWidth;
-                startH = contentEl ? contentEl.offsetHeight : Math.round(startW * (9 / 16));
+                startH = winEl.offsetHeight;
                 startTx = tx;
                 startTy = ty;
 
@@ -1717,6 +1603,18 @@ function initHeroWindows() {
             });
         }
     });
+
+    // Viewport resize responsiveness guard
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            windows.forEach(winEl => {
+                const maxW = Math.max(240, window.innerWidth - 30);
+                if (winEl.offsetWidth > maxW) {
+                    winEl.style.width = `${maxW}px`;
+                }
+            });
+        }
+    }, { passive: true });
 }
 
 // --------------- Hero Logo Dock Animation ------------------

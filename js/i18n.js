@@ -367,57 +367,145 @@
         return DICTIONARY[lang][key] || key;
     }
 
-    function getUserTimezoneInfo() {
+    const CITY_LABEL_MAP = {
+        "Pescara": "PSR",
+        "Rome": "RM",
+        "Roma": "RM",
+        "Milan": "MI",
+        "Milano": "MI",
+        "Naples": "NA",
+        "Napoli": "NA",
+        "Turin": "TO",
+        "Torino": "TO",
+        "Florence": "FI",
+        "Firenze": "FI",
+        "Bologna": "BO",
+        "Venice": "VE",
+        "Venezia": "VE",
+        "Ancona": "AN",
+        "L'Aquila": "AQ",
+        "Chieti": "CH",
+        "Teramo": "TE",
+        "Bari": "BA",
+        "Palermo": "PA",
+        "Catania": "CT",
+        "Genoa": "GE",
+        "Genova": "GE",
+        "Verona": "VR",
+        "Vatican": "RM",
+        "San Marino": "RSM",
+        "New York": "NYC",
+        "London": "LON",
+        "Paris": "PAR",
+        "Berlin": "BER",
+        "Tokyo": "TYO",
+        "Los Angeles": "LA",
+        "Chicago": "CHI",
+        "Toronto": "TOR",
+        "Sydney": "SYD"
+    };
+
+    let geoInfo = (() => {
         try {
-            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Rome";
-            const parts = tz.split('/');
+            const cached = sessionStorage.getItem('portfolio_geo_data');
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                if (parsed && parsed.city && parsed.label) return parsed;
+            }
+        } catch (_) {}
+
+        // Immediate default: if Italian locale or Central European timezone (e.g. Windows mapping CET to Berlin/Rome), default accurately to Pescara / PSR
+        try {
+            const sysTz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+            const isItalian = (navigator.language && navigator.language.startsWith('it')) ||
+                              (navigator.languages && Array.from(navigator.languages).some(l => l.startsWith('it'))) ||
+                              sysTz === "Europe/Rome";
+            if (isItalian || sysTz === "Europe/Berlin" || sysTz === "Europe/Rome" || !sysTz) {
+                return { timeZone: "Europe/Rome", label: "PSR", city: "Pescara", country: "IT" };
+            }
+            const parts = sysTz.split('/');
             const rawCity = parts[parts.length - 1].replace(/_/g, ' ');
-            const labelMap = {
-                "Rome": "RM",
-                "Vatican": "RM",
-                "San Marino": "RM",
-                "Milan": "MI",
-                "New York": "NYC",
-                "London": "LON",
-                "Paris": "PAR",
-                "Berlin": "BER",
-                "Tokyo": "TYO",
-                "Los Angeles": "LA",
-                "Chicago": "CHI",
-                "Toronto": "TOR",
-                "Sydney": "SYD"
-            };
-            const label = labelMap[rawCity] || (rawCity.length <= 4 ? rawCity.toUpperCase() : rawCity.substring(0, 3).toUpperCase());
-            return { timeZone: tz, label: label, city: rawCity };
-        } catch {
-            return { timeZone: undefined, label: "LOC", city: "Local" };
+            const label = CITY_LABEL_MAP[rawCity] || (rawCity.length <= 4 ? rawCity.toUpperCase() : rawCity.substring(0, 3).toUpperCase());
+            return { timeZone: sysTz, label: label, city: rawCity, country: "" };
+        } catch (_) {
+            return { timeZone: "Europe/Rome", label: "PSR", city: "Pescara", country: "IT" };
         }
+    })();
+
+    const activeClockElements = new Set();
+    let clockTimerId = null;
+
+    function fetchPrecisionLocation() {
+        try {
+            if (sessionStorage.getItem('portfolio_geo_data')) return;
+        } catch (_) {}
+
+        fetch('https://get.geojs.io/v1/ip/geo.json', { cache: 'no-cache' })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.city) {
+                    const detectedCity = data.city;
+                    const detectedCountry = data.country_code || data.country || "";
+                    const tz = data.timezone || geoInfo.timeZone || "Europe/Rome";
+                    let label = CITY_LABEL_MAP[detectedCity];
+                    if (!label) {
+                        label = detectedCity.length <= 4 ? detectedCity.toUpperCase() : detectedCity.substring(0, 3).toUpperCase();
+                    }
+                    geoInfo = {
+                        timeZone: tz,
+                        label: label,
+                        city: detectedCity,
+                        country: detectedCountry
+                    };
+                    try {
+                        sessionStorage.setItem('portfolio_geo_data', JSON.stringify(geoInfo));
+                    } catch (_) {}
+                    updateLiveClocks();
+                }
+            })
+            .catch(() => {
+                // Network unavailable or blocked: keep accurate default (Pescara / PSR)
+            });
     }
 
-    function initLiveClock(targetElId = "live-clock") {
-        const el = document.getElementById(targetElId);
-        if (!el) return;
-        const tzInfo = getUserTimezoneInfo();
-        const tick = () => {
+    function updateLiveClocks() {
+        const now = new Date();
+        activeClockElements.forEach(el => {
+            if (!document.body.contains(el)) {
+                activeClockElements.delete(el);
+                return;
+            }
             try {
-                const now = new Date();
                 const timeStr = new Intl.DateTimeFormat("en-US", {
-                    timeZone: tzInfo.timeZone,
+                    timeZone: geoInfo.timeZone,
                     hour: "2-digit",
                     minute: "2-digit",
                     second: "2-digit",
                     hour12: false,
                 }).format(now);
-                el.textContent = `${timeStr} ${tzInfo.label}`;
-                el.title = `${tzInfo.city} (${tzInfo.timeZone || 'Local'})`;
+                el.textContent = `${timeStr} ${geoInfo.label}`;
+                el.title = `${geoInfo.city}${geoInfo.country ? ', ' + geoInfo.country : ''} (${geoInfo.timeZone || 'Europe/Rome'})`;
             } catch {
-                const now = new Date();
                 const pad = n => String(n).padStart(2, '0');
-                el.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${tzInfo.label}`;
+                el.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${geoInfo.label}`;
             }
-        };
-        tick();
-        return setInterval(tick, 1000);
+        });
+    }
+
+    function getUserTimezoneInfo() {
+        return { ...geoInfo };
+    }
+
+    function initLiveClock(targetElId = "live-clock") {
+        const el = document.getElementById(targetElId);
+        if (!el) return;
+        activeClockElements.add(el);
+        updateLiveClocks();
+        if (!clockTimerId) {
+            clockTimerId = setInterval(updateLiveClocks, 1000);
+        }
+        fetchPrecisionLocation();
+        return clockTimerId;
     }
 
     function applyTranslations(lang, isUserAction = false) {

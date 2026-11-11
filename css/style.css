@@ -2090,14 +2090,15 @@ body.dark-theme .sd-toc-item {
 
 /* --- Window 1: VLC Media Player (Top Center/Left) --- */
 #hero-win-vlc.kali-window-vlc {
-    position: absolute !important;
-    top: 1.2vh !important;
-    left: 21vw !important;
-    width: 37.1vw !important;
-    height: 44.5vh !important;
-    min-width: 300px !important;
-    min-height: 180px !important;
-    max-width: none !important;
+    position: absolute;
+    top: 1.2vh;
+    left: 21vw;
+    width: 37.1vw;
+    height: 44.5vh;
+    min-width: 260px;
+    min-height: 160px;
+    max-width: 95vw;
+    max-height: 90vh;
     background: var(--win-bg);
     border: 1px solid var(--win-border);
     border-radius: 8px;
@@ -2107,55 +2108,58 @@ body.dark-theme .sd-toc-item {
     user-select: none;
     z-index: 10;
     overflow: visible;
-    margin: 0 !important;
+    margin: 0;
     transition: box-shadow 0.25s ease, opacity 0.22s ease;
 }
 
 /* --- Window 2: NOMOD / MIKK (Top Right) --- */
 #project-win-1.fg-win-nomod,
 #project-win-1.fg-win-mikk {
-    position: absolute !important;
-    top: 7.5vh !important;
-    left: 67vw !important;
-    width: 26.1vw !important;
-    height: 36.5vh !important;
-    min-width: 230px !important;
-    min-height: 160px !important;
-    max-width: none !important;
+    position: absolute;
+    top: 7.5vh;
+    left: 67vw;
+    width: 26.1vw;
+    height: 36.5vh;
+    min-width: 230px;
+    min-height: 150px;
+    max-width: 95vw;
+    max-height: 90vh;
     z-index: 11;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.16);
-    margin: 0 !important;
+    margin: 0;
 }
 
 /* --- Window 3: HARP CHAIR (Bottom Left) --- */
 #project-win-0.fg-win-harp {
-    position: absolute !important;
-    top: 50.5vh !important;
-    left: 12.5vw !important;
-    width: 27.8vw !important;
-    height: 38.5vh !important;
-    min-width: 240px !important;
-    min-height: 170px !important;
-    max-width: none !important;
+    position: absolute;
+    top: 50.5vh;
+    left: 12.5vw;
+    width: 27.8vw;
+    height: 38.5vh;
+    min-width: 240px;
+    min-height: 150px;
+    max-width: 95vw;
+    max-height: 90vh;
     z-index: 12;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.16);
-    margin: 0 !important;
+    margin: 0;
 }
 
 /* --- Window 4: LUCA / JEWELRY (Bottom Center/Right) --- */
 #project-win-2.fg-win-luca,
 #project-win-2.fg-win-jewelry {
-    position: absolute !important;
-    top: 49.5vh !important;
-    left: 51.5vw !important;
-    width: 28.8vw !important;
-    height: 38.5vh !important;
-    min-width: 250px !important;
-    min-height: 170px !important;
-    max-width: none !important;
+    position: absolute;
+    top: 49.5vh;
+    left: 51.5vw;
+    width: 28.8vw;
+    height: 38.5vh;
+    min-width: 250px;
+    min-height: 150px;
+    max-width: 95vw;
+    max-height: 90vh;
     z-index: 13;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.16);
-    margin: 0 !important;
+    margin: 0;
 }
 
 /* --- Desktop 100% Single Viewport (Strictly No Vertical Scroll, Zero Gap, Transparent Ticker + Footer) --- */
@@ -4341,10 +4345,10 @@ body.kali-os-page::before {
 
 /* --- Desktop Workspace --- */
 .kali-os-desktop {
-    flex: 1;
+    flex: 1 1 0;
     position: relative;
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 66px);
     overflow: hidden;
     padding: 0;
 }
@@ -5417,20 +5421,9 @@ body.dark-theme .pd-inspector-close-btn {
     filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
 }
 
-/* --- Bottom Taskbar --- */
+/* --- Bottom Taskbar (Hidden / Removed per request) --- */
 .kali-os-taskbar {
-    height: 34px;
-    flex-shrink: 0;
-    background: var(--win-toolbar-bg);
-    border-top: 1px solid var(--win-toolbar-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
-    position: relative;
-    z-index: 1000;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
+    display: none !important;
 }
 
 .kali-taskbar-left,
