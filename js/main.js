@@ -78,13 +78,13 @@ const PROJECTS = [
                 aspect: "landscape",
             },
             {
-                image: "images/nomod/Presentazione Tesi_Page_12.png",
-                caption: "MIKK_12.PNG",
+                image: "images/nomod/Gemini_Generated_Image_8xq0xi8xq0xi8xq0-gigapixel-high fidelity v2-2x.jpg",
+                caption: "MIKK_05.JPG",
                 aspect: "landscape",
             },
             {
-                image: "images/nomod/Presentazione Tesi_Page_18.png",
-                caption: "MIKK_18.PNG",
+                image: "images/nomod/Gemini_Generated_Image_nzvyopnzvyopnzvy-gigapixel-high fidelity v2-2x.jpg",
+                caption: "MIKK_06.JPG",
                 aspect: "landscape",
             },
             {
