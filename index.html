@@ -19,6 +19,18 @@
     <meta name="view-transition" content="same-origin">
     <script>
         (function() {
+            try {
+                if (window.location.protocol !== 'file:') {
+                    var p = window.location.pathname;
+                    if (p.endsWith('/index.html')) {
+                        var clean = p.slice(0, -10) || '/';
+                        window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+                    } else if (p.endsWith('.html')) {
+                        var clean = p.slice(0, -5);
+                        window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+                    }
+                }
+            } catch (e) {}
             var t = sessionStorage.getItem('macos_space_transition');
             if (t === 'to_about') document.documentElement.dataset.vtDirection = 'forward';
             else if (t === 'to_portfolio') document.documentElement.dataset.vtDirection = 'backward';

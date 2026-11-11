@@ -772,7 +772,7 @@ function renderMacTopNav() {
         <nav class="mac-top-nav" id="mac-top-nav" aria-label="Mac OS System Menu Bar">
             <div class="mac-nav-left">
                 <!-- App / Brand Name -->
-                <a href="index.html" class="mac-nav-brand nb-nav-home-link" aria-label="Lorenzo Kraja — Home">
+                <a href="./" class="mac-nav-brand nb-nav-home-link" aria-label="Lorenzo Kraja — Home">
                     <span class="nb-nav-home-text">${escapeHTML(CONFIG.designerName)}</span>
                 </a>
 
@@ -2077,9 +2077,25 @@ function bindEvents() {
     if (homeLink) {
         homeLink.addEventListener("click", (e) => {
             const path = window.location.pathname;
-            if (path.endsWith("index.html") || path.endsWith("/") || path === "") {
+            if (path.endsWith("index.html") || path.endsWith("/") || path === "" || path.endsWith("/index")) {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        });
+    }
+
+    if (window.location.protocol === 'file:') {
+        document.addEventListener('click', function(e) {
+            var a = e.target.closest('a');
+            if (a) {
+                var href = a.getAttribute('href');
+                if (href === './' || href === '/') {
+                    e.preventDefault();
+                    window.location.href = 'index.html';
+                } else if (href && href.startsWith('./#')) {
+                    e.preventDefault();
+                    window.location.href = 'index.html' + href.slice(2);
+                }
             }
         });
     }

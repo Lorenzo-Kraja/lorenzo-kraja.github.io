@@ -2237,31 +2237,63 @@
             });
         }
 
-        function navigateBackToPortfolio(targetUrl = 'index.html') {
+        function navigateBackToPortfolio(targetUrl = './') {
             document.documentElement.dataset.vtDirection = 'backward';
             sessionStorage.setItem('macos_space_transition', 'to_portfolio');
             showMacosHud(2, 1, 1400);
 
+            // Clean URL: on HTTP/HTTPS use clean path, on file:// preserve index.html
+            let dest = targetUrl;
+            if (window.location.protocol !== 'file:') {
+                if (dest === 'index.html' || dest === '') {
+                    dest = './';
+                } else if (dest.startsWith('index.html#')) {
+                    dest = './' + dest.slice(10);
+                }
+            } else {
+                if (dest === './' || dest === '') {
+                    dest = 'index.html';
+                } else if (dest.startsWith('./#')) {
+                    dest = 'index.html' + dest.slice(2);
+                }
+            }
+
             if (document.startViewTransition) {
-                window.location.href = targetUrl;
+                window.location.href = dest;
             } else {
                 document.body.classList.add('macos-space-slide-out-right');
                 setTimeout(() => {
-                    window.location.href = targetUrl;
+                    window.location.href = dest;
                 }, 460);
             }
         }
 
-        // 3. Intercept all links back to Portfolio (index.html)
-        const backLinks = document.querySelectorAll('a[href="index.html"], a[href^="index.html#"], .kali-topbar-back');
+        // 3. Intercept all links back to Portfolio (index.html or ./)
+        const backLinks = document.querySelectorAll('a[href="index.html"], a[href="./"], a[href="/"], a[href^="index.html#"], a[href^="./#"], .kali-topbar-back');
         backLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 if (e.metaKey || e.ctrlKey || e.shiftKey) return;
                 e.preventDefault();
-                const href = link.getAttribute('href') || 'index.html';
+                const href = link.getAttribute('href') || './';
                 navigateBackToPortfolio(href);
             });
         });
+
+        if (window.location.protocol === 'file:') {
+            document.addEventListener('click', (e) => {
+                const a = e.target.closest('a');
+                if (a) {
+                    const href = a.getAttribute('href');
+                    if (href === './' || href === '/') {
+                        e.preventDefault();
+                        navigateBackToPortfolio('index.html');
+                    } else if (href && href.startsWith('./#')) {
+                        e.preventDefault();
+                        navigateBackToPortfolio('index.html' + href.slice(2));
+                    }
+                }
+            });
+        }
     }
 
     // --------------- Contact Window Actions -----------------

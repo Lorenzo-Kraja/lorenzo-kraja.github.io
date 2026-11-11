@@ -13,6 +13,22 @@
     <meta property="og:image" content="images/harp-chair/01.gif">
 
     <meta name="view-transition" content="same-origin">
+    <script>
+        (function() {
+            try {
+                if (window.location.protocol !== 'file:') {
+                    var p = window.location.pathname;
+                    if (p.endsWith('/index.html')) {
+                        var clean = p.slice(0, -10) || '/';
+                        window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+                    } else if (p.endsWith('.html')) {
+                        var clean = p.slice(0, -5);
+                        window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+                    }
+                }
+            } catch (e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="fos-project-body">
@@ -22,7 +38,7 @@
     <!-- TOP NAVIGATION BAR (Transparent, No Arrow, No About/Contact) -->
     <nav class="nb-top-nav fos-nav">
         <div class="nb-nav-col-1">
-            <a href="index.html" class="nb-nav-home-link" aria-label="Torna alla Home">
+            <a href="./" class="nb-nav-home-link" aria-label="Torna alla Home">
                 <span class="nb-nav-home-text" data-i18n="nav.home">Lorenzo Kraja</span>
             </a>
         </div>
@@ -171,7 +187,7 @@
 
         <!-- Bottom Page Footer Navigation -->
         <footer class="fos-page-footer">
-            <a href="index.html" class="fos-nav-link" data-i18n="nav.backHome">&larr; Torna alla Home</a>
+            <a href="./" class="fos-nav-link" data-i18n="nav.backHome">&larr; Torna alla Home</a>
             <a href="mikk.html" class="fos-nav-link" data-i18n="harp.next">Prossimo Progetto: MIKK (2023) &rarr;</a>
         </footer>
 
@@ -221,6 +237,22 @@
 
         startClock();
         initTheme();
+
+        if (window.location.protocol === 'file:') {
+            document.addEventListener('click', function(e) {
+                var a = e.target.closest('a');
+                if (a) {
+                    var href = a.getAttribute('href');
+                    if (href === './' || href === '/') {
+                        e.preventDefault();
+                        window.location.href = 'index.html';
+                    } else if (href && href.startsWith('./#')) {
+                        e.preventDefault();
+                        window.location.href = 'index.html' + href.slice(2);
+                    }
+                }
+            });
+        }
     </script>
     <script src="js/lightbox.js"></script>
 </body>
