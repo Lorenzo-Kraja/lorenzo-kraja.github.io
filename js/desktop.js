@@ -1159,6 +1159,159 @@
                             "caption": "Jewelry Inspiration — Wrought iron cast cartouche escutcheon with volute scrolls"
                     }
             ]
+    },
+    {
+            "id": "cinematic-frames",
+            "name": "Cinematic frames & lighting",
+            "displayPath": "Cinematic frames & lighting",
+            "category": "Cinematography & Lighting, 2026",
+            "description": "Cinematic stills, moody compositions, light/shadow contrasts and film direction visual references.",
+            "tagColor": "blue",
+            "files": [
+                    {
+                            "name": "00g5j7goe4r81.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/00g5j7goe4r81.png",
+                            "size": "1.9 MB",
+                            "sizeBytes": "1984493",
+                            "created": "10/22/2026, 04:18:22 PM",
+                            "modified": "10/22/2026, 04:25:01 PM",
+                            "contentType": "image/png",
+                            "dimensions": "1920 × 1080",
+                            "caption": "Cinematic frames & lighting — Atmospheric night exterior with volumetric streetlamp glow"
+                    },
+                    {
+                            "name": "32oaynw3g0ha1.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/32oaynw3g0ha1.png",
+                            "size": "1.6 MB",
+                            "sizeBytes": "1663867",
+                            "created": "10/25/2026, 09:35:14 PM",
+                            "modified": "10/25/2026, 09:41:30 PM",
+                            "contentType": "image/png",
+                            "dimensions": "1920 × 1080",
+                            "caption": "Cinematic frames & lighting — Cinematic portrait frame with rim lighting & soft fill"
+                    },
+                    {
+                            "name": "c8353dbbf5d0ad601ca372e6fa6f146b.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/c8353dbbf5d0ad601ca372e6fa6f146b.png",
+                            "size": "907 KB",
+                            "sizeBytes": "928332",
+                            "created": "10/28/2026, 02:14:05 AM",
+                            "modified": "10/28/2026, 02:18:42 AM",
+                            "contentType": "image/png",
+                            "dimensions": "1200 × 750",
+                            "caption": "Cinematic frames & lighting — Moody widescreen frame with neon accents & specular reflection"
+                    },
+                    {
+                            "name": "Cure_04.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/Cure_04.png",
+                            "size": "681 KB",
+                            "sizeBytes": "696848",
+                            "created": "10/30/2026, 11:42:33 AM",
+                            "modified": "10/30/2026, 11:49:10 AM",
+                            "contentType": "image/png",
+                            "dimensions": "1920 × 1040",
+                            "caption": "Cinematic frames & lighting — Kiyoshi Kurosawa's Cure (1997), interior corridor low-key lighting"
+                    },
+                    {
+                            "name": "Cure_47.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/Cure_47.png",
+                            "size": "1.4 MB",
+                            "sizeBytes": "1435931",
+                            "created": "11/02/2026, 07:05:19 PM",
+                            "modified": "11/02/2026, 07:11:45 PM",
+                            "contentType": "image/png",
+                            "dimensions": "1920 × 1040",
+                            "caption": "Cinematic frames & lighting — Kiyoshi Kurosawa's Cure (1997), hospital ward natural contrast framing"
+                    },
+                    {
+                            "name": "Cure_65.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/Cure_65.png",
+                            "size": "2.1 MB",
+                            "sizeBytes": "2166538",
+                            "created": "11/04/2026, 01:28:44 AM",
+                            "modified": "11/04/2026, 01:34:02 AM",
+                            "contentType": "image/png",
+                            "dimensions": "1920 × 1040",
+                            "caption": "Cinematic frames & lighting — Kiyoshi Kurosawa's Cure (1997), hypnotic water beaker chiaroscuro"
+                    },
+                    {
+                            "name": "d91c03748ac9970a134e0fafd6cc3af1.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/d91c03748ac9970a134e0fafd6cc3af1.png",
+                            "size": "855 KB",
+                            "sizeBytes": "875420",
+                            "created": "11/06/2026, 03:52:11 PM",
+                            "modified": "11/06/2026, 03:58:25 PM",
+                            "contentType": "image/png",
+                            "dimensions": "1200 × 602",
+                            "caption": "Cinematic frames & lighting — Deep focal perspective with cinematic haze & silhouette contrast"
+                    },
+                    {
+                            "name": "HannibalS01E11-0810.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/HannibalS01E11-0810.png",
+                            "size": "482 KB",
+                            "sizeBytes": "493701",
+                            "created": "11/08/2026, 10:16:38 AM",
+                            "modified": "11/08/2026, 10:22:50 AM",
+                            "contentType": "image/png",
+                            "dimensions": "1000 × 563",
+                            "caption": "Cinematic frames & lighting — Hannibal S01E11, forensic table directional cool wash lighting"
+                    },
+                    {
+                            "name": "HJ_Fromage.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/HJ_Fromage.png",
+                            "size": "595 KB",
+                            "sizeBytes": "609469",
+                            "created": "11/10/2026, 08:44:02 PM",
+                            "modified": "11/10/2026, 08:49:15 PM",
+                            "contentType": "image/png",
+                            "dimensions": "1000 × 561",
+                            "caption": "Cinematic frames & lighting — Hannibal S01E08 'Fromage', Tobias bud cellar warm ambient light"
+                    },
+                    {
+                            "name": "SheldonIsleyBody.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/SheldonIsleyBody.png",
+                            "size": "732 KB",
+                            "sizeBytes": "749223",
+                            "created": "11/12/2026, 02:30:17 AM",
+                            "modified": "11/12/2026, 02:37:44 AM",
+                            "contentType": "image/png",
+                            "dimensions": "1000 × 563",
+                            "caption": "Cinematic frames & lighting — Hannibal S01E08 'Fromage', cello sculpture dramatic split lighting"
+                    },
+                    {
+                            "name": "vsg2yqn7fdl91.png",
+                            "type": "image",
+                            "subType": "PNG image",
+                            "src": "images/Cinematic frames & lighting/vsg2yqn7fdl91.png",
+                            "size": "704 KB",
+                            "sizeBytes": "721160",
+                            "created": "11/14/2026, 11:05:29 AM",
+                            "modified": "11/14/2026, 11:12:08 AM",
+                            "contentType": "image/png",
+                            "dimensions": "1023 × 574",
+                            "caption": "Cinematic frames & lighting — Minimalist architectural framing with directional window daylight"
+                    }
+            ]
     }
     ];
 
@@ -1597,9 +1750,13 @@
                     });
                 });
 
+                const folderCountEl = document.getElementById('pd-status-folder-count');
+                if (folderCountEl) {
+                    folderCountEl.textContent = `${PROJECT_FOLDERS.length} ${PROJECT_FOLDERS.length === 1 ? t('finder.folderSingle') : t('finder.folderPlural')}`;
+                }
                 if (statusSummary) {
                     const totalFiles = PROJECT_FOLDERS.reduce((acc, f) => acc + f.files.length, 0);
-                    statusSummary.textContent = `${totalFiles} ${t('finder.filePlural')} • Jewelry Inspiration`;
+                    statusSummary.textContent = `${totalFiles} ${t('finder.filePlural')}`;
                 }
             } else {
                 // Render files inside active folder
@@ -1844,6 +2001,9 @@
                 openPreview(activeFileIdx);
             } else {
                 closePreview();
+            }
+            if (statusSummary) {
+                statusSummary.textContent = `${folder.files.length} ${folder.files.length === 1 ? t('finder.fileSingle') : t('finder.filePlural')} • ${folder.name}`;
             }
         }
 
